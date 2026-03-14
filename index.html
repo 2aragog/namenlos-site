@@ -148,7 +148,7 @@ function buildAlley(){
   s.background=new THREE.Color(0x050510);
   S.clickables.alley=[];
   // Ground
-  s.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(4,24),M.wetGround),{rotation:{x:-Math.PI/2,y:0,z:0}}));
+  const alleyGround=new THREE.Mesh(new THREE.PlaneGeometry(4,24),M.wetGround);alleyGround.rotation.x=-Math.PI/2;s.add(alleyGround);
   // Walls
   const wg=new THREE.BoxGeometry(0.4,6,24);
   const wl=new THREE.Mesh(wg,M.darkWall);wl.position.set(-2,3,0);s.add(wl);
@@ -184,8 +184,8 @@ function buildShop(){
   s.background=new THREE.Color(0x0e0c0a);
   S.clickables.shop=[];
   // Floor/ceiling/walls
-  s.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(10,10),M.stone),{rotation:{x:-Math.PI/2}}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshStandardMaterial({color:0x0a0908})),{rotation:{x:Math.PI/2},position:{x:0,y:3.2,z:0}}));
+  const shopFloor=new THREE.Mesh(new THREE.PlaneGeometry(10,10),M.stone);shopFloor.rotation.x=-Math.PI/2;s.add(shopFloor);
+  const shopCeil=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshStandardMaterial({color:0x0a0908}));shopCeil.rotation.x=Math.PI/2;shopCeil.position.set(0,3.2,0);s.add(shopCeil);
   const wm=M.brick;
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm),{position:new THREE.Vector3(0,1.6,-5)}));
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm),{position:new THREE.Vector3(-5,1.6,0)}));
@@ -264,12 +264,12 @@ function buildCinema(){
   S.clickables.cinema=[];
   const cm=M.cinemaWall;
   // Room
-  s.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x0d0808,roughness:0.9})),{rotation:{x:-Math.PI/2}}));
+  const cinFloor=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x0d0808,roughness:0.9}));cinFloor.rotation.x=-Math.PI/2;s.add(cinFloor);
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm),{position:new THREE.Vector3(0,2.25,-8)}));
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm),{position:new THREE.Vector3(-7,2.25,0)}));
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm),{position:new THREE.Vector3(7,2.25,0)}));
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm),{position:new THREE.Vector3(0,2.25,8)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x080505})),{position:new THREE.Vector3(0,4.5,0),rotation:{x:Math.PI/2}}));
+  const cinCeil=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x080505}));cinCeil.position.set(0,4.5,0);cinCeil.rotation.x=Math.PI/2;s.add(cinCeil);
 
   // Neon strip
   s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(12,0.05,0.05),M.neonRed),{position:new THREE.Vector3(0,4.2,-7.8)}));
