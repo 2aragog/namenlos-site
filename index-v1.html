@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Namenlos — Coming Soon</title>
+  <meta name="description" content="Namenlos — Dark Romance. Coming Soon.">
+  <meta property="og:title" content="Namenlos — Coming Soon">
+  <meta property="og:description" content="Something dark is awakening.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://namenlos.black">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --black: #0a0a0a;
+      --deep: #111111;
+      --smoke: #1a1a1a;
+      --ash: #2a2a2a;
+      --silver: #6b6b6b;
+      --mist: #999999;
+      --bone: #c8c0b8;
+      --cream: #e8e0d8;
+      --blood: #8b1a1a;
+      --blood-glow: #a52222;
+    }
+
+    html, body { height: 100%; overflow-x: hidden; }
+
+    body {
+      background: var(--black);
+      color: var(--cream);
+      font-family: 'Josefin Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .atmosphere {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 26, 26, 0.08) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: breathe 8s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    .particle {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      background: var(--silver);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+      animation: float-up linear infinite;
+    }
+
+    @keyframes float-up {
+      0% { opacity: 0; transform: translateY(0) translateX(0); }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.2; }
+      100% { opacity: 0; transform: translateY(-100vh) translateX(30px); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .line-top {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--silver));
+      margin-bottom: 40px;
+      animation: fadeSlideDown 2s ease-out 0.3s both;
+    }
+
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(3rem, 8vw, 7rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-indent: 0.35em;
+      line-height: 1;
+      animation: fadeIn 2.5s ease-out 0.6s both;
+      position: relative;
+    }
+
+    .brand::after {
+      content: '';
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 1px;
+      background: var(--blood);
+      animation: expandLine 2s ease-out 1.5s both;
+    }
+
+    @keyframes expandLine {
+      from { width: 0; opacity: 0; }
+      to { width: 40px; opacity: 1; }
+    }
+
+    .tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(0.85rem, 2vw, 1.1rem);
+      color: var(--mist);
+      letter-spacing: 0.15em;
+      margin-top: 36px;
+      animation: fadeIn 2s ease-out 1.2s both;
+    }
+
+    .status {
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 200;
+      font-size: clamp(0.65rem, 1.2vw, 0.75rem);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--silver);
+      margin-top: 50px;
+      text-indent: 0.5em;
+      animation: fadeIn 2s ease-out 1.8s both;
+    }
+
+    .signup {
+      margin-top: 44px;
+      animation: fadeIn 2s ease-out 2.2s both;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .signup-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--silver);
+      letter-spacing: 0.1em;
+    }
+
+    .signup-form {
+      display: flex;
+      align-items: stretch;
+      width: 100%;
+      max-width: 380px;
+    }
+
+    .signup-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--ash);
+      border-right: none;
+      padding: 12px 18px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      outline: none;
+      transition: border-color 0.4s ease;
+      min-width: 0;
+    }
+
+    .signup-input::placeholder {
+      color: var(--silver);
+      letter-spacing: 0.08em;
+    }
+
+    .signup-input:focus {
+      border-color: var(--blood);
+    }
+
+    .signup-button {
+      background: transparent;
+      border: 1px solid var(--ash);
+      padding: 12px 22px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--mist);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      white-space: nowrap;
+    }
+
+    .signup-button:hover {
+      border-color: var(--blood);
+      color: var(--cream);
+      background: rgba(139, 26, 26, 0.1);
+    }
+
+    .signup-success {
+      display: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--bone);
+      letter-spacing: 0.05em;
+    }
+
+    .signup-success.visible { display: block; animation: fadeIn 0.6s ease-out both; }
+    .signup-form.hidden { display: none; }
+    .signup-label.hidden { display: none; }
+
+    .line-bottom {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to top, transparent, var(--silver));
+      margin-top: 44px;
+      animation: fadeSlideUp 2s ease-out 2.6s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 26, 26, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+      transition: left 0.3s ease-out, top 0.3s ease-out;
+    }
+
+    @media (max-width: 600px) {
+      .line-top, .line-bottom { height: 40px; }
+      .brand { letter-spacing: 0.2em; text-indent: 0.2em; }
+      .status { letter-spacing: 0.3em; text-indent: 0.3em; }
+      .signup-form {
+        flex-direction: column;
+        max-width: 300px;
+      }
+      .signup-input {
+        border-right: 1px solid var(--ash);
+        border-bottom: none;
+        text-align: center;
+      }
+      .signup-input:focus { border-color: var(--blood); }
+      .signup-button { border-top: 1px solid var(--ash); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="atmosphere"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="content">
+    <div class="line-top"></div>
+    <h1 class="brand">Namenlos</h1>
+    <p class="tagline">dark romance</p>
+    <p class="status">coming soon</p>
+
+    <div class="signup">
+      <p class="signup-label" id="signupLabel">be the first to know</p>
+      <div class="signup-form" id="signupForm">
+        <input type="email" class="signup-input" id="emailInput" placeholder="your@email.com" autocomplete="email">
+        <button type="button" class="signup-button" id="signupBtn">notify me</button>
+      </div>
+      <p class="signup-success" id="signupSuccess">the darkness will find you</p>
+    </div>
+
+    <div class="line-bottom"></div>
+  </div>
+
+  <script>
+    // Particles
+    function createParticle() {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.bottom = '-10px';
+      const s = (Math.random() * 1.5 + 0.5) + 'px';
+      p.style.width = s; p.style.height = s;
+      p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+      p.style.animationDelay = (Math.random() * 2) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 20000);
+    }
+    setInterval(createParticle, 800);
+    for (let i = 0; i < 8; i++) setTimeout(createParticle, i * 300);
+
+    // Cursor glow
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+
+    // Signup
+    function handleSignup() {
+      const email = document.getElementById('emailInput').value.trim();
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        document.getElementById('emailInput').style.borderColor = 'var(--blood)';
+        return;
+      }
+
+      // Send to Formspree — replace YOUR_FORM_ID after creating free account at formspree.io
+      const FORMSPREE_ID = 'YOUR_FORM_ID';
+      if (FORMSPREE_ID !== 'YOUR_FORM_ID') {
+        fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        }).catch(() => {});
+      }
+
+      document.getElementById('signupForm').classList.add('hidden');
+      document.getElementById('signupLabel').classList.add('hidden');
+      document.getElementById('signupSuccess').classList.add('visible');
+    }
+
+    document.getElementById('signupBtn').addEventListener('click', handleSignup);
+    document.getElementById('emailInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSignup();
+    });
+  </script>
+
+</body>
+</html>
