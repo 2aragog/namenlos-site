@@ -17,8 +17,8 @@ canvas{display:block}
 #coin-display{position:fixed;top:20px;right:20px;z-index:1000;display:none;align-items:center;gap:8px;background:rgba(10,10,10,0.85);border:1px solid var(--gold-dim);border-radius:24px;padding:8px 16px;font-family:var(--font-display);font-size:14px;color:var(--gold);backdrop-filter:blur(8px)}
 #coin-display .coin-icon{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--black);box-shadow:0 0 8px rgba(201,168,76,0.4)}
 #scene-label{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:900;font-family:var(--font-display);font-size:11px;letter-spacing:4px;color:var(--ash);opacity:0;transition:opacity 1.5s ease;pointer-events:none}
-.back-btn{position:fixed;top:20px;left:20px;z-index:1000;background:none;border:1px solid var(--stone);color:var(--ash);font-family:var(--font-display);font-size:10px;letter-spacing:2px;padding:8px 16px;cursor:pointer;transition:all .3s;display:none}
-.back-btn:hover{border-color:var(--bone);color:var(--bone)}
+#back-btn{position:fixed;top:20px;left:20px;z-index:1000;background:none;border:1px solid var(--stone);color:var(--ash);font-family:var(--font-display);font-size:10px;letter-spacing:2px;padding:8px 16px;cursor:pointer;transition:all .3s;display:none}
+#back-btn:hover{border-color:var(--bone);color:var(--bone)}
 #scene-code{position:fixed;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);transition:opacity .8s ease}
 #code-prompt{font-family:var(--font-body);font-size:22px;font-style:italic;color:var(--mist);line-height:1.7;margin-bottom:40px;letter-spacing:1px;text-align:center}
 #code-input{background:transparent;border:none;border-bottom:1px solid var(--ash);color:var(--bone);font-family:var(--font-typewriter);font-size:24px;text-align:center;width:280px;padding:8px 4px;outline:none;caret-color:var(--bone);letter-spacing:3px}
@@ -81,347 +81,573 @@ canvas{display:block}
 <div id="scene-label"></div>
 <div id="tooltip-3d"></div>
 <div id="welcome-text">The shopkeeper remembers you.</div>
-<button class="back-btn" id="back-btn">↑ SHOP</button>
+<button id="back-btn">↑ SHOP</button>
 <div id="scene-code"><div style="text-align:center;max-width:500px;padding:20px;"><div id="code-prompt">The shop has no address.<br>But it has a word.<br><br>Say it.</div><input type="text" id="code-input" placeholder="_ _ _ _ _ _ _" autocomplete="off" spellcheck="false" autofocus><div id="code-error"></div></div></div>
 <div id="shopkeeper-msg"><div class="sk-inner"><button class="sk-close" onclick="closeShopkeeper()">&times;</button><div class="sk-text" id="sk-msg-text"></div><div class="sk-actions" id="sk-msg-actions"></div></div></div>
 <div id="coin-shop"><div class="coin-shop-inner"><h2>NAMELESS COINS</h2><div class="sk-quote">"You've seen the shop. But there are rooms you haven't entered. The Nameless Coin opens them all."</div><div class="coin-packages"><div class="coin-pkg" onclick="buyCoins(10)"><div><div class="pkg-name">10 COINS</div></div><div class="pkg-price">$9.99</div></div><div class="coin-pkg" onclick="buyCoins(25)"><div><div class="pkg-name">25 COINS</div><div class="pkg-note">Save 20%</div></div><div class="pkg-price">$19.99</div></div><div class="coin-pkg" onclick="buyCoins(-1)"><div><div class="pkg-name">THE NAMELESS CIRCLE</div><div class="pkg-note">Unlimited · All content · Your name on the Wall</div></div><div class="pkg-price">$4.99/mo</div></div></div><button class="coin-shop-close" onclick="closeCoinShop()">Not yet.</button></div></div>
-
 <!-- PANELS -->
-<div class="panel-overlay" id="panel-whip"><div class="panel"><button class="panel-close" onclick="closePanel('whip')">&times;</button><h2>SKIN ME</h2><p style="font-style:italic;color:var(--gold-dim);font-size:14px;letter-spacing:2px;">A NAMENLOS NOVEL · BOOK 1</p><p>Paranormal Dark Romance 18+ · Berlin</p><h3>TRAILER</h3><div style="background:#111;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;border:1px solid #222;"><span style="color:var(--ash);font-family:var(--font-display);font-size:12px;letter-spacing:3px;">TRAILER COMING SOON</span></div><h3>CHAPTER 1 — FREE</h3><div class="chapter-text"><p>The shop had no sign. No address. No name anyone remembered.</p><p>Rita found it the way most people find things they shouldn't — by not looking. By turning left when she meant to turn right, by following the alley instead of the avenue, by trusting her feet more than her phone.</p><p>The door was heavy, older than the building around it. Wood so dark it looked burned. A brass handle shaped like a hand — five fingers curled inward, as if gripping something invisible.</p><p>She pushed.</p><p>Inside: shelves. Hundreds of them. Objects she couldn't name. A kerosene lamp on the counter, the only light, and behind it — a man. Or something shaped like one.</p><p>"You're early," he said. His voice was dry leaves on stone. "Or late. I can never tell."</p><p>Rita opened her mouth to speak. But her eyes had already found it. On the center shelf, coiled like a sleeping snake: the whip.</p><p>Black leather. Braided tight. The handle was bone — not imitation, not plastic, real bone, smooth from centuries of hands.</p><p>It was the most beautiful thing she had ever seen.</p><p>"Don't," the shopkeeper said.</p><p>But Rita was already reaching.</p><p style="text-align:center;color:var(--gold-dim);margin-top:20px;font-style:italic;">— End of preview —</p></div><h3>GET THE BOOK</h3><button class="btn-primary" onclick="alert('→ Digistore24 ebook')">EBOOK — $9.99</button><button class="btn-secondary" onclick="alert('→ Digistore24 paperback')">PAPERBACK — $16.99</button><button class="btn-secondary" onclick="alert('→ Digistore24 bundle')">PREMIUM BUNDLE — $25</button><h3>SOUNDTRACK PREVIEW</h3><div style="background:#111;padding:16px;border:1px solid #222;display:flex;align-items:center;gap:12px;"><span style="font-size:24px;cursor:pointer;">▶</span><div><div style="font-family:var(--font-display);font-size:12px;color:var(--bone);letter-spacing:2px;">TRACK 01 — NIMM MICH</div><div style="font-size:13px;color:var(--ash);">Preview · Full in Premium Bundle</div></div></div></div></div>
-<div class="panel-overlay" id="panel-wig"><div class="panel"><button class="panel-close" onclick="closePanel('wig')">&times;</button><h2>CARRY ME</h2><div class="waitlist-tag">COMING SOON</div><p style="font-style:italic;color:var(--gold-dim);font-size:14px;letter-spacing:2px;">A NAMENLOS NOVEL · BOOK 2</p><p>The red wig on the shelf is watching you.</p><p>YA · ab 16</p><h3>JOIN THE WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-wig"><button onclick="captureEmail('wig')">NOTIFY ME</button></div></div></div>
-<div class="panel-overlay" id="panel-mirror"><div class="panel"><button class="panel-close" onclick="closePanel('mirror')">&times;</button><h2>BOOK 3</h2><div class="waitlist-tag">COMING SOON</div><p>The mirror shows no reflection. Perhaps it shows someone else's.</p><h3>JOIN THE WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-mirror"><button onclick="captureEmail('mirror')">NOTIFY ME</button></div></div></div>
-<div class="panel-overlay" id="panel-box"><div class="panel"><button class="panel-close" onclick="closePanel('box')">&times;</button><h2>LAY ME</h2><div class="waitlist-tag">COMING SOON</div><p style="font-style:italic;color:var(--gold-dim);font-size:14px;letter-spacing:2px;">A NAMENLOS NOVEL · DARK ROMANCE 18+</p><p>Inside the box: a tarot deck. Every card has a name. Every name has a price.</p><h3>JOIN THE WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-box"><button onclick="captureEmail('box')">NOTIFY ME</button></div></div></div>
-<div class="panel-overlay" id="panel-glove"><div class="panel"><button class="panel-close" onclick="closePanel('glove')">&times;</button><h2 style="color:var(--ash)">THE GLOVE</h2><p style="font-style:italic;color:var(--gold-dim);margin-bottom:20px;">You noticed. Most don't.</p><p>The glove lay on the lowest shelf, forgotten or deliberately hidden. Black kid leather, the left hand only, the fingers curled inward as if still gripping something.</p><p>The shopkeeper had placed it there on a Tuesday in 1987. Or 1887. Time moved differently in the shop.</p><p>A woman had come in that day, asking for something to hold. "I keep dropping everything," she said. "My keys. My coffee. My life."</p><p>He sold her the glove. She never dropped anything again. But she also couldn't let go.</p><p>She returned the glove on a Thursday. Her fingers were raw.</p><p>"Keep it," she said. "Some things hold too tight."</p><p style="text-align:center;color:var(--ash);margin-top:20px;font-size:13px;letter-spacing:3px;">— A NAMENLOS SHORT STORY —</p></div></div>
-<div class="panel-overlay" id="panel-shopkeeper"><div class="panel"><button class="panel-close" onclick="closePanel('shopkeeper')">&times;</button><h2 style="font-size:18px">THE SHOPKEEPER</h2><div id="dialog-container"><p id="dialog-text" style="font-style:italic;min-height:60px;"></p><div id="dialog-choices" style="margin-top:20px;"></div></div></div></div>
-<div class="panel-overlay" id="panel-wall"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('wall')">&times;</button><h2>THE WALL</h2><p style="color:var(--ash);font-size:14px;margin-bottom:20px;">Names of those who belong to The Nameless Circle.</p><div style="font-family:var(--font-typewriter);color:var(--bone);font-size:13px;line-height:2.2;"><span style="color:var(--ash)">Be the first.</span></div><button class="btn-primary" style="margin-top:24px" onclick="closePanel('wall');setTimeout(openCoinShop,300)">JOIN THE CIRCLE — $4.99/mo</button></div></div>
-<div class="panel-overlay" id="panel-popcorn"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('popcorn')">&times;</button><h2 style="color:var(--neon-red)">POPCORN</h2><p style="margin-bottom:24px">Every bucket comes with a secret.</p><div style="display:flex;flex-direction:column;gap:12px"><div class="coin-pkg" onclick="buyPopcorn('small')"><div><div class="pkg-name">SMALL</div><div class="pkg-note">Deleted scene (60 sec)</div></div><div class="pkg-price">1 coin</div></div><div class="coin-pkg" onclick="buyPopcorn('large')"><div><div class="pkg-name">LARGE</div><div class="pkg-note">Alt scene + Book 2 teaser</div></div><div class="pkg-price">2 coins</div></div><div class="coin-pkg" onclick="buyPopcorn('combo')"><div><div class="pkg-name">COMBO</div><div class="pkg-note">All above + soundtrack track</div></div><div class="pkg-price">3 coins</div></div></div></div></div>
+<div class="panel-overlay" id="panel-whip"><div class="panel"><button class="panel-close" onclick="closePanel('whip')">&times;</button><h2>SKIN ME</h2><p style="font-style:italic;color:var(--gold-dim);font-size:14px;letter-spacing:2px;">A NAMENLOS NOVEL · BOOK 1</p><p>Paranormal Dark Romance 18+ · Berlin</p><h3>CHAPTER 1 — FREE</h3><div class="chapter-text"><p>The shop had no sign. No address. No name anyone remembered.</p><p>Rita found it the way most people find things they shouldn't — by not looking. By turning left when she meant to turn right, by following the alley instead of the avenue.</p><p>The door was heavy, older than the building around it. Wood so dark it looked burned. A brass handle shaped like a hand — five fingers curled inward, as if gripping something invisible.</p><p>She pushed.</p><p>Inside: shelves. Hundreds of them. A kerosene lamp on the counter, the only light, and behind it — a man. Or something shaped like one.</p><p>"You're early," he said. His voice was dry leaves on stone. "Or late. I can never tell."</p><p>Rita opened her mouth to speak. But her eyes had already found it. On the center shelf, coiled like a sleeping snake: the whip.</p><p>Black leather. Braided tight. The handle was bone — not imitation, not plastic, real bone, smooth from centuries of hands.</p><p>It was the most beautiful thing she had ever seen.</p><p>"Don't," the shopkeeper said.</p><p>But Rita was already reaching.</p><p style="text-align:center;color:var(--gold-dim);margin-top:20px;font-style:italic;">— End of preview —</p></div><h3>GET THE BOOK</h3><button class="btn-primary" onclick="alert('→ Digistore24')">EBOOK — $9.99</button><button class="btn-secondary" onclick="alert('→ Digistore24')">PAPERBACK — $16.99</button><button class="btn-secondary" onclick="alert('→ Digistore24')">PREMIUM BUNDLE — $25</button></div></div>
+<div class="panel-overlay" id="panel-wig"><div class="panel"><button class="panel-close" onclick="closePanel('wig')">&times;</button><h2>CARRY ME</h2><div class="waitlist-tag">COMING SOON</div><p>The red wig on the shelf is watching you.</p><h3>WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-wig"><button onclick="captureEmail('wig')">NOTIFY ME</button></div></div></div>
+<div class="panel-overlay" id="panel-mirror"><div class="panel"><button class="panel-close" onclick="closePanel('mirror')">&times;</button><h2>BOOK 3</h2><div class="waitlist-tag">COMING SOON</div><p>The mirror shows no reflection.</p><h3>WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-mirror"><button onclick="captureEmail('mirror')">NOTIFY ME</button></div></div></div>
+<div class="panel-overlay" id="panel-box"><div class="panel"><button class="panel-close" onclick="closePanel('box')">&times;</button><h2>LAY ME</h2><div class="waitlist-tag">COMING SOON</div><p>Inside the box: a tarot deck. Every card has a name.</p><h3>WAITLIST</h3><div class="email-form"><input type="email" placeholder="your@email.com" id="email-box"><button onclick="captureEmail('box')">NOTIFY ME</button></div></div></div>
+<div class="panel-overlay" id="panel-glove"><div class="panel"><button class="panel-close" onclick="closePanel('glove')">&times;</button><h2 style="color:var(--ash)">THE GLOVE</h2><p style="font-style:italic;color:var(--gold-dim);">You noticed. Most don't.</p><p>The glove lay on the lowest shelf, forgotten or deliberately hidden. Black kid leather, the left hand only.</p><p>A woman had come in asking for something to hold. He sold her the glove. She never dropped anything again. But she also couldn't let go.</p><p>She returned the glove on a Thursday. Her fingers were raw.</p><p>"Keep it," she said. "Some things hold too tight."</p><p style="text-align:center;color:var(--ash);margin-top:20px;font-size:13px;letter-spacing:3px;">— A NAMENLOS SHORT STORY —</p></div></div>
+<div class="panel-overlay" id="panel-shopkeeper"><div class="panel"><button class="panel-close" onclick="closePanel('shopkeeper')">&times;</button><h2 style="font-size:18px">THE SHOPKEEPER</h2><p id="dialog-text" style="font-style:italic;min-height:60px;"></p><div id="dialog-choices" style="margin-top:20px;"></div></div></div>
+<div class="panel-overlay" id="panel-wall"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('wall')">&times;</button><h2>THE WALL</h2><p style="color:var(--ash);font-size:14px;">Names of The Nameless Circle.</p><div style="font-family:var(--font-typewriter);color:var(--bone);font-size:13px;line-height:2.2;"><span style="color:var(--ash)">Be the first.</span></div><button class="btn-primary" style="margin-top:24px" onclick="closePanel('wall');setTimeout(openCoinShop,300)">JOIN — $4.99/mo</button></div></div>
+<div class="panel-overlay" id="panel-popcorn"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('popcorn')">&times;</button><h2 style="color:var(--neon-red)">POPCORN</h2><p>Every bucket comes with a secret.</p><div style="display:flex;flex-direction:column;gap:12px;margin-top:16px"><div class="coin-pkg" onclick="buyPopcorn('small')"><div><div class="pkg-name">SMALL</div><div class="pkg-note">Deleted scene</div></div><div class="pkg-price">1 coin</div></div><div class="coin-pkg" onclick="buyPopcorn('large')"><div><div class="pkg-name">LARGE</div><div class="pkg-note">Alt scene + teaser</div></div><div class="pkg-price">2 coins</div></div><div class="coin-pkg" onclick="buyPopcorn('combo')"><div><div class="pkg-name">COMBO</div><div class="pkg-note">All + soundtrack</div></div><div class="pkg-price">3 coins</div></div></div></div></div>
 <div class="panel-overlay" id="panel-wc"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('wc')">&times;</button><div id="wc-content"></div></div></div>
-<div class="panel-overlay" id="panel-art"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('art')">&times;</button><h2>ART</h2><div style="background:#111;height:300px;display:flex;align-items:center;justify-content:center;border:1px solid #222;margin-bottom:16px"><span style="color:var(--ash);font-family:var(--font-display);font-size:11px;letter-spacing:2px">PREVIEW · WATERMARKED</span></div><button class="btn-primary" onclick="buyArt()">DOWNLOAD HQ — 1 COIN</button></div></div>
-<div class="panel-overlay" id="panel-episode"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('episode')">&times;</button><h2 id="episode-title">EPISODE 1</h2><div style="background:#000;height:300px;display:flex;align-items:center;justify-content:center;border:1px solid #222;margin-bottom:16px"><span style="color:var(--ash);font-family:var(--font-display);font-size:11px;letter-spacing:2px">VIDEO PLAYER<br><br>YouTube iframe here</span></div></div></div>
-<div class="panel-overlay" id="panel-secret-code"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('secret-code')">&times;</button><p style="font-style:italic;margin-bottom:20px">"There is a room below the cinema. Not everyone finds it. The word is different."</p><input type="text" id="secret-code-input" placeholder="_ _ _ _ _ _ _" autocomplete="off" spellcheck="false" style="background:transparent;border:none;border-bottom:1px solid var(--ash);color:var(--bone);font-family:var(--font-typewriter);font-size:22px;text-align:center;width:200px;padding:8px;outline:none"><div id="secret-code-error" style="margin-top:16px;color:var(--ash);font-size:14px;font-style:italic"></div></div></div>
-<div class="panel-overlay" id="panel-secret"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('secret')">&times;</button><h2 style="color:var(--blood);text-shadow:0 0 20px rgba(139,0,0,0.4)">THE ROOM BELOW</h2><p style="font-style:italic">You found it. Not everyone does.</p><div style="margin-top:24px;text-align:left" id="secret-content"></div></div></div>
+<div class="panel-overlay" id="panel-art"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('art')">&times;</button><h2>ART</h2><div style="background:#111;height:300px;display:flex;align-items:center;justify-content:center;border:1px solid #222;margin-bottom:16px"><span style="color:var(--ash);font-family:var(--font-display);font-size:11px;letter-spacing:2px">PREVIEW</span></div><button class="btn-primary" onclick="buyArt()">DOWNLOAD HQ — 1 COIN</button></div></div>
+<div class="panel-overlay" id="panel-episode"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('episode')">&times;</button><h2 id="episode-title">EPISODE 1</h2><div style="background:#000;height:300px;display:flex;align-items:center;justify-content:center;border:1px solid #222"><span style="color:var(--ash);font-family:var(--font-display);font-size:11px;letter-spacing:2px">VIDEO PLAYER</span></div></div></div>
+<div class="panel-overlay" id="panel-secret-code"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('secret-code')">&times;</button><p style="font-style:italic;margin-bottom:20px">"There is a room below the cinema. Not everyone finds it. The word is different."</p><input type="text" id="secret-code-input" placeholder="_ _ _ _ _ _" autocomplete="off" spellcheck="false" style="background:transparent;border:none;border-bottom:1px solid var(--ash);color:var(--bone);font-family:var(--font-typewriter);font-size:22px;text-align:center;width:200px;padding:8px;outline:none"><div id="secret-code-error" style="margin-top:16px;color:var(--ash);font-size:14px;font-style:italic"></div></div></div>
+<div class="panel-overlay" id="panel-secret"><div class="panel" style="text-align:center"><button class="panel-close" onclick="closePanel('secret')">&times;</button><h2 style="color:var(--blood)">THE ROOM BELOW</h2><p style="font-style:italic">You found it. Not everyone does.</p><div style="margin-top:24px;text-align:left" id="secret-content"></div></div></div>
 
 <script>
-const S={coins:parseInt(localStorage.getItem('namenlos_coins')||'0'),isCircle:localStorage.getItem('namenlos_circle')==='true',knownToShop:localStorage.getItem('namenlos_known')==='true',fromAd:new URLSearchParams(location.search).has('r'),codeAttempts:0,scene:'code',email:localStorage.getItem('namenlos_email'),wcVisits:parseInt(localStorage.getItem('namenlos_wc')||'0'),dialogStep:0,mouse:new THREE.Vector2(),raycaster:new THREE.Raycaster(),hovered:null,clickables:{},clock:new THREE.Clock()};
+// ═══ HELPER: create mesh with position ═══
+function mk(geo, mat, x, y, z) {
+  var m = new THREE.Mesh(geo, mat);
+  if (x !== undefined) m.position.set(x, y, z);
+  return m;
+}
+function mkLight(color, intensity, dist, x, y, z) {
+  var l = new THREE.PointLight(color, intensity, dist);
+  l.position.set(x, y, z);
+  return l;
+}
 
-// RENDERER
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=0.6;
+// ═══ STATE ═══
+var S = {
+  coins: parseInt(localStorage.getItem('namenlos_coins') || '0'),
+  isCircle: localStorage.getItem('namenlos_circle') === 'true',
+  knownToShop: localStorage.getItem('namenlos_known') === 'true',
+  fromAd: new URLSearchParams(location.search).has('r'),
+  codeAttempts: 0,
+  scene: 'code',
+  email: localStorage.getItem('namenlos_email'),
+  wcVisits: parseInt(localStorage.getItem('namenlos_wc') || '0'),
+  dialogStep: 0,
+  mouse: new THREE.Vector2(),
+  raycaster: new THREE.Raycaster(),
+  hovered: null,
+  clickables: {},
+  clock: new THREE.Clock()
+};
+
+// ═══ RENDERER ═══
+var renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.6;
 document.body.appendChild(renderer.domElement);
-renderer.domElement.style.cssText='position:fixed;inset:0;z-index:1';
+renderer.domElement.style.cssText = 'position:fixed;inset:0;z-index:1';
 
-const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,100);
-let currentScene=null;
+var camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+var currentScene = null;
 
-window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight)});
+window.addEventListener('resize', function() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-// MATERIALS
-const M={
-  darkWall:new THREE.MeshStandardMaterial({color:0x0f0f15,roughness:0.9}),
-  wetGround:new THREE.MeshStandardMaterial({color:0x0a0a12,roughness:0.15,metalness:0.4}),
-  brick:new THREE.MeshStandardMaterial({color:0x1a1510,roughness:0.85}),
-  wood:new THREE.MeshStandardMaterial({color:0x1a1510,roughness:0.7}),
-  darkWood:new THREE.MeshStandardMaterial({color:0x0f0d0a,roughness:0.8}),
-  bone:new THREE.MeshStandardMaterial({color:0xc8b89a,roughness:0.4}),
-  gold:new THREE.MeshStandardMaterial({color:0xc9a84c,roughness:0.3,metalness:0.7}),
-  leather:new THREE.MeshStandardMaterial({color:0x1a0e08,roughness:0.6}),
-  red:new THREE.MeshStandardMaterial({color:0xcc2233,roughness:0.5}),
-  mirror:new THREE.MeshStandardMaterial({color:0x334455,roughness:0.1,metalness:0.8}),
-  neonRed:new THREE.MeshBasicMaterial({color:0xff2a2a}),
-  neonPink:new THREE.MeshBasicMaterial({color:0xff4466}),
-  stone:new THREE.MeshStandardMaterial({color:0x12100e,roughness:0.95}),
-  lamp:new THREE.MeshBasicMaterial({color:0xf5c76a}),
-  cinemaWall:new THREE.MeshStandardMaterial({color:0x1a1212,roughness:0.85}),
-  seat:new THREE.MeshStandardMaterial({color:0x1a1515,roughness:0.8}),
-  seatOcc:new THREE.MeshStandardMaterial({color:0x100a0a,roughness:0.9}),
+// ═══ MATERIALS ═══
+var M = {
+  darkWall: new THREE.MeshStandardMaterial({ color: 0x0f0f15, roughness: 0.9 }),
+  wetGround: new THREE.MeshStandardMaterial({ color: 0x0a0a12, roughness: 0.15, metalness: 0.4 }),
+  brick: new THREE.MeshStandardMaterial({ color: 0x1a1510, roughness: 0.85 }),
+  wood: new THREE.MeshStandardMaterial({ color: 0x1a1510, roughness: 0.7 }),
+  darkWood: new THREE.MeshStandardMaterial({ color: 0x0f0d0a, roughness: 0.8 }),
+  bone: new THREE.MeshStandardMaterial({ color: 0xc8b89a, roughness: 0.4 }),
+  gold: new THREE.MeshStandardMaterial({ color: 0xc9a84c, roughness: 0.3, metalness: 0.7 }),
+  leather: new THREE.MeshStandardMaterial({ color: 0x1a0e08, roughness: 0.6 }),
+  red: new THREE.MeshStandardMaterial({ color: 0xcc2233, roughness: 0.5 }),
+  mirror: new THREE.MeshStandardMaterial({ color: 0x334455, roughness: 0.1, metalness: 0.8 }),
+  neonRed: new THREE.MeshBasicMaterial({ color: 0xff2a2a }),
+  neonPink: new THREE.MeshBasicMaterial({ color: 0xff4466 }),
+  stone: new THREE.MeshStandardMaterial({ color: 0x12100e, roughness: 0.95 }),
+  lamp: new THREE.MeshBasicMaterial({ color: 0xf5c76a }),
+  cinemaWall: new THREE.MeshStandardMaterial({ color: 0x1a1212, roughness: 0.85 }),
+  seat: new THREE.MeshStandardMaterial({ color: 0x1a1515, roughness: 0.8 }),
+  seatOcc: new THREE.MeshStandardMaterial({ color: 0x100a0a, roughness: 0.9 })
 };
 
 // ═══ BUILD ALLEY ═══
-function buildAlley(){
-  const s=new THREE.Scene();
-  s.fog=new THREE.FogExp2(0x050510,0.12);
-  s.background=new THREE.Color(0x050510);
-  S.clickables.alley=[];
-  // Ground
-  const alleyGround=new THREE.Mesh(new THREE.PlaneGeometry(4,24),M.wetGround);alleyGround.rotation.x=-Math.PI/2;s.add(alleyGround);
-  // Walls
-  const wg=new THREE.BoxGeometry(0.4,6,24);
-  const wl=new THREE.Mesh(wg,M.darkWall);wl.position.set(-2,3,0);s.add(wl);
-  const wr=new THREE.Mesh(wg,M.darkWall);wr.position.set(2,3,0);s.add(wr);
-  // Neon left
-  const nb=new THREE.Mesh(new THREE.BoxGeometry(1,0.06,0.06),M.neonRed);nb.position.set(-1.75,3.8,-4);s.add(nb);
-  const _o1=new THREE.PointLight(0xff2a2a,3,8);_o1.position.set(-1.75,3.5,-4);s.add(_o1);
-  // Neon right "PAR...ISE"
-  const nr=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.04,0.04),M.neonPink);nr.position.set(1.7,3.4,-5);s.add(nr);
-  const _o2=new THREE.PointLight(0xff4466,2,6);_o2.position.set(1.7,3.2,-5);s.add(_o2);
-  // Pipes
-  for(let i=0;i<5;i++){const p=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,6,6),new THREE.MeshStandardMaterial({color:0x1a1a1a,metalness:0.4,roughness:0.6}));p.position.set(-1.75,3,-3+i*2.5);s.add(p);}
-  // Puddles
-  for(let i=0;i<4;i++){const p=new THREE.Mesh(new THREE.CircleGeometry(0.25+Math.random()*0.35,12),new THREE.MeshStandardMaterial({color:0x0a0a18,roughness:0.05,metalness:0.5,transparent:true,opacity:0.6}));p.rotation.x=-Math.PI/2;p.position.set(-0.6+Math.random()*1.2,0.005,-2+i*3);s.add(p);}
-  // Door
-  const door=new THREE.Mesh(new THREE.BoxGeometry(1.2,2.6,0.2),M.darkWood);
-  door.position.set(0,1.3,-11);door.castShadow=true;
-  door.userData={id:'door',tooltip:'ENTER THE SHOP'};
-  s.add(door);S.clickables.alley.push(door);
-  // Handle
-  const h=new THREE.Mesh(new THREE.SphereGeometry(0.06,12,12),M.gold);h.position.set(0.38,1.2,-10.88);s.add(h);
-  // Warm door light
-  const _o3=new THREE.PointLight(0xf5c76a,1,5);_o3.position.set(0,2.2,-10);s.add(_o3);
-  s.add(new THREE.AmbientLight(0x111122,0.25));
-  camera.position.set(0,1.6,1);camera.lookAt(0,1.4,-11);
+function buildAlley() {
+  var s = new THREE.Scene();
+  s.fog = new THREE.FogExp2(0x050510, 0.12);
+  s.background = new THREE.Color(0x050510);
+  S.clickables.alley = [];
+
+  var ground = mk(new THREE.PlaneGeometry(4, 24), M.wetGround);
+  ground.rotation.x = -Math.PI / 2;
+  s.add(ground);
+
+  s.add(mk(new THREE.BoxGeometry(0.4, 6, 24), M.darkWall, -2, 3, 0));
+  s.add(mk(new THREE.BoxGeometry(0.4, 6, 24), M.darkWall, 2, 3, 0));
+
+  s.add(mk(new THREE.BoxGeometry(1, 0.06, 0.06), M.neonRed, -1.75, 3.8, -4));
+  s.add(mkLight(0xff2a2a, 3, 8, -1.75, 3.5, -4));
+  s.add(mk(new THREE.BoxGeometry(1.4, 0.04, 0.04), M.neonPink, 1.7, 3.4, -5));
+  s.add(mkLight(0xff4466, 2, 6, 1.7, 3.2, -5));
+
+  for (var i = 0; i < 5; i++) {
+    s.add(mk(new THREE.CylinderGeometry(0.025, 0.025, 6, 6), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, metalness: 0.4, roughness: 0.6 }), -1.75, 3, -3 + i * 2.5));
+  }
+  for (var i = 0; i < 4; i++) {
+    var puddle = mk(new THREE.CircleGeometry(0.25 + Math.random() * 0.35, 12), new THREE.MeshStandardMaterial({ color: 0x0a0a18, roughness: 0.05, metalness: 0.5, transparent: true, opacity: 0.6 }), -0.6 + Math.random() * 1.2, 0.005, -2 + i * 3);
+    puddle.rotation.x = -Math.PI / 2;
+    s.add(puddle);
+  }
+
+  var door = mk(new THREE.BoxGeometry(1.2, 2.6, 0.2), M.darkWood, 0, 1.3, -11);
+  door.castShadow = true;
+  door.userData = { id: 'door', tooltip: 'ENTER THE SHOP' };
+  s.add(door);
+  S.clickables.alley.push(door);
+
+  s.add(mk(new THREE.SphereGeometry(0.06, 12, 12), M.gold, 0.38, 1.2, -10.88));
+  s.add(mkLight(0xf5c76a, 1, 5, 0, 2.2, -10));
+  s.add(new THREE.AmbientLight(0x111122, 0.25));
+
+  camera.position.set(0, 1.6, 1);
+  camera.lookAt(0, 1.4, -11);
   return s;
 }
 
 // ═══ BUILD SHOP ═══
-function buildShop(){
-  const s=new THREE.Scene();
-  s.fog=new THREE.FogExp2(0x0e0c0a,0.1);
-  s.background=new THREE.Color(0x0e0c0a);
-  S.clickables.shop=[];
-  // Floor/ceiling/walls
-  const shopFloor=new THREE.Mesh(new THREE.PlaneGeometry(10,10),M.stone);shopFloor.rotation.x=-Math.PI/2;s.add(shopFloor);
-  const shopCeil=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshStandardMaterial({color:0x0a0908}));shopCeil.rotation.x=Math.PI/2;shopCeil.position.set(0,3.2,0);s.add(shopCeil);
-  const wm=M.brick;
-  const _o4=new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm);_o4.position.set(0,1.6,-5);s.add(_o4);
-  const _o5=new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm);_o5.position.set(-5,1.6,0);s.add(_o5);
-  const _o6=new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm);_o6.position.set(5,1.6,0);s.add(_o6);
-  const _o7=new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm);_o7.position.set(0,1.6,5);s.add(_o7);
+function buildShop() {
+  var s = new THREE.Scene();
+  s.fog = new THREE.FogExp2(0x0e0c0a, 0.1);
+  s.background = new THREE.Color(0x0e0c0a);
+  S.clickables.shop = [];
 
-  // Lamp
-  const lb=new THREE.Mesh(new THREE.SphereGeometry(0.1,12,12),M.lamp);lb.position.set(0,2.6,0);s.add(lb);
-  const lc=new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,0.5,4),new THREE.MeshStandardMaterial({color:0x333333}));lc.position.set(0,2.85,0);s.add(lc);
-  const ll=new THREE.PointLight(0xf5c76a,3,9);ll.position.set(0,2.5,0);ll.castShadow=true;ll.shadow.mapSize.set(512,512);s.add(ll);
+  var floor = mk(new THREE.PlaneGeometry(10, 10), M.stone);
+  floor.rotation.x = -Math.PI / 2;
+  s.add(floor);
 
-  // Counter
-  const _o8=new THREE.Mesh(new THREE.BoxGeometry(4.5,0.12,0.9),M.wood);_o8.position.set(0,1,-2);_o8.castShadow=true;s.add(_o8);
-  const _o9=new THREE.Mesh(new THREE.BoxGeometry(0.1,1,0.1),M.darkWood);_o9.position.set(x,0.5,-2);for(let x of[-2,2]){s.add(_o9);
+  var ceil = mk(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({ color: 0x0a0908 }), 0, 3.2, 0);
+  ceil.rotation.x = Math.PI / 2;
+  s.add(ceil);
 
-  // Shelves
-  const _o10=new THREE.Mesh(new THREE.BoxGeometry(7,0.06,0.6),M.wood);_o10.position.set(0,y,-4.65);_o10.castShadow=true;for(let y of[1.6,2.3]){s.add(_o10);
+  s.add(mk(new THREE.BoxGeometry(10, 3.2, 0.2), M.brick, 0, 1.6, -5));
+  s.add(mk(new THREE.BoxGeometry(0.2, 3.2, 10), M.brick, -5, 1.6, 0));
+  s.add(mk(new THREE.BoxGeometry(0.2, 3.2, 10), M.brick, 5, 1.6, 0));
+  s.add(mk(new THREE.BoxGeometry(10, 3.2, 0.2), M.brick, 0, 1.6, 5));
+
+  s.add(mk(new THREE.SphereGeometry(0.1, 12, 12), M.lamp, 0, 2.6, 0));
+  s.add(mk(new THREE.CylinderGeometry(0.008, 0.008, 0.5, 4), new THREE.MeshStandardMaterial({ color: 0x333333 }), 0, 2.85, 0));
+  var ll = mkLight(0xf5c76a, 3, 9, 0, 2.5, 0);
+  ll.castShadow = true;
+  s.add(ll);
+
+  var counter = mk(new THREE.BoxGeometry(4.5, 0.12, 0.9), M.wood, 0, 1, -2);
+  counter.castShadow = true;
+  s.add(counter);
+  s.add(mk(new THREE.BoxGeometry(0.1, 1, 0.1), M.darkWood, -2, 0.5, -2));
+  s.add(mk(new THREE.BoxGeometry(0.1, 1, 0.1), M.darkWood, 2, 0.5, -2));
+
+  var shelf1 = mk(new THREE.BoxGeometry(7, 0.06, 0.6), M.wood, 0, 1.6, -4.65);
+  shelf1.castShadow = true;
+  s.add(shelf1);
+  var shelf2 = mk(new THREE.BoxGeometry(7, 0.06, 0.6), M.wood, 0, 2.3, -4.65);
+  shelf2.castShadow = true;
+  s.add(shelf2);
 
   // WHIP
-  const wg=new THREE.Group();
-  const wh=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.045,0.35,8),M.bone);wh.position.y=0.18;wg.add(wh);
-  for(let i=0;i<7;i++){const seg=new THREE.Mesh(new THREE.CylinderGeometry(0.018-i*0.001,0.018-i*0.0015,0.22,6),M.leather);seg.position.set(Math.sin(i*0.35)*0.06,0.35+i*0.2,Math.cos(i*0.25)*0.04);seg.rotation.z=Math.sin(i*0.5)*0.25;wg.add(seg);}
-  wg.position.set(0,2.33,-4.4);wg.userData={id:'whip',tooltip:'SKIN ME'};s.add(wg);S.clickables.shop.push(wg);
-  const _o11=new THREE.PointLight(0x8b0000,0.6,2);_o11.position.set(0,2.3,-4.4);s.add(_o11);
+  var wg = new THREE.Group();
+  var wh = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.045, 0.35, 8), M.bone);
+  wh.position.y = 0.18;
+  wg.add(wh);
+  for (var i = 0; i < 7; i++) {
+    var seg = new THREE.Mesh(new THREE.CylinderGeometry(0.018 - i * 0.001, 0.018 - i * 0.0015, 0.22, 6), M.leather);
+    seg.position.set(Math.sin(i * 0.35) * 0.06, 0.35 + i * 0.2, Math.cos(i * 0.25) * 0.04);
+    seg.rotation.z = Math.sin(i * 0.5) * 0.25;
+    wg.add(seg);
+  }
+  wg.position.set(0, 2.33, -4.4);
+  wg.userData = { id: 'whip', tooltip: 'SKIN ME' };
+  s.add(wg);
+  S.clickables.shop.push(wg);
+  s.add(mkLight(0x8b0000, 0.6, 2, 0, 2.3, -4.4));
 
   // WIG
-  const wig=new THREE.Mesh(new THREE.SphereGeometry(0.2,16,12,0,Math.PI*2,0,Math.PI*0.7),M.red);
-  wig.position.set(-1.8,2.38,-4.4);wig.userData={id:'wig',tooltip:'CARRY ME'};s.add(wig);S.clickables.shop.push(wig);
+  var wig = mk(new THREE.SphereGeometry(0.2, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.7), M.red, -1.8, 2.38, -4.4);
+  wig.userData = { id: 'wig', tooltip: 'CARRY ME' };
+  s.add(wig);
+  S.clickables.shop.push(wig);
 
   // MIRROR
-  const mm=new THREE.Mesh(new THREE.CircleGeometry(0.17,16),M.mirror);mm.position.set(1.5,2.35,-4.55);
-  mm.userData={id:'mirror',tooltip:'BOOK 3'};s.add(mm);S.clickables.shop.push(mm);
-  const mf=new THREE.Mesh(new THREE.RingGeometry(0.16,0.2,16),M.gold);mf.position.set(1.5,2.35,-4.54);s.add(mf);
+  var mm = mk(new THREE.CircleGeometry(0.17, 16), M.mirror, 1.5, 2.35, -4.55);
+  mm.userData = { id: 'mirror', tooltip: 'BOOK 3' };
+  s.add(mm);
+  S.clickables.shop.push(mm);
+  s.add(mk(new THREE.RingGeometry(0.16, 0.2, 16), M.gold, 1.5, 2.35, -4.54));
 
   // BOX
-  const bg=new THREE.Group();
-  const _o12=new THREE.Mesh(new THREE.BoxGeometry(0.28,0.16,0.2),M.darkWood);_o12.position.set(0,0.08,0);bg.add(_o12);
-  const _o13=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.03,0.22),M.wood);_o13.position.set(0,0.17,0);bg.add(_o13);
-  bg.position.set(-0.6,1.63,-4.4);bg.userData={id:'box',tooltip:'LAY ME'};s.add(bg);S.clickables.shop.push(bg);
+  var bg = new THREE.Group();
+  bg.add(mk(new THREE.BoxGeometry(0.28, 0.16, 0.2), M.darkWood, 0, 0.08, 0));
+  bg.add(mk(new THREE.BoxGeometry(0.3, 0.03, 0.22), M.wood, 0, 0.17, 0));
+  bg.position.set(-0.6, 1.63, -4.4);
+  bg.userData = { id: 'box', tooltip: 'LAY ME' };
+  s.add(bg);
+  S.clickables.shop.push(bg);
 
   // GLOVE
-  const gg=new THREE.Group();
-  const gm=new THREE.MeshStandardMaterial({color:0x111111,roughness:0.7});
-  gg.add(new THREE.Mesh(new THREE.BoxGeometry(0.1,0.16,0.04),gm));
-  for(let i=0;i<4;i++){const f=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.01,0.09,6),gm);f.position.set(-0.03+i*0.02,0.11,0);f.rotation.z=(i-1.5)*0.1;gg.add(f);}
-  gg.position.set(2.5,1.66,-4.4);gg.userData={id:'glove',tooltip:''};s.add(gg);S.clickables.shop.push(gg);
+  var gg = new THREE.Group();
+  var gm = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.7 });
+  gg.add(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.16, 0.04), gm));
+  for (var i = 0; i < 4; i++) {
+    var f = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.01, 0.09, 6), gm);
+    f.position.set(-0.03 + i * 0.02, 0.11, 0);
+    f.rotation.z = (i - 1.5) * 0.1;
+    gg.add(f);
+  }
+  gg.position.set(2.5, 1.66, -4.4);
+  gg.userData = { id: 'glove', tooltip: '' };
+  s.add(gg);
+  S.clickables.shop.push(gg);
 
   // SHOPKEEPER
-  const sk=new THREE.Group();
-  const _o14=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.28,1.3,8),new THREE.MeshStandardMaterial({color:0x0e0c0a,roughness:0.9}));_o14.position.set(0,0.65,0);sk.add(_o14);
-  const _o15=new THREE.Mesh(new THREE.SphereGeometry(0.16,12,12),new THREE.MeshStandardMaterial({color:0x2a1a10,roughness:0.7}));_o15.position.set(0,1.42,0);sk.add(_o15);
-  const _o16=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),M.gold);_o16.position.set(x,1.45,0.14);for(let x of[-0.045,0.045]){sk.add(_o16);
-  sk.position.set(0,0,-3.2);sk.userData={id:'shopkeeper',tooltip:'THE SHOPKEEPER'};s.add(sk);S.clickables.shop.push(sk);
+  var sk = new THREE.Group();
+  sk.add(mk(new THREE.CylinderGeometry(0.22, 0.28, 1.3, 8), new THREE.MeshStandardMaterial({ color: 0x0e0c0a, roughness: 0.9 }), 0, 0.65, 0));
+  sk.add(mk(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshStandardMaterial({ color: 0x2a1a10, roughness: 0.7 }), 0, 1.42, 0));
+  sk.add(mk(new THREE.SphereGeometry(0.018, 8, 8), M.gold, -0.045, 1.45, 0.14));
+  sk.add(mk(new THREE.SphereGeometry(0.018, 8, 8), M.gold, 0.045, 1.45, 0.14));
+  sk.position.set(0, 0, -3.2);
+  sk.userData = { id: 'shopkeeper', tooltip: 'THE SHOPKEEPER' };
+  s.add(sk);
+  S.clickables.shop.push(sk);
 
   // WALL OF NAMES
-  const wp=new THREE.Mesh(new THREE.BoxGeometry(0.02,1.2,1),new THREE.MeshStandardMaterial({color:0x15120f,roughness:0.85}));
-  wp.position.set(4.88,1.8,1.5);wp.userData={id:'wall',tooltip:'THE WALL OF NAMES'};s.add(wp);S.clickables.shop.push(wp);
+  var wp = mk(new THREE.BoxGeometry(0.02, 1.2, 1), new THREE.MeshStandardMaterial({ color: 0x15120f, roughness: 0.85 }), 4.88, 1.8, 1.5);
+  wp.userData = { id: 'wall', tooltip: 'THE WALL OF NAMES' };
+  s.add(wp);
+  S.clickables.shop.push(wp);
 
   // STAIRS
-  const sg=new THREE.Group();
-  const _o17=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood);_o17.position.set(0,-i*0.12,3.8+i*0.3);for(let i=0;i<8;i++){sg.add(_o17);
-  sg.userData={id:'stairs',tooltip:'CINEMA BELOW ↓'};s.add(sg);S.clickables.shop.push(sg);
-  const _o18=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.05,2.5),new THREE.MeshStandardMaterial({color:0x080606}));_o18.position.set(0,-0.01,4.5);s.add(_o18);
+  var sg = new THREE.Group();
+  for (var i = 0; i < 8; i++) {
+    sg.add(mk(new THREE.BoxGeometry(1.2, 0.08, 0.3), M.darkWood, 0, -i * 0.12, 3.8 + i * 0.3));
+  }
+  sg.userData = { id: 'stairs', tooltip: 'CINEMA BELOW ↓' };
+  s.add(sg);
+  S.clickables.shop.push(sg);
 
-  s.add(new THREE.AmbientLight(0x1a1510,0.15));
-  const _o19=new THREE.PointLight(0x8a7234,0.4,7);_o19.position.set(3.5,1.5,2);s.add(_o19);
-  camera.position.set(0,1.6,3.8);camera.lookAt(0,1.3,-3);
+  s.add(mk(new THREE.BoxGeometry(1.4, 0.05, 2.5), new THREE.MeshStandardMaterial({ color: 0x080606 }), 0, -0.01, 4.5));
+  s.add(new THREE.AmbientLight(0x1a1510, 0.15));
+  s.add(mkLight(0x8a7234, 0.4, 7, 3.5, 1.5, 2));
+
+  camera.position.set(0, 1.6, 3.8);
+  camera.lookAt(0, 1.3, -3);
   return s;
 }
 
 // ═══ BUILD CINEMA ═══
-function buildCinema(){
-  const s=new THREE.Scene();
-  s.fog=new THREE.FogExp2(0x0a0606,0.08);
-  s.background=new THREE.Color(0x0a0606);
-  S.clickables.cinema=[];
-  const cm=M.cinemaWall;
-  // Room
-  const cinFloor=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x0d0808,roughness:0.9}));cinFloor.rotation.x=-Math.PI/2;s.add(cinFloor);
-  const _o20=new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm);_o20.position.set(0,2.25,-8);s.add(_o20);
-  const _o21=new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm);_o21.position.set(-7,2.25,0);s.add(_o21);
-  const _o22=new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm);_o22.position.set(7,2.25,0);s.add(_o22);
-  const _o23=new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm);_o23.position.set(0,2.25,8);s.add(_o23);
-  const cinCeil=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x080505}));cinCeil.position.set(0,4.5,0);cinCeil.rotation.x=Math.PI/2;s.add(cinCeil);
+function buildCinema() {
+  var s = new THREE.Scene();
+  s.fog = new THREE.FogExp2(0x0a0606, 0.08);
+  s.background = new THREE.Color(0x0a0606);
+  S.clickables.cinema = [];
 
-  // Neon strip
-  const _o24=new THREE.Mesh(new THREE.BoxGeometry(12,0.05,0.05),M.neonRed);_o24.position.set(0,4.2,-7.8);s.add(_o24);
-  const _o25=new THREE.PointLight(0xff2a2a,3,10);_o25.position.set(0,4,-7);s.add(_o25);
+  var cinFloor = mk(new THREE.PlaneGeometry(14, 16), new THREE.MeshStandardMaterial({ color: 0x0d0808, roughness: 0.9 }));
+  cinFloor.rotation.x = -Math.PI / 2;
+  s.add(cinFloor);
 
-  // Screen
-  const scr=new THREE.Mesh(new THREE.BoxGeometry(6,3.2,0.1),new THREE.MeshStandardMaterial({color:0x111111,roughness:0.5,emissive:0x060608,emissiveIntensity:0.5}));
-  scr.position.set(0,2.6,-7.5);scr.userData={id:'screen',tooltip:'▶ EPISODE 1 — FREE'};s.add(scr);S.clickables.cinema.push(scr);
-  const _o26=new THREE.PointLight(0x333344,0.6,6);_o26.position.set(0,2.5,-5.5);s.add(_o26);
+  s.add(mk(new THREE.BoxGeometry(14, 4.5, 0.2), M.cinemaWall, 0, 2.25, -8));
+  s.add(mk(new THREE.BoxGeometry(0.2, 4.5, 16), M.cinemaWall, -7, 2.25, 0));
+  s.add(mk(new THREE.BoxGeometry(0.2, 4.5, 16), M.cinemaWall, 7, 2.25, 0));
+  s.add(mk(new THREE.BoxGeometry(14, 4.5, 0.2), M.cinemaWall, 0, 2.25, 8));
 
-  // Seats
-  for(let r=0;r<5;r++)for(let c=0;c<8;c++){
-    const occ=Math.random()<0.3;
-    const seat=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.45,0.45),occ?M.seatOcc:M.seat);
-    seat.position.set(-3.5+c*1,0.22+r*0.06,-2.5+r*1.3);seat.castShadow=true;s.add(seat);
-    const _o27=new THREE.Mesh(new THREE.SphereGeometry(0.16,8,8),new THREE.MeshStandardMaterial({color:0x0a0606}));_o27.position.set(seat.position.x,seat.position.y+0.38,seat.position.z);if(occ){s.add(_o27);
-      const _o28=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.05,0.12,6),new THREE.MeshStandardMaterial({color:0xcc2222}));_o28.position.set(seat.position.x+0.22,seat.position.y+0.28,seat.position.z);if(Math.random()<0.4){s.add(_o28);
+  var cinCeil = mk(new THREE.PlaneGeometry(14, 16), new THREE.MeshStandardMaterial({ color: 0x080505 }), 0, 4.5, 0);
+  cinCeil.rotation.x = Math.PI / 2;
+  s.add(cinCeil);
+
+  s.add(mk(new THREE.BoxGeometry(12, 0.05, 0.05), M.neonRed, 0, 4.2, -7.8));
+  s.add(mkLight(0xff2a2a, 3, 10, 0, 4, -7));
+
+  var scr = mk(new THREE.BoxGeometry(6, 3.2, 0.1), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.5, emissive: 0x060608, emissiveIntensity: 0.5 }), 0, 2.6, -7.5);
+  scr.userData = { id: 'screen', tooltip: '▶ EPISODE 1 — FREE' };
+  s.add(scr);
+  S.clickables.cinema.push(scr);
+  s.add(mkLight(0x333344, 0.6, 6, 0, 2.5, -5.5));
+
+  for (var r = 0; r < 5; r++) {
+    for (var c = 0; c < 8; c++) {
+      var occ = Math.random() < 0.3;
+      var seat = mk(new THREE.BoxGeometry(0.55, 0.45, 0.45), occ ? M.seatOcc : M.seat, -3.5 + c, 0.22 + r * 0.06, -2.5 + r * 1.3);
+      seat.castShadow = true;
+      s.add(seat);
+      if (occ) {
+        s.add(mk(new THREE.SphereGeometry(0.16, 8, 8), new THREE.MeshStandardMaterial({ color: 0x0a0606 }), seat.position.x, seat.position.y + 0.38, seat.position.z));
+        if (Math.random() < 0.4) {
+          s.add(mk(new THREE.CylinderGeometry(0.04, 0.05, 0.12, 6), new THREE.MeshStandardMaterial({ color: 0xcc2222 }), seat.position.x + 0.22, seat.position.y + 0.28, seat.position.z));
+        }
+      }
     }
   }
 
-  // Popcorn stand
-  const ps=new THREE.Group();
-  const _o29=new THREE.Mesh(new THREE.BoxGeometry(0.7,1.3,0.5),new THREE.MeshStandardMaterial({color:0xaa1111,roughness:0.5}));_o29.position.set(0,0.65,0);ps.add(_o29);
-  const _o30=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.06,0.6),new THREE.MeshStandardMaterial({color:0xcc2222}));_o30.position.set(0,1.33,0);ps.add(_o30);
-  ps.position.set(-5.8,0,0);ps.userData={id:'popcorn',tooltip:'POPCORN'};s.add(ps);S.clickables.cinema.push(ps);
+  // Popcorn
+  var ps = new THREE.Group();
+  ps.add(mk(new THREE.BoxGeometry(0.7, 1.3, 0.5), new THREE.MeshStandardMaterial({ color: 0xaa1111, roughness: 0.5 }), 0, 0.65, 0));
+  ps.add(mk(new THREE.BoxGeometry(0.8, 0.06, 0.6), new THREE.MeshStandardMaterial({ color: 0xcc2222 }), 0, 1.33, 0));
+  ps.position.set(-5.8, 0, 0);
+  ps.userData = { id: 'popcorn', tooltip: 'POPCORN' };
+  s.add(ps);
+  S.clickables.cinema.push(ps);
 
-  // WC door
-  const wc=new THREE.Mesh(new THREE.BoxGeometry(0.9,2.2,0.12),M.darkWood);
-  wc.position.set(6.3,1.1,0);wc.userData={id:'wc',tooltip:'WC — 1 COIN'};s.add(wc);S.clickables.cinema.push(wc);
+  // WC
+  var wc = mk(new THREE.BoxGeometry(0.9, 2.2, 0.12), M.darkWood, 6.3, 1.1, 0);
+  wc.userData = { id: 'wc', tooltip: 'WC — 1 COIN' };
+  s.add(wc);
+  S.clickables.cinema.push(wc);
 
-  // Art frames
-  for(let i=0;i<3;i++){
-    const f=new THREE.Mesh(new THREE.BoxGeometry(0.9,1.1,0.06),new THREE.MeshStandardMaterial({color:0x1a1818,roughness:0.7}));
-    f.position.set(-2.5+i*2.5,2.2,7.7);s.add(f);
-    const _o31=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.9,0.07),new THREE.MeshStandardMaterial({color:0x222020}));_o31.position.set(f.position.x,f.position.y,f.position.z+0.02);s.add(_o31);
-    if(i===0){f.userData={id:'art',tooltip:'ART — 1 COIN FOR HQ'};S.clickables.cinema.push(f);}
+  // Art
+  for (var i = 0; i < 3; i++) {
+    var fr = mk(new THREE.BoxGeometry(0.9, 1.1, 0.06), new THREE.MeshStandardMaterial({ color: 0x1a1818, roughness: 0.7 }), -2.5 + i * 2.5, 2.2, 7.7);
+    s.add(fr);
+    s.add(mk(new THREE.BoxGeometry(0.7, 0.9, 0.07), new THREE.MeshStandardMaterial({ color: 0x222020 }), fr.position.x, fr.position.y, fr.position.z + 0.02));
+    if (i === 0) { fr.userData = { id: 'art', tooltip: 'ART — 1 COIN' }; S.clickables.cinema.push(fr); }
   }
 
-  // Secret door (subtle)
-  const sd=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.9,0.06),new THREE.MeshStandardMaterial({color:0x0e0808}));
-  sd.position.set(5.5,0.45,-7.5);sd.userData={id:'secret',tooltip:'...'};s.add(sd);S.clickables.cinema.push(sd);
+  // Secret door
+  var sd = mk(new THREE.BoxGeometry(0.7, 0.9, 0.06), new THREE.MeshStandardMaterial({ color: 0x0e0808 }), 5.5, 0.45, -7.5);
+  sd.userData = { id: 'secret', tooltip: '...' };
+  s.add(sd);
+  S.clickables.cinema.push(sd);
 
   // Stairs up
-  const su=new THREE.Group();
-  const _o32=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood);_o32.position.set(0,i*0.15,7+i*0.3);for(let i=0;i<5;i++){su.add(_o32);
-  su.userData={id:'back-shop',tooltip:'↑ BACK TO SHOP'};s.add(su);S.clickables.cinema.push(su);
+  var su = new THREE.Group();
+  for (var i = 0; i < 5; i++) {
+    su.add(mk(new THREE.BoxGeometry(1.2, 0.08, 0.3), M.darkWood, 0, i * 0.15, 7 + i * 0.3));
+  }
+  su.userData = { id: 'back-shop', tooltip: '↑ BACK TO SHOP' };
+  s.add(su);
+  S.clickables.cinema.push(su);
 
-  s.add(new THREE.AmbientLight(0x150a0a,0.2));
-  const _o33=new THREE.PointLight(0x331111,0.6,8);_o33.position.set(-4.5,2.5,-3);s.add(_o33);
-  camera.position.set(0,2.2,6);camera.lookAt(0,1.8,-6);
+  s.add(new THREE.AmbientLight(0x150a0a, 0.2));
+  s.add(mkLight(0x331111, 0.6, 8, -4.5, 2.5, -3));
+  camera.position.set(0, 2.2, 6);
+  camera.lookAt(0, 1.8, -6);
   return s;
 }
 
 // ═══ SCENE SWITCH ═══
-function switchScene(name){
-  const ov=document.getElementById('transition-overlay');ov.classList.add('active');
-  const bb=document.getElementById('back-btn'),lb=document.getElementById('scene-label');
-  setTimeout(()=>{
-    S.scene=name;
-    if(name==='alley'){currentScene=buildAlley();bb.style.display='none';lb.textContent='ENTER THE SHOP';lb.style.opacity='1';setTimeout(()=>lb.style.opacity='0',3000);
-      if(S.knownToShop&&!S.fromAd){const w=document.getElementById('welcome-text');w.style.opacity='1';setTimeout(()=>w.style.opacity='0',3000);}
-    }else if(name==='shop'){currentScene=buildShop();bb.style.display='none';}
-    else if(name==='cinema'){currentScene=buildCinema();bb.style.display='block';bb.textContent='↑ SHOP';bb.onclick=()=>switchScene('shop');}
+function switchScene(name) {
+  var ov = document.getElementById('transition-overlay');
+  ov.classList.add('active');
+  var bb = document.getElementById('back-btn');
+  var lb = document.getElementById('scene-label');
+  setTimeout(function() {
+    S.scene = name;
+    if (name === 'alley') {
+      currentScene = buildAlley();
+      bb.style.display = 'none';
+      lb.textContent = 'ENTER THE SHOP';
+      lb.style.opacity = '1';
+      setTimeout(function() { lb.style.opacity = '0'; }, 3000);
+      if (S.knownToShop && !S.fromAd) {
+        var w = document.getElementById('welcome-text');
+        w.style.opacity = '1';
+        setTimeout(function() { w.style.opacity = '0'; }, 3000);
+      }
+    } else if (name === 'shop') {
+      currentScene = buildShop();
+      bb.style.display = 'none';
+    } else if (name === 'cinema') {
+      currentScene = buildCinema();
+      bb.style.display = 'block';
+      bb.textContent = '↑ SHOP';
+      bb.onclick = function() { switchScene('shop'); };
+    }
     updateCoinDisplay();
-    setTimeout(()=>ov.classList.remove('active'),100);
-  },600);
+    setTimeout(function() { ov.classList.remove('active'); }, 100);
+  }, 600);
 }
 
 // ═══ INTERACTION ═══
-const tooltip=document.getElementById('tooltip-3d');
-function onMM(e){S.mouse.x=(e.clientX/window.innerWidth)*2-1;S.mouse.y=-(e.clientY/window.innerHeight)*2+1;tooltip.style.left=(e.clientX+16)+'px';tooltip.style.top=(e.clientY-8)+'px';
-  // Camera sway
-  if(currentScene){const sx=S.mouse.x*0.03,sy=S.mouse.y*0.02;camera.rotation.y=-sx;camera.rotation.x=sy;}
-}
-function checkHover(){
-  if(!currentScene)return;const cl=S.clickables[S.scene]||[];if(!cl.length)return;
-  S.raycaster.setFromCamera(S.mouse,camera);
-  const hits=S.raycaster.intersectObjects(cl,true);
-  if(hits.length>0){let o=hits[0].object;while(o&&!o.userData.id)o=o.parent;
-    if(o&&o.userData.id){if(S.hovered!==o){S.hovered=o;document.body.style.cursor='pointer';tooltip.textContent=o.userData.tooltip||'';tooltip.style.opacity=o.userData.tooltip?'1':'0';}return;}
-  }
-  if(S.hovered){S.hovered=null;document.body.style.cursor='default';tooltip.style.opacity='0';}
-}
-function handleClick(id){
-  switch(id){
-    case'door':switchScene('shop');break;case'whip':openPanel('whip');break;case'wig':openPanel('wig');break;
-    case'mirror':openPanel('mirror');break;case'box':openPanel('box');break;case'glove':openPanel('glove');break;
-    case'shopkeeper':openPanel('shopkeeper');initDialog();break;case'wall':openPanel('wall');break;
-    case'stairs':switchScene('cinema');break;case'screen':playEpisode(1);break;case'popcorn':openPanel('popcorn');break;
-    case'wc':handleWC();break;case'art':openPanel('art');break;
-    case'secret':openPanel('secret-code');setTimeout(()=>document.getElementById('secret-code-input').focus(),300);break;
-    case'back-shop':switchScene('shop');break;
+var tooltip = document.getElementById('tooltip-3d');
+function onMM(e) {
+  S.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  S.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  tooltip.style.left = (e.clientX + 16) + 'px';
+  tooltip.style.top = (e.clientY - 8) + 'px';
+  if (currentScene) {
+    camera.rotation.y = -S.mouse.x * 0.03;
+    camera.rotation.x = S.mouse.y * 0.02;
   }
 }
-window.addEventListener('mousemove',onMM);
-renderer.domElement.addEventListener('click',()=>{if(S.hovered)handleClick(S.hovered.userData.id);});
-renderer.domElement.addEventListener('touchstart',(e)=>{const t=e.touches[0];S.mouse.x=(t.clientX/window.innerWidth)*2-1;S.mouse.y=-(t.clientY/window.innerHeight)*2+1;checkHover();if(S.hovered)handleClick(S.hovered.userData.id);});
+function checkHover() {
+  if (!currentScene) return;
+  var cl = S.clickables[S.scene] || [];
+  if (!cl.length) return;
+  S.raycaster.setFromCamera(S.mouse, camera);
+  var hits = S.raycaster.intersectObjects(cl, true);
+  if (hits.length > 0) {
+    var o = hits[0].object;
+    while (o && !o.userData.id) o = o.parent;
+    if (o && o.userData.id) {
+      if (S.hovered !== o) {
+        S.hovered = o;
+        document.body.style.cursor = 'pointer';
+        tooltip.textContent = o.userData.tooltip || '';
+        tooltip.style.opacity = o.userData.tooltip ? '1' : '0';
+      }
+      return;
+    }
+  }
+  if (S.hovered) { S.hovered = null; document.body.style.cursor = 'default'; tooltip.style.opacity = '0'; }
+}
+function handleClick(id) {
+  switch (id) {
+    case 'door': switchScene('shop'); break;
+    case 'whip': openPanel('whip'); break;
+    case 'wig': openPanel('wig'); break;
+    case 'mirror': openPanel('mirror'); break;
+    case 'box': openPanel('box'); break;
+    case 'glove': openPanel('glove'); break;
+    case 'shopkeeper': openPanel('shopkeeper'); initDialog(); break;
+    case 'wall': openPanel('wall'); break;
+    case 'stairs': switchScene('cinema'); break;
+    case 'screen': playEpisode(1); break;
+    case 'popcorn': openPanel('popcorn'); break;
+    case 'wc': handleWC(); break;
+    case 'art': openPanel('art'); break;
+    case 'secret': openPanel('secret-code'); setTimeout(function() { document.getElementById('secret-code-input').focus(); }, 300); break;
+    case 'back-shop': switchScene('shop'); break;
+  }
+}
+window.addEventListener('mousemove', onMM);
+renderer.domElement.addEventListener('click', function() { if (S.hovered) handleClick(S.hovered.userData.id); });
+renderer.domElement.addEventListener('touchstart', function(e) {
+  var t = e.touches[0];
+  S.mouse.x = (t.clientX / window.innerWidth) * 2 - 1;
+  S.mouse.y = -(t.clientY / window.innerHeight) * 2 + 1;
+  checkHover();
+  if (S.hovered) handleClick(S.hovered.userData.id);
+});
 
 // ═══ ANIMATION ═══
-function animate(){
-  requestAnimationFrame(animate);const t=S.clock.getElapsedTime();
+function animate() {
+  requestAnimationFrame(animate);
+  var t = S.clock.getElapsedTime();
   checkHover();
-  if(currentScene){
-    if(S.scene==='alley')currentScene.fog.density=0.12+Math.sin(t*0.4)*0.015;
-    if(S.scene==='shop'){const ls=currentScene.children.filter(c=>c.isPointLight&&c.intensity>2);if(ls[0])ls[0].intensity=3+Math.sin(t*2.5)*0.2+Math.sin(t*7)*0.08;}
-    renderer.render(currentScene,camera);
+  if (currentScene) {
+    if (S.scene === 'alley') currentScene.fog.density = 0.12 + Math.sin(t * 0.4) * 0.015;
+    renderer.render(currentScene, camera);
   }
 }
 animate();
 
 // ═══ CODE SCREEN ═══
-document.getElementById('code-input').addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
-function checkCode(){
-  const r=document.getElementById('code-input').value.trim().toLowerCase().replace(/[\s\-]/g,''),err=document.getElementById('code-error');
-  if(r==='nimmmich'){localStorage.setItem('namenlos_known','true');S.knownToShop=true;
-    const cs=document.getElementById('scene-code');cs.style.opacity='0';setTimeout(()=>{cs.style.display='none';switchScene('alley');},800);
-  }else{S.codeAttempts++;const ms=["The door doesn't recognize you.","Still wrong. The shopkeeper is listening.","You're persistent. That's something. But the word is not yours yet.",'Try reading Chapter 1. The whip whispers the answer. <a href="#" onclick="openPanel(\'whip\');return false;">Read free →</a>'];err.innerHTML=ms[Math.min(S.codeAttempts-1,ms.length-1)];}
+document.getElementById('code-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') checkCode(); });
+function checkCode() {
+  var r = document.getElementById('code-input').value.trim().toLowerCase().replace(/[\s\-]/g, '');
+  var err = document.getElementById('code-error');
+  if (r === 'nimmmich') {
+    localStorage.setItem('namenlos_known', 'true');
+    S.knownToShop = true;
+    var cs = document.getElementById('scene-code');
+    cs.style.opacity = '0';
+    setTimeout(function() { cs.style.display = 'none'; switchScene('alley'); }, 800);
+  } else {
+    S.codeAttempts++;
+    var ms = [
+      "The door doesn't recognize you.",
+      "Still wrong. The shopkeeper is listening.",
+      "You're persistent. But the word is not yours yet.",
+      'Try reading Chapter 1. <a href="#" onclick="openPanel(\'whip\');return false;">Read free →</a>'
+    ];
+    err.innerHTML = ms[Math.min(S.codeAttempts - 1, ms.length - 1)];
+  }
 }
 
 // Secret code
-document.getElementById('secret-code-input').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){if(document.getElementById('secret-code-input').value.trim().toLowerCase()==='vergiss'){closePanel('secret-code');
-    setTimeout(()=>{document.getElementById('secret-content').innerHTML='<p style="font-style:italic;color:var(--mist);font-size:17px;line-height:1.9;"><em>The whip remembers every hand that held it.</em><br><br>Vienna, 1793. A countess bought it for her husband. He used it once. She used it forever. The shopkeeper found it in her bedchamber after the funeral, coiled on the pillow where his head had been.<br><br>Prague, 1841. A poet wrote seventeen sonnets about it. None of them rhymed. He said the whip whispered the words and the words refused to behave.<br><br>Istanbul, 1923. A dancer hung it on the wall of her dressing room. Every mirror in the room cracked within a week. She danced better after that. She said the cracks showed her real form.<br><br><span style="color:var(--blood);font-size:14px;letter-spacing:3px;font-style:normal;">THE WHIP DOES NOT BELONG TO ANYONE.<br>EVERYONE BELONGS TO THE WHIP.</span></p>';openPanel('secret');},300);
-  }else document.getElementById('secret-code-error').textContent='That is not the word.';}
+document.getElementById('secret-code-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (document.getElementById('secret-code-input').value.trim().toLowerCase() === 'vergiss') {
+      closePanel('secret-code');
+      setTimeout(function() {
+        document.getElementById('secret-content').innerHTML = '<p style="font-style:italic;color:var(--mist);font-size:17px;line-height:1.9;"><em>The whip remembers every hand that held it.</em><br><br>Vienna, 1793. A countess bought it for her husband. He used it once. She used it forever.<br><br>Prague, 1841. A poet wrote seventeen sonnets about it. None rhymed.<br><br>Istanbul, 1923. A dancer hung it on the wall. Every mirror cracked within a week. She danced better after that.<br><br><span style="color:var(--blood);font-size:14px;letter-spacing:3px;">THE WHIP DOES NOT BELONG TO ANYONE.<br>EVERYONE BELONGS TO THE WHIP.</span></p>';
+        openPanel('secret');
+      }, 300);
+    } else {
+      document.getElementById('secret-code-error').textContent = 'That is not the word.';
+    }
+  }
 });
 
 // ═══ INIT ═══
 updateCoinDisplay();
-if(S.fromAd||S.knownToShop){document.getElementById('scene-code').style.display='none';switchScene('alley');}
-else document.getElementById('code-input').focus();
+if (S.fromAd || S.knownToShop) { document.getElementById('scene-code').style.display = 'none'; switchScene('alley'); }
+else { document.getElementById('code-input').focus(); }
 
-// ═══ UI FUNCTIONS ═══
-function openPanel(n){const p=document.getElementById('panel-'+n);if(p)p.classList.add('open');}
-function closePanel(n){const p=document.getElementById('panel-'+n);if(p)p.classList.remove('open');}
-function updateCoinDisplay(){const el=document.getElementById('coin-display'),ct=document.getElementById('coin-count');if(S.coins>0||S.isCircle){el.style.display='flex';ct.textContent=S.isCircle?'∞':S.coins;}else el.style.display='none';}
-function openCoinShop(){document.getElementById('coin-shop').classList.add('open');}
-function closeCoinShop(){document.getElementById('coin-shop').classList.remove('open');}
-function buyCoins(n){if(n===-1){alert('→ Digistore24: The Nameless Circle $4.99/mo');S.isCircle=true;localStorage.setItem('namenlos_circle','true');}else{alert('→ Digistore24: '+n+' Nameless Coins');S.coins+=n;localStorage.setItem('namenlos_coins',S.coins.toString());}updateCoinDisplay();closeCoinShop();}
-function spendCoins(n){if(S.isCircle)return true;if(S.coins>=n){S.coins-=n;localStorage.setItem('namenlos_coins',S.coins.toString());updateCoinDisplay();return true;}showShopkeeperMsg("Your coins are spent. But the Circle never runs out.",[{label:'BUY COINS',action:()=>{closeShopkeeper();openCoinShop();}},{label:'NOT NOW',action:closeShopkeeper}]);return false;}
-function showShopkeeperMsg(t,a){document.getElementById('sk-msg-text').textContent=t;const el=document.getElementById('sk-msg-actions');el.innerHTML='';a.forEach(x=>{const b=document.createElement('button');b.className='sk-btn';b.textContent=x.label;b.onclick=x.action;el.appendChild(b);});document.getElementById('shopkeeper-msg').style.display='block';}
-function closeShopkeeper(){document.getElementById('shopkeeper-msg').style.display='none';}
+// ═══ UI ═══
+function openPanel(n) { var p = document.getElementById('panel-' + n); if (p) p.classList.add('open'); }
+function closePanel(n) { var p = document.getElementById('panel-' + n); if (p) p.classList.remove('open'); }
+function updateCoinDisplay() {
+  var el = document.getElementById('coin-display'), ct = document.getElementById('coin-count');
+  if (S.coins > 0 || S.isCircle) { el.style.display = 'flex'; ct.textContent = S.isCircle ? '∞' : S.coins; }
+  else { el.style.display = 'none'; }
+}
+function openCoinShop() { document.getElementById('coin-shop').classList.add('open'); }
+function closeCoinShop() { document.getElementById('coin-shop').classList.remove('open'); }
+function buyCoins(n) {
+  if (n === -1) { alert('→ Digistore24: Circle $4.99/mo'); S.isCircle = true; localStorage.setItem('namenlos_circle', 'true'); }
+  else { alert('→ Digistore24: ' + n + ' coins'); S.coins += n; localStorage.setItem('namenlos_coins', S.coins.toString()); }
+  updateCoinDisplay(); closeCoinShop();
+}
+function spendCoins(n) {
+  if (S.isCircle) return true;
+  if (S.coins >= n) { S.coins -= n; localStorage.setItem('namenlos_coins', S.coins.toString()); updateCoinDisplay(); return true; }
+  showShopkeeperMsg("Your coins are spent. But the Circle never runs out.", [
+    { label: 'BUY COINS', action: function() { closeShopkeeper(); openCoinShop(); } },
+    { label: 'NOT NOW', action: closeShopkeeper }
+  ]);
+  return false;
+}
+function showShopkeeperMsg(t, a) {
+  document.getElementById('sk-msg-text').textContent = t;
+  var el = document.getElementById('sk-msg-actions'); el.innerHTML = '';
+  a.forEach(function(x) { var b = document.createElement('button'); b.className = 'sk-btn'; b.textContent = x.label; b.onclick = x.action; el.appendChild(b); });
+  document.getElementById('shopkeeper-msg').style.display = 'block';
+}
+function closeShopkeeper() { document.getElementById('shopkeeper-msg').style.display = 'none'; }
 
-// DIALOG
-const DLG=[{text:'"Welcome. Or welcome back. The shop doesn\'t distinguish."',choices:[{label:'"What do you sell?"',next:1},{label:'"How long has this place been here?"',next:2}]},{text:'"Objects. Each one has a story. Each story has a price. The whip is the oldest."',choices:[{label:'"Tell me about the whip."',next:3},{label:'"The room below?"',next:4}]},{text:'"Longer than the street. Longer than the city. The door moves. I stay."',choices:[{label:'"What do you sell?"',next:1},{label:'"Is there more?"',next:4}]},{text:'"Nimm mich — and they take it. Every time. I warn them. They take it anyway."',choices:[{label:'"Leave my email"',next:5},{label:'"The room below…"',next:4}]},{text:'"There is a room below the cinema. Not everyone finds it. The word is different."',choices:[{label:'"I\'ll find it."',next:6},{label:'"Leave my email"',next:5}]},{text:'"Your name. So I remember you when you return."',choices:[{label:'Leave email',action:'email'}]},{text:'"Good. The persistent ones usually do."',choices:[{label:'Close',action:'close'}]}];
-function initDialog(){S.dialogStep=0;renderDialog();}
-function renderDialog(){const step=DLG[S.dialogStep];if(!step)return;document.getElementById('dialog-text').textContent=step.text;const ch=document.getElementById('dialog-choices');ch.innerHTML='';step.choices.forEach(c=>{const b=document.createElement('button');b.className='btn-secondary';b.style.marginLeft='0';b.style.marginRight='8px';b.textContent=c.label;b.onclick=()=>{if(c.action==='email'){ch.innerHTML='<div class="email-form"><input type="email" placeholder="your@email.com" id="email-shopkeeper"><button onclick="captureEmail(\'shopkeeper\')">REMEMBER ME</button></div>';return;}if(c.action==='close'){closePanel('shopkeeper');return;}S.dialogStep=c.next;renderDialog();};ch.appendChild(b);});}
-function playEpisode(n){if(n===1){document.getElementById('episode-title').textContent='EPISODE 1';openPanel('episode');}else if(spendCoins(2)){document.getElementById('episode-title').textContent='EPISODE '+n;openPanel('episode');}}
-function buyPopcorn(sz){const c={small:1,large:2,combo:3};if(spendCoins(c[sz])){closePanel('popcorn');setTimeout(()=>alert({small:'Deleted scene unlocked!',large:'Alt scene + Book 2 teaser!',combo:'Everything + soundtrack track!'}[sz]),300);}}
-function handleWC(){const wc=document.getElementById('wc-content');if(S.wcVisits>0){S.wcVisits++;localStorage.setItem('namenlos_wc',S.wcVisits.toString());const ts=["The toilet remembers you. No charge this time.","Back again? The shopkeeper raises an eyebrow.","Third time. The toilet wonders if you live here."];wc.innerHTML='<h2 style="color:var(--ash)">WC</h2><p style="font-style:italic;margin-bottom:20px">'+ts[Math.min(S.wcVisits-1,ts.length-1)]+'</p><div style="margin-top:24px;padding:20px;border:1px solid var(--stone);text-align:left"><h3 style="color:var(--gold-dim)">THE WHIP IN VIENNA</h3><p style="font-size:15px;line-height:1.8">It hung in the Countess\'s bedroom for eleven years. She told visitors it was decorative. They never asked why the leather was always warm.</p></div><p style="margin-top:20px;color:var(--ash);font-style:italic">You feel lighter. The shopkeeper nods approvingly.</p>';openPanel('wc');return;}
-  if(spendCoins(1)){S.wcVisits=1;localStorage.setItem('namenlos_wc','1');wc.innerHTML='<h2 style="color:var(--ash)">WC</h2><p style="font-style:italic;margin-bottom:20px">The door creaks. The light flickers. A mirror shows… nothing.</p><p style="font-size:18px;color:var(--bone);margin:16px 0"><em>"You paid a coin to pee in a fictional toilet. The shopkeeper respects your commitment."</em></p><div style="margin-top:24px;padding:20px;border:1px solid var(--stone);text-align:left"><h3 style="color:var(--gold-dim)">THE WHIP IN PRAGUE</h3><p style="font-size:15px;line-height:1.8">The poet wrote by candlelight. The whip lay across his desk like a sleeping animal. He said it breathed. His publisher said he drank too much. Both were right.</p></div><p style="margin-top:20px;color:var(--ash);font-style:italic">You feel lighter. The shopkeeper nods approvingly.</p>';openPanel('wc');}}
-function buyArt(){if(spendCoins(1)){closePanel('art');alert('Art downloaded in HQ!');}}
-function captureEmail(src){const inp=document.getElementById('email-'+src);if(!inp)return;const em=inp.value.trim();if(!em||!em.includes('@')){inp.style.borderColor='var(--neon-red)';return;}S.email=em;localStorage.setItem('namenlos_email',em);inp.value='';inp.style.borderColor='var(--gold)';inp.placeholder='The shopkeeper remembers.';inp.disabled=true;}
+// Dialog
+var DLG = [
+  { text: '"Welcome. Or welcome back."', choices: [{ label: '"What do you sell?"', next: 1 }, { label: '"How long has this place been here?"', next: 2 }] },
+  { text: '"Objects. Each has a story. The whip is the oldest."', choices: [{ label: '"Tell me about the whip."', next: 3 }, { label: '"The room below?"', next: 4 }] },
+  { text: '"Longer than the street. Longer than the city."', choices: [{ label: '"What do you sell?"', next: 1 }, { label: '"Is there more?"', next: 4 }] },
+  { text: '"Nimm mich — and they take it. Every time."', choices: [{ label: '"Leave my email"', next: 5 }, { label: '"The room below…"', next: 4 }] },
+  { text: '"There is a room below the cinema. The word is different."', choices: [{ label: '"I\'ll find it."', next: 6 }, { label: '"Leave my email"', next: 5 }] },
+  { text: '"Your name. So I remember you."', choices: [{ label: 'Leave email', action: 'email' }] },
+  { text: '"Good. The persistent ones usually do."', choices: [{ label: 'Close', action: 'close' }] }
+];
+function initDialog() { S.dialogStep = 0; renderDialog(); }
+function renderDialog() {
+  var step = DLG[S.dialogStep]; if (!step) return;
+  document.getElementById('dialog-text').textContent = step.text;
+  var ch = document.getElementById('dialog-choices'); ch.innerHTML = '';
+  step.choices.forEach(function(c) {
+    var b = document.createElement('button'); b.className = 'btn-secondary'; b.style.marginLeft = '0'; b.style.marginRight = '8px'; b.textContent = c.label;
+    b.onclick = function() {
+      if (c.action === 'email') { ch.innerHTML = '<div class="email-form"><input type="email" placeholder="your@email.com" id="email-shopkeeper"><button onclick="captureEmail(\'shopkeeper\')">REMEMBER ME</button></div>'; return; }
+      if (c.action === 'close') { closePanel('shopkeeper'); return; }
+      S.dialogStep = c.next; renderDialog();
+    };
+    ch.appendChild(b);
+  });
+}
+function playEpisode(n) { if (n === 1) { document.getElementById('episode-title').textContent = 'EPISODE 1'; openPanel('episode'); } else if (spendCoins(2)) { document.getElementById('episode-title').textContent = 'EPISODE ' + n; openPanel('episode'); } }
+function buyPopcorn(sz) { var c = { small: 1, large: 2, combo: 3 }; if (spendCoins(c[sz])) { closePanel('popcorn'); alert('Content unlocked!'); } }
+function handleWC() {
+  var wc = document.getElementById('wc-content');
+  if (S.wcVisits > 0) { S.wcVisits++; localStorage.setItem('namenlos_wc', S.wcVisits.toString()); wc.innerHTML = '<h2 style="color:var(--ash)">WC</h2><p style="font-style:italic">The toilet remembers you. No charge.</p><p style="margin-top:20px;color:var(--ash);font-style:italic">You feel lighter.</p>'; openPanel('wc'); return; }
+  if (spendCoins(1)) { S.wcVisits = 1; localStorage.setItem('namenlos_wc', '1'); wc.innerHTML = '<h2 style="color:var(--ash)">WC</h2><p style="font-style:italic">The door creaks. A mirror shows… nothing.</p><p style="font-size:18px;color:var(--bone);margin:16px 0"><em>"You paid a coin to pee in a fictional toilet. The shopkeeper respects your commitment."</em></p><p style="margin-top:20px;color:var(--ash);font-style:italic">You feel lighter.</p>'; openPanel('wc'); }
+}
+function buyArt() { if (spendCoins(1)) { closePanel('art'); alert('Art downloaded!'); } }
+function captureEmail(src) { var inp = document.getElementById('email-' + src); if (!inp) return; var em = inp.value.trim(); if (!em || em.indexOf('@') < 0) { inp.style.borderColor = 'var(--neon-red)'; return; } S.email = em; localStorage.setItem('namenlos_email', em); inp.value = ''; inp.style.borderColor = 'var(--gold)'; inp.placeholder = 'The shopkeeper remembers.'; inp.disabled = true; }
 </script>
 </body>
 </html>
