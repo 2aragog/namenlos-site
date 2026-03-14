@@ -290,8 +290,8 @@ body::after{
     const e=document.getElementById('ei').value.trim();
     if(!e||!e.includes('@'))return;
     // Send to Kit (ConvertKit) form 9207421
-    var fd=new FormData();fd.append('email_address',e);
-    fetch('https://app.kit.com/forms/9207421/subscriptions',{method:'POST',body:fd}).catch(function(){});
+    var body='email_address='+encodeURIComponent(e);
+    fetch('https://app.kit.com/forms/9207421/subscriptions',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body}).catch(function(){});
     localStorage.setItem('namenlos_email',e);
     document.getElementById('sf').classList.add('h');
     document.getElementById('sl').classList.add('h');
