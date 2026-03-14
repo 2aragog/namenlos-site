@@ -155,10 +155,10 @@ function buildAlley(){
   const wr=new THREE.Mesh(wg,M.darkWall);wr.position.set(2,3,0);s.add(wr);
   // Neon left
   const nb=new THREE.Mesh(new THREE.BoxGeometry(1,0.06,0.06),M.neonRed);nb.position.set(-1.75,3.8,-4);s.add(nb);
-  s.add(Object.assign(new THREE.PointLight(0xff2a2a,3,8),{position:new THREE.Vector3(-1.75,3.5,-4)}));
+  const _o1=new THREE.PointLight(0xff2a2a,3,8);_o1.position.set(-1.75,3.5,-4);s.add(_o1);
   // Neon right "PAR...ISE"
   const nr=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.04,0.04),M.neonPink);nr.position.set(1.7,3.4,-5);s.add(nr);
-  s.add(Object.assign(new THREE.PointLight(0xff4466,2,6),{position:new THREE.Vector3(1.7,3.2,-5)}));
+  const _o2=new THREE.PointLight(0xff4466,2,6);_o2.position.set(1.7,3.2,-5);s.add(_o2);
   // Pipes
   for(let i=0;i<5;i++){const p=new THREE.Mesh(new THREE.CylinderGeometry(0.025,0.025,6,6),new THREE.MeshStandardMaterial({color:0x1a1a1a,metalness:0.4,roughness:0.6}));p.position.set(-1.75,3,-3+i*2.5);s.add(p);}
   // Puddles
@@ -171,7 +171,7 @@ function buildAlley(){
   // Handle
   const h=new THREE.Mesh(new THREE.SphereGeometry(0.06,12,12),M.gold);h.position.set(0.38,1.2,-10.88);s.add(h);
   // Warm door light
-  s.add(Object.assign(new THREE.PointLight(0xf5c76a,1,5),{position:new THREE.Vector3(0,2.2,-10)}));
+  const _o3=new THREE.PointLight(0xf5c76a,1,5);_o3.position.set(0,2.2,-10);s.add(_o3);
   s.add(new THREE.AmbientLight(0x111122,0.25));
   camera.position.set(0,1.6,1);camera.lookAt(0,1.4,-11);
   return s;
@@ -187,10 +187,10 @@ function buildShop(){
   const shopFloor=new THREE.Mesh(new THREE.PlaneGeometry(10,10),M.stone);shopFloor.rotation.x=-Math.PI/2;s.add(shopFloor);
   const shopCeil=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshStandardMaterial({color:0x0a0908}));shopCeil.rotation.x=Math.PI/2;shopCeil.position.set(0,3.2,0);s.add(shopCeil);
   const wm=M.brick;
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm),{position:new THREE.Vector3(0,1.6,-5)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm),{position:new THREE.Vector3(-5,1.6,0)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm),{position:new THREE.Vector3(5,1.6,0)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm),{position:new THREE.Vector3(0,1.6,5)}));
+  const _o4=new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm);_o4.position.set(0,1.6,-5);s.add(_o4);
+  const _o5=new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm);_o5.position.set(-5,1.6,0);s.add(_o5);
+  const _o6=new THREE.Mesh(new THREE.BoxGeometry(0.2,3.2,10),wm);_o6.position.set(5,1.6,0);s.add(_o6);
+  const _o7=new THREE.Mesh(new THREE.BoxGeometry(10,3.2,0.2),wm);_o7.position.set(0,1.6,5);s.add(_o7);
 
   // Lamp
   const lb=new THREE.Mesh(new THREE.SphereGeometry(0.1,12,12),M.lamp);lb.position.set(0,2.6,0);s.add(lb);
@@ -198,18 +198,18 @@ function buildShop(){
   const ll=new THREE.PointLight(0xf5c76a,3,9);ll.position.set(0,2.5,0);ll.castShadow=true;ll.shadow.mapSize.set(512,512);s.add(ll);
 
   // Counter
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(4.5,0.12,0.9),M.wood),{position:new THREE.Vector3(0,1,-2),castShadow:true}));
-  for(let x of[-2,2]){s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.1,1,0.1),M.darkWood),{position:new THREE.Vector3(x,0.5,-2)}));}
+  const _o8=new THREE.Mesh(new THREE.BoxGeometry(4.5,0.12,0.9),M.wood);_o8.position.set(0,1,-2);_o8.castShadow=true;s.add(_o8);
+  const _o9=new THREE.Mesh(new THREE.BoxGeometry(0.1,1,0.1),M.darkWood);_o9.position.set(x,0.5,-2);for(let x of[-2,2]){s.add(_o9);
 
   // Shelves
-  for(let y of[1.6,2.3]){s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(7,0.06,0.6),M.wood),{position:new THREE.Vector3(0,y,-4.65),castShadow:true}));}
+  const _o10=new THREE.Mesh(new THREE.BoxGeometry(7,0.06,0.6),M.wood);_o10.position.set(0,y,-4.65);_o10.castShadow=true;for(let y of[1.6,2.3]){s.add(_o10);
 
   // WHIP
   const wg=new THREE.Group();
   const wh=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.045,0.35,8),M.bone);wh.position.y=0.18;wg.add(wh);
   for(let i=0;i<7;i++){const seg=new THREE.Mesh(new THREE.CylinderGeometry(0.018-i*0.001,0.018-i*0.0015,0.22,6),M.leather);seg.position.set(Math.sin(i*0.35)*0.06,0.35+i*0.2,Math.cos(i*0.25)*0.04);seg.rotation.z=Math.sin(i*0.5)*0.25;wg.add(seg);}
   wg.position.set(0,2.33,-4.4);wg.userData={id:'whip',tooltip:'SKIN ME'};s.add(wg);S.clickables.shop.push(wg);
-  s.add(Object.assign(new THREE.PointLight(0x8b0000,0.6,2),{position:new THREE.Vector3(0,2.3,-4.4)}));
+  const _o11=new THREE.PointLight(0x8b0000,0.6,2);_o11.position.set(0,2.3,-4.4);s.add(_o11);
 
   // WIG
   const wig=new THREE.Mesh(new THREE.SphereGeometry(0.2,16,12,0,Math.PI*2,0,Math.PI*0.7),M.red);
@@ -222,8 +222,8 @@ function buildShop(){
 
   // BOX
   const bg=new THREE.Group();
-  bg.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.28,0.16,0.2),M.darkWood),{position:new THREE.Vector3(0,0.08,0)}));
-  bg.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.3,0.03,0.22),M.wood),{position:new THREE.Vector3(0,0.17,0)}));
+  const _o12=new THREE.Mesh(new THREE.BoxGeometry(0.28,0.16,0.2),M.darkWood);_o12.position.set(0,0.08,0);bg.add(_o12);
+  const _o13=new THREE.Mesh(new THREE.BoxGeometry(0.3,0.03,0.22),M.wood);_o13.position.set(0,0.17,0);bg.add(_o13);
   bg.position.set(-0.6,1.63,-4.4);bg.userData={id:'box',tooltip:'LAY ME'};s.add(bg);S.clickables.shop.push(bg);
 
   // GLOVE
@@ -235,9 +235,9 @@ function buildShop(){
 
   // SHOPKEEPER
   const sk=new THREE.Group();
-  sk.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.28,1.3,8),new THREE.MeshStandardMaterial({color:0x0e0c0a,roughness:0.9})),{position:new THREE.Vector3(0,0.65,0)}));
-  sk.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.16,12,12),new THREE.MeshStandardMaterial({color:0x2a1a10,roughness:0.7})),{position:new THREE.Vector3(0,1.42,0)}));
-  for(let x of[-0.045,0.045]){sk.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),M.gold),{position:new THREE.Vector3(x,1.45,0.14)}));}
+  const _o14=new THREE.Mesh(new THREE.CylinderGeometry(0.22,0.28,1.3,8),new THREE.MeshStandardMaterial({color:0x0e0c0a,roughness:0.9}));_o14.position.set(0,0.65,0);sk.add(_o14);
+  const _o15=new THREE.Mesh(new THREE.SphereGeometry(0.16,12,12),new THREE.MeshStandardMaterial({color:0x2a1a10,roughness:0.7}));_o15.position.set(0,1.42,0);sk.add(_o15);
+  const _o16=new THREE.Mesh(new THREE.SphereGeometry(0.018,8,8),M.gold);_o16.position.set(x,1.45,0.14);for(let x of[-0.045,0.045]){sk.add(_o16);
   sk.position.set(0,0,-3.2);sk.userData={id:'shopkeeper',tooltip:'THE SHOPKEEPER'};s.add(sk);S.clickables.shop.push(sk);
 
   // WALL OF NAMES
@@ -246,12 +246,12 @@ function buildShop(){
 
   // STAIRS
   const sg=new THREE.Group();
-  for(let i=0;i<8;i++){sg.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood),{position:new THREE.Vector3(0,-i*0.12,3.8+i*0.3)}));}
+  const _o17=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood);_o17.position.set(0,-i*0.12,3.8+i*0.3);for(let i=0;i<8;i++){sg.add(_o17);
   sg.userData={id:'stairs',tooltip:'CINEMA BELOW ↓'};s.add(sg);S.clickables.shop.push(sg);
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(1.4,0.05,2.5),new THREE.MeshStandardMaterial({color:0x080606})),{position:new THREE.Vector3(0,-0.01,4.5)}));
+  const _o18=new THREE.Mesh(new THREE.BoxGeometry(1.4,0.05,2.5),new THREE.MeshStandardMaterial({color:0x080606}));_o18.position.set(0,-0.01,4.5);s.add(_o18);
 
   s.add(new THREE.AmbientLight(0x1a1510,0.15));
-  s.add(Object.assign(new THREE.PointLight(0x8a7234,0.4,7),{position:new THREE.Vector3(3.5,1.5,2)}));
+  const _o19=new THREE.PointLight(0x8a7234,0.4,7);_o19.position.set(3.5,1.5,2);s.add(_o19);
   camera.position.set(0,1.6,3.8);camera.lookAt(0,1.3,-3);
   return s;
 }
@@ -265,35 +265,35 @@ function buildCinema(){
   const cm=M.cinemaWall;
   // Room
   const cinFloor=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x0d0808,roughness:0.9}));cinFloor.rotation.x=-Math.PI/2;s.add(cinFloor);
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm),{position:new THREE.Vector3(0,2.25,-8)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm),{position:new THREE.Vector3(-7,2.25,0)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm),{position:new THREE.Vector3(7,2.25,0)}));
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm),{position:new THREE.Vector3(0,2.25,8)}));
+  const _o20=new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm);_o20.position.set(0,2.25,-8);s.add(_o20);
+  const _o21=new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm);_o21.position.set(-7,2.25,0);s.add(_o21);
+  const _o22=new THREE.Mesh(new THREE.BoxGeometry(0.2,4.5,16),cm);_o22.position.set(7,2.25,0);s.add(_o22);
+  const _o23=new THREE.Mesh(new THREE.BoxGeometry(14,4.5,0.2),cm);_o23.position.set(0,2.25,8);s.add(_o23);
   const cinCeil=new THREE.Mesh(new THREE.PlaneGeometry(14,16),new THREE.MeshStandardMaterial({color:0x080505}));cinCeil.position.set(0,4.5,0);cinCeil.rotation.x=Math.PI/2;s.add(cinCeil);
 
   // Neon strip
-  s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(12,0.05,0.05),M.neonRed),{position:new THREE.Vector3(0,4.2,-7.8)}));
-  s.add(Object.assign(new THREE.PointLight(0xff2a2a,3,10),{position:new THREE.Vector3(0,4,-7)}));
+  const _o24=new THREE.Mesh(new THREE.BoxGeometry(12,0.05,0.05),M.neonRed);_o24.position.set(0,4.2,-7.8);s.add(_o24);
+  const _o25=new THREE.PointLight(0xff2a2a,3,10);_o25.position.set(0,4,-7);s.add(_o25);
 
   // Screen
   const scr=new THREE.Mesh(new THREE.BoxGeometry(6,3.2,0.1),new THREE.MeshStandardMaterial({color:0x111111,roughness:0.5,emissive:0x060608,emissiveIntensity:0.5}));
   scr.position.set(0,2.6,-7.5);scr.userData={id:'screen',tooltip:'▶ EPISODE 1 — FREE'};s.add(scr);S.clickables.cinema.push(scr);
-  s.add(Object.assign(new THREE.PointLight(0x333344,0.6,6),{position:new THREE.Vector3(0,2.5,-5.5)}));
+  const _o26=new THREE.PointLight(0x333344,0.6,6);_o26.position.set(0,2.5,-5.5);s.add(_o26);
 
   // Seats
   for(let r=0;r<5;r++)for(let c=0;c<8;c++){
     const occ=Math.random()<0.3;
     const seat=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.45,0.45),occ?M.seatOcc:M.seat);
     seat.position.set(-3.5+c*1,0.22+r*0.06,-2.5+r*1.3);seat.castShadow=true;s.add(seat);
-    if(occ){s.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(0.16,8,8),new THREE.MeshStandardMaterial({color:0x0a0606})),{position:new THREE.Vector3(seat.position.x,seat.position.y+0.38,seat.position.z)}));
-      if(Math.random()<0.4){s.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.05,0.12,6),new THREE.MeshStandardMaterial({color:0xcc2222})),{position:new THREE.Vector3(seat.position.x+0.22,seat.position.y+0.28,seat.position.z)}));}
+    const _o27=new THREE.Mesh(new THREE.SphereGeometry(0.16,8,8),new THREE.MeshStandardMaterial({color:0x0a0606}));_o27.position.set(seat.position.x,seat.position.y+0.38,seat.position.z);if(occ){s.add(_o27);
+      const _o28=new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.05,0.12,6),new THREE.MeshStandardMaterial({color:0xcc2222}));_o28.position.set(seat.position.x+0.22,seat.position.y+0.28,seat.position.z);if(Math.random()<0.4){s.add(_o28);
     }
   }
 
   // Popcorn stand
   const ps=new THREE.Group();
-  ps.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.7,1.3,0.5),new THREE.MeshStandardMaterial({color:0xaa1111,roughness:0.5})),{position:new THREE.Vector3(0,0.65,0)}));
-  ps.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.8,0.06,0.6),new THREE.MeshStandardMaterial({color:0xcc2222})),{position:new THREE.Vector3(0,1.33,0)}));
+  const _o29=new THREE.Mesh(new THREE.BoxGeometry(0.7,1.3,0.5),new THREE.MeshStandardMaterial({color:0xaa1111,roughness:0.5}));_o29.position.set(0,0.65,0);ps.add(_o29);
+  const _o30=new THREE.Mesh(new THREE.BoxGeometry(0.8,0.06,0.6),new THREE.MeshStandardMaterial({color:0xcc2222}));_o30.position.set(0,1.33,0);ps.add(_o30);
   ps.position.set(-5.8,0,0);ps.userData={id:'popcorn',tooltip:'POPCORN'};s.add(ps);S.clickables.cinema.push(ps);
 
   // WC door
@@ -304,7 +304,7 @@ function buildCinema(){
   for(let i=0;i<3;i++){
     const f=new THREE.Mesh(new THREE.BoxGeometry(0.9,1.1,0.06),new THREE.MeshStandardMaterial({color:0x1a1818,roughness:0.7}));
     f.position.set(-2.5+i*2.5,2.2,7.7);s.add(f);
-    s.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.7,0.9,0.07),new THREE.MeshStandardMaterial({color:0x222020})),{position:new THREE.Vector3(f.position.x,f.position.y,f.position.z+0.02)}));
+    const _o31=new THREE.Mesh(new THREE.BoxGeometry(0.7,0.9,0.07),new THREE.MeshStandardMaterial({color:0x222020}));_o31.position.set(f.position.x,f.position.y,f.position.z+0.02);s.add(_o31);
     if(i===0){f.userData={id:'art',tooltip:'ART — 1 COIN FOR HQ'};S.clickables.cinema.push(f);}
   }
 
@@ -314,11 +314,11 @@ function buildCinema(){
 
   // Stairs up
   const su=new THREE.Group();
-  for(let i=0;i<5;i++){su.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood),{position:new THREE.Vector3(0,i*0.15,7+i*0.3)}));}
+  const _o32=new THREE.Mesh(new THREE.BoxGeometry(1.2,0.08,0.3),M.darkWood);_o32.position.set(0,i*0.15,7+i*0.3);for(let i=0;i<5;i++){su.add(_o32);
   su.userData={id:'back-shop',tooltip:'↑ BACK TO SHOP'};s.add(su);S.clickables.cinema.push(su);
 
   s.add(new THREE.AmbientLight(0x150a0a,0.2));
-  s.add(Object.assign(new THREE.PointLight(0x331111,0.6,8),{position:new THREE.Vector3(-4.5,2.5,-3)}));
+  const _o33=new THREE.PointLight(0x331111,0.6,8);_o33.position.set(-4.5,2.5,-3);s.add(_o33);
   camera.position.set(0,2.2,6);camera.lookAt(0,1.8,-6);
   return s;
 }
