@@ -16,15 +16,69 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 
 /* ═══ HOTSPOTS ═══ */
 .hotspots{position:absolute;top:50%;left:50%;width:110%;height:110%;transform:translate(-50%,-50%);will-change:transform;z-index:30}
-.hotspot{position:absolute;cursor:pointer;border:1px solid transparent;border-radius:6px;transition:all 0.5s ease;animation:shimmer 4s ease-in-out infinite}
-.hotspot:nth-child(2){animation-delay:1s}
-.hotspot:nth-child(3){animation-delay:2s}
-.hotspot:nth-child(4){animation-delay:0.5s}
-.hotspot:nth-child(5){animation-delay:1.5s}
-@keyframes shimmer{0%,100%{border-color:rgba(200,160,80,0)}50%{border-color:rgba(200,160,80,0.12)}}
-.hotspot:hover{background:rgba(200,160,80,0.08);border-color:rgba(200,160,80,0.35);box-shadow:0 0 25px rgba(200,160,80,0.15),inset 0 0 20px rgba(200,160,80,0.08);animation:none}
+.hotspot{position:absolute;cursor:pointer;border:1px solid transparent;border-radius:6px;transition:all 0.5s ease;overflow:visible}
 .hotspot .label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#c8a060;font-size:10px;padding:4px 14px;white-space:nowrap;opacity:0;transition:opacity 0.4s;letter-spacing:3px;text-transform:uppercase;pointer-events:none;border:1px solid rgba(200,160,80,0.2)}
 .hotspot:hover .label{opacity:1}
+
+/* Breathing glow per color */
+.hotspot[data-glow=amber]{animation:breathAmber 4s ease-in-out infinite}
+.hotspot[data-glow=red]{animation:breathRed 5s ease-in-out infinite}
+.hotspot[data-glow=silver]{animation:breathSilver 4.5s ease-in-out infinite}
+.hotspot[data-glow=mystic]{animation:breathMystic 5.5s ease-in-out infinite}
+.hotspot:nth-child(2){animation-delay:1.2s}
+.hotspot:nth-child(3){animation-delay:2.4s}
+.hotspot:nth-child(4){animation-delay:0.6s}
+.hotspot:nth-child(5){animation-delay:1.8s}
+
+@keyframes breathAmber{
+  0%,100%{border-color:rgba(200,160,80,0.03);box-shadow:0 0 8px rgba(200,160,80,0)}
+  50%{border-color:rgba(200,160,80,0.18);box-shadow:0 0 30px rgba(200,160,80,0.08),inset 0 0 20px rgba(200,160,80,0.03)}
+}
+@keyframes breathRed{
+  0%,100%{border-color:rgba(180,40,40,0.03);box-shadow:0 0 8px rgba(180,40,40,0)}
+  50%{border-color:rgba(180,40,40,0.2);box-shadow:0 0 35px rgba(180,40,40,0.1),inset 0 0 20px rgba(180,40,40,0.04)}
+}
+@keyframes breathSilver{
+  0%,100%{border-color:rgba(160,180,200,0.03);box-shadow:0 0 8px rgba(160,180,200,0)}
+  50%{border-color:rgba(160,180,200,0.15);box-shadow:0 0 25px rgba(160,180,200,0.08),inset 0 0 15px rgba(160,180,200,0.03)}
+}
+@keyframes breathMystic{
+  0%,100%{border-color:rgba(140,100,180,0.03);box-shadow:0 0 8px rgba(140,100,180,0)}
+  50%{border-color:rgba(140,100,180,0.18);box-shadow:0 0 30px rgba(140,100,180,0.1),inset 0 0 20px rgba(140,100,180,0.04)}
+}
+
+/* Hover intensifies glow */
+.hotspot[data-glow=amber]:hover{background:rgba(200,160,80,0.06);border-color:rgba(200,160,80,0.4);box-shadow:0 0 40px rgba(200,160,80,0.2),inset 0 0 25px rgba(200,160,80,0.06);animation:none}
+.hotspot[data-glow=red]:hover{background:rgba(180,40,40,0.06);border-color:rgba(180,40,40,0.35);box-shadow:0 0 45px rgba(180,40,40,0.2),inset 0 0 25px rgba(180,40,40,0.06);animation:none}
+.hotspot[data-glow=silver]:hover{background:rgba(160,180,200,0.06);border-color:rgba(160,180,200,0.3);box-shadow:0 0 35px rgba(160,180,200,0.15),inset 0 0 20px rgba(160,180,200,0.05);animation:none}
+.hotspot[data-glow=mystic]:hover{background:rgba(140,100,180,0.06);border-color:rgba(140,100,180,0.35);box-shadow:0 0 40px rgba(140,100,180,0.2),inset 0 0 25px rgba(140,100,180,0.06);animation:none}
+
+/* Embers */
+.ember{position:absolute;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:29;animation:emberRise linear forwards}
+.ember.amber{background:#c8a060}
+.ember.red{background:#b44030}
+.ember.silver{background:#a0b4c8}
+.ember.mystic{background:#9070b0}
+@keyframes emberRise{
+  0%{opacity:0;transform:translateY(0) translateX(0) scale(1)}
+  10%{opacity:0.9}
+  50%{opacity:0.6;transform:translateY(-40px) translateX(var(--ex,6px)) scale(0.8)}
+  100%{opacity:0;transform:translateY(-90px) translateX(var(--ex2,12px)) scale(0.3)}
+}
+
+/* Whispers */
+.whisper{position:absolute;pointer-events:none;z-index:29;font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;letter-spacing:2px;opacity:0;animation:whisperFade 6s ease-in-out forwards;white-space:nowrap}
+.whisper.amber{color:rgba(200,160,80,0.5)}
+.whisper.red{color:rgba(180,60,60,0.45)}
+.whisper.silver{color:rgba(160,180,200,0.4)}
+.whisper.mystic{color:rgba(160,120,200,0.45)}
+@keyframes whisperFade{
+  0%{opacity:0;transform:translateY(4px)}
+  15%{opacity:0.7;transform:translateY(0)}
+  40%{opacity:0.5;transform:translateY(-2px)}
+  60%{opacity:0.3}
+  100%{opacity:0;transform:translateY(-8px)}
+}
 
 /* ═══ TOP BAR ═══ */
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:55;display:flex;align-items:center;padding:12px 20px;pointer-events:none}
@@ -147,6 +201,8 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   /* Hotspot labels always visible on touch */
   .hotspot .label{opacity:0.7;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px}
   .hotspot{min-width:44px;min-height:44px}
+  .whisper{font-size:11px}
+  .ember{opacity:0.7}
 
   /* Top bar: compact */
   .top-bar{padding:8px 12px}
@@ -225,7 +281,7 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene active" id="scene-alley">
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
   <div class="hotspots">
-    <div class="hotspot" data-goto="hall" style="right:12%;top:18%;width:22%;height:62%">
+    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." style="right:12%;top:18%;width:22%;height:62%">
       <span class="label">Enter the Shop</span>
     </div>
   </div>
@@ -236,19 +292,19 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   <img class="scene-img" src="img/Shop/002-Main-hall.jpg" alt="shop">
   <div class="hotspots">
     <!-- Shopkeeper -->
-    <div class="hotspot" data-goto="shopkeeper" style="left:18%;top:15%;width:18%;height:50%">
+    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." style="left:18%;top:15%;width:18%;height:50%">
       <span class="label">The Shopkeeper</span>
     </div>
     <!-- Bookshelf: wooden shelf with books, right of red door -->
-    <div class="hotspot" data-goto="books" style="left:58%;top:8%;width:20%;height:55%">
+    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." style="left:58%;top:8%;width:20%;height:55%">
       <span class="label">The Books</span>
     </div>
     <!-- Glass cabinet far right = artifacts -->
-    <div class="hotspot" data-goto="display" style="left:82%;top:5%;width:16%;height:70%">
+    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." style="left:82%;top:5%;width:16%;height:70%">
       <span class="label">Artifacts</span>
     </div>
     <!-- Red door -->
-    <div class="hotspot" data-goto="corridor" style="left:42%;top:28%;width:14%;height:52%">
+    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." style="left:42%;top:28%;width:14%;height:52%">
       <span class="label">The Red Door</span>
     </div>
   </div>
@@ -275,29 +331,29 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   <img class="scene-img" src="img/Shop/004-Display-case.png" alt="display">
   <div class="hotspots">
     <!-- Row 1: mirror, hourglass, tarot, wig -->
-    <div class="hotspot" data-artifact="mirror" style="left:2%;top:2%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="mirror" data-glow="silver" data-whisper="don't look..." style="left:2%;top:2%;width:23%;height:46%">
       <span class="label">The Mirror</span>
     </div>
-    <div class="hotspot" data-artifact="hourglass" style="left:26%;top:2%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="hourglass" data-glow="red" data-whisper="time is running out..." style="left:26%;top:2%;width:23%;height:46%">
       <span class="label">The Hourglass</span>
     </div>
-    <div class="hotspot" data-artifact="tarot" style="left:50%;top:2%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="tarot" data-glow="mystic" data-whisper="the cards know..." style="left:50%;top:2%;width:23%;height:46%">
       <span class="label">The Tarot Box</span>
     </div>
-    <div class="hotspot" data-artifact="wig" style="left:74%;top:2%;width:24%;height:46%">
+    <div class="hotspot" data-artifact="wig" data-glow="amber" data-whisper="it watches..." style="left:74%;top:2%;width:24%;height:46%">
       <span class="label">The Wig</span>
     </div>
     <!-- Row 2: glove, whip, compass, scrolls -->
-    <div class="hotspot" data-artifact="glove" style="left:2%;top:52%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="glove" data-glow="red" data-whisper="you can't let go..." style="left:2%;top:52%;width:23%;height:46%">
       <span class="label">The Glove</span>
     </div>
-    <div class="hotspot" data-artifact="whip" style="left:26%;top:52%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="whip" data-glow="red" data-whisper="the whip remembers..." style="left:26%;top:52%;width:23%;height:46%">
       <span class="label">The Whip</span>
     </div>
-    <div class="hotspot" data-artifact="compass" style="left:50%;top:52%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="compass" data-glow="silver" data-whisper="where do you need to be..." style="left:50%;top:52%;width:23%;height:46%">
       <span class="label">The Compass</span>
     </div>
-    <div class="hotspot" data-artifact="scrolls" style="left:74%;top:52%;width:24%;height:46%">
+    <div class="hotspot" data-artifact="scrolls" data-glow="amber" data-whisper="the ink is still wet..." style="left:74%;top:52%;width:24%;height:46%">
       <span class="label">The Scrolls</span>
     </div>
   </div>
@@ -354,11 +410,11 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   <img class="scene-img" src="img/Shop/006-Cinema-door-wc.png" alt="corridor">
   <div class="hotspots">
     <!-- WC door: closed wooden door, center -->
-    <div class="hotspot" data-goto="wc" style="left:34%;top:12%;width:16%;height:68%">
+    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." style="left:34%;top:12%;width:16%;height:68%">
       <span class="label">WC</span>
     </div>
     <!-- KINO door: open metal door with red glow, right -->
-    <div class="hotspot" data-goto="cinema" style="left:54%;top:8%;width:18%;height:78%">
+    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." style="left:54%;top:8%;width:18%;height:78%">
       <span class="label">Cinema</span>
     </div>
   </div>
@@ -382,7 +438,7 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-wc">
   <img class="scene-img" src="img/Shop/008-WC.png" alt="wc">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secret" style="left:35%;top:25%;width:30%;height:55%">
+    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." style="left:35%;top:25%;width:30%;height:55%">
       <span class="label">???</span>
     </div>
   </div>
@@ -688,6 +744,85 @@ const critical=document.querySelectorAll('#scene-alley .scene-img, #scene-hall .
 let loaded=0;const fill=document.getElementById('loadFill');
 function chk(){fill.style.width=(loaded/critical.length*100)+'%';if(loaded>=critical.length)setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
 critical.forEach(img=>{if(img.complete){loaded++;chk();}else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}});chk();
+
+// ═══ EMBERS ═══
+function spawnEmber(hotspot) {
+  const glow = hotspot.dataset.glow || 'amber';
+  const rect = hotspot.getBoundingClientRect();
+  const scene = hotspot.closest('.scene');
+  if(!scene || !scene.classList.contains('active')) return;
+  
+  const ember = document.createElement('div');
+  ember.className = 'ember ' + glow;
+  const x = rect.left + Math.random() * rect.width;
+  const y = rect.top + rect.height * 0.3 + Math.random() * rect.height * 0.4;
+  ember.style.left = x + 'px';
+  ember.style.top = y + 'px';
+  ember.style.setProperty('--ex', (Math.random()*16-8)+'px');
+  ember.style.setProperty('--ex2', (Math.random()*24-12)+'px');
+  const dur = 2 + Math.random()*2;
+  ember.style.animationDuration = dur+'s';
+  const sz = 1 + Math.random()*2;
+  ember.style.width = sz+'px';
+  ember.style.height = sz+'px';
+  document.body.appendChild(ember);
+  setTimeout(() => ember.remove(), dur*1000);
+}
+
+// Spawn embers periodically for active scene hotspots
+setInterval(() => {
+  const active = document.querySelector('.scene.active');
+  if(!active) return;
+  const spots = active.querySelectorAll('.hotspot[data-glow]');
+  spots.forEach(h => {
+    if(Math.random() < 0.4) spawnEmber(h);
+  });
+}, 800);
+
+// Extra embers on hover
+document.querySelectorAll('.hotspot[data-glow]').forEach(h => {
+  h.addEventListener('mouseenter', () => {
+    for(let i=0;i<5;i++) setTimeout(() => spawnEmber(h), i*150);
+  });
+  h.addEventListener('touchstart', () => {
+    for(let i=0;i<4;i++) setTimeout(() => spawnEmber(h), i*120);
+  }, {passive:true});
+});
+
+// ═══ WHISPERS ═══
+function spawnWhisper(hotspot) {
+  const text = hotspot.dataset.whisper;
+  if(!text) return;
+  const glow = hotspot.dataset.glow || 'amber';
+  const scene = hotspot.closest('.scene');
+  if(!scene || !scene.classList.contains('active')) return;
+  
+  const rect = hotspot.getBoundingClientRect();
+  const whisper = document.createElement('div');
+  whisper.className = 'whisper ' + glow;
+  whisper.textContent = text;
+  whisper.style.left = (rect.left + rect.width*0.1 + Math.random()*rect.width*0.5) + 'px';
+  whisper.style.top = (rect.top + rect.height*0.2 + Math.random()*rect.height*0.3) + 'px';
+  document.body.appendChild(whisper);
+  setTimeout(() => whisper.remove(), 6000);
+}
+
+// Random whispers every 5-9 seconds
+function scheduleWhisper() {
+  const delay = 5000 + Math.random()*4000;
+  setTimeout(() => {
+    const active = document.querySelector('.scene.active');
+    if(active) {
+      const spots = active.querySelectorAll('.hotspot[data-whisper]');
+      if(spots.length) {
+        const pick = spots[Math.floor(Math.random()*spots.length)];
+        spawnWhisper(pick);
+      }
+    }
+    scheduleWhisper();
+  }, delay);
+}
+scheduleWhisper();
 </script>
 </body>
 </html>
