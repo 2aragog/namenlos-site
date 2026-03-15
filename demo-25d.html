@@ -25,11 +25,11 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
 
 /* MID elements — move MEDIUM */
 .layer-mid{z-index:2}
-.layer-mid img{position:absolute;mix-blend-mode:screen}
+.layer-mid img{position:absolute;mix-blend-mode:lighten}
 
 /* FG elements — move FAST */
 .layer-fg{z-index:3}
-.layer-fg img{position:absolute;mix-blend-mode:screen}
+.layer-fg img{position:absolute;mix-blend-mode:lighten}
 
 /* ═══ ELEMENT POSITIONING (% of viewport) ═══ */
 /* Counter — mid layer, bottom-left */
@@ -46,11 +46,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
 .el-wall-left{left:0;top:0;height:100%;opacity:0.7}
 
 /* Shopkeeper — foreground, closest */
-.el-shopkeeper{left:22%;top:12%;height:52%}
+.el-shopkeeper{left:25%;top:8%;height:55%;filter:brightness(1.1)}
 /* Lamp — foreground, glows bright */
-.el-lamp{left:32%;top:20%;height:35%}
-/* Wall lamp — foreground accent */
-.el-wall-lamp{left:8%;top:15%;height:22%}
+.el-lamp{left:37%;top:18%;height:38%;filter:brightness(1.3)}
 
 /* ═══ VIGNETTE ═══ */
 .vignette{
@@ -127,20 +125,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#050505;font-family:
   <!-- LAYER 1: Background (moves slow - 5px) -->
   <div class="layer layer-bg" id="layerBg"></div>
 
-  <!-- LAYER 2: Mid elements (move medium - 15px) -->
+  <!-- LAYER 2: Mid elements (move medium - 15px) — only door glow for depth -->
   <div class="layer layer-mid" id="layerMid" style="inset:-20px">
-    <img class="el-floor" src="img/layers/floor.png" alt="">
-    <img class="el-counter" src="img/layers/counter.png" alt="">
     <img class="el-door" src="img/layers/door-red.png" alt="">
-    <img class="el-cabinet" src="img/layers/cabinet.png" alt="">
-    <img class="el-wall-left" src="img/layers/wall-left.png" alt="">
   </div>
 
-  <!-- LAYER 3: Foreground (moves fast - 30px) -->
+  <!-- LAYER 3: Foreground (moves fast - 30px) — shopkeeper + lamp -->
   <div class="layer layer-fg" id="layerFg" style="inset:-40px">
     <img class="el-shopkeeper" src="img/layers/shopkeeper.png" alt="">
     <img class="el-lamp flickering" src="img/layers/lamp.png" alt="">
-    <img class="el-wall-lamp flickering" src="img/layers/wall-lamp.png" alt="">
   </div>
 </div>
 
