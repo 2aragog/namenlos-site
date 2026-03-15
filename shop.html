@@ -693,7 +693,7 @@ body{cursor:default}
 <div id="gameCursor"><span class="rune">◈</span></div>
 
 <!-- SWIPE HINT (mobile) -->
-<div class="swipe-hint" id="swipeHint">← swipe to look around →</div>
+<div class="swipe-hint" id="swipeHint">← swipe or tilt to look around →</div>
 
 <!-- OVERLAYS -->
 <div class="vignette"></div>
@@ -940,23 +940,32 @@ if(!isMobile) {
   });
 }
 
-// ═══ MOBILE TOUCH PAN ═══
+// ═══ MOBILE TOUCH PAN + GYROSCOPE ═══
 if(isMobile) {
   let panX = 0;
   let startX = 0;
   let startPanX = 0;
   let isPanning = false;
-  const maxPan = 120; // max pixels left/right
+  let gyroEnabled = false;
+  let gyroPanX = 0;
+  let gyroSmooth = 0;
+  const maxPan = 120;
 
+  // Touch pan
   document.addEventListener('touchstart', e => {
     if(e.touches.length === 1) {
       startX = e.touches[0].clientX;
       startPanX = panX;
       isPanning = true;
     }
-    // Hide swipe hint on first touch
     const hint = document.getElementById('swipeHint');
     if(hint) hint.style.display = 'none';
+    // Request gyro permission on first touch (iOS 13+)
+    if(!gyroEnabled && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(r => {
+        if(r === 'granted') { gyroEnabled = true; startGyro(); }
+      }).catch(()=>{});
+    }
   }, {passive:true});
 
   document.addEventListener('touchmove', e => {
@@ -966,9 +975,7 @@ if(isMobile) {
     applyPan();
   }, {passive:true});
 
-  document.addEventListener('touchend', () => {
-    isPanning = false;
-  });
+  document.addEventListener('touchend', () => { isPanning = false; });
 
   function applyPan() {
     const active = document.querySelector('.scene.active');
@@ -979,11 +986,41 @@ if(isMobile) {
     if(hs) hs.style.setProperty('--panX', panX + 'px');
   }
 
+  // Gyroscope pan
+  function startGyro() {
+    window.addEventListener('deviceorientation', e => {
+      if(e.gamma === null) return;
+      // gamma: -90..90, tilt left=negative, right=positive
+      // Map ±15 degrees to ±maxPan
+      const tilt = Math.max(-15, Math.min(15, e.gamma));
+      gyroPanX = (tilt / 15) * maxPan;
+    });
+
+    // Smooth animation loop for gyro
+    (function gyroAnim() {
+      if(!isPanning) { // Only gyro when not finger-dragging
+        gyroSmooth += (gyroPanX - gyroSmooth) * 0.08;
+        panX = Math.max(-maxPan, Math.min(maxPan, gyroSmooth));
+        applyPan();
+      } else {
+        gyroSmooth = panX; // Sync so there's no jump when finger lifts
+      }
+      requestAnimationFrame(gyroAnim);
+    })();
+  }
+
+  // Auto-start gyro for Android (no permission needed)
+  if(typeof DeviceOrientationEvent.requestPermission !== 'function') {
+    gyroEnabled = true;
+    startGyro();
+  }
+
   // Reset pan on scene change
   const origUpdateUI = updateUI;
   updateUI = function() {
     origUpdateUI();
     panX = 0;
+    gyroSmooth = 0;
     const active = document.querySelector('.scene.active');
     if(active) {
       const img = active.querySelector('.scene-img');
@@ -1005,17 +1042,6 @@ if(!isMobile) {
     if(a){const i=a.querySelector('.scene-img'),h=a.querySelector('.hotspots');if(i)i.style.transform=t;if(h)h.style.transform=t;}
     requestAnimationFrame(anim);
   })();
-} else {
-  // On mobile: subtle gyroscope tilt only
-  if(window.DeviceOrientationEvent) window.addEventListener('deviceorientation',e=>{
-    if(e.gamma!==null){
-      const gx=Math.max(-1,Math.min(1,e.gamma/35))*4;
-      const gy=Math.max(-1,Math.min(1,(e.beta-45)/35))*2;
-      const t='translate(calc(-50% + '+(-gx)+'px), calc(-50% + '+(-gy)+'px))';
-      const a=document.querySelector('.scene.active');
-      if(a){const i=a.querySelector('.scene-img');if(i)i.style.transform=t;}
-    }
-  });
 }
 
 // Dust
