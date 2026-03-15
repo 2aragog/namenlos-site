@@ -2,594 +2,1178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NAMENLOS</title>
 <meta name="description" content="The shop has no address. But it has a word.">
+<meta property="og:title" content="NAMENLOS">
+<meta property="og:description" content="The shop has no address. But it has a word. Say it.">
+<meta name="theme-color" content="#0a0a0a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Special+Elite&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --black:#0a0a0a;--dark:#111;--coal:#1a1a1a;--stone:#2a2a2a;
-  --ash:#555;--mist:#888;--bone:#c8b89a;--cream:#e0d8d0;
-  --gold:#c9a84c;--gold-dim:#8a7234;--blood:#8b0000;
-  --neon-red:#ff2a2a;--neon-pink:#ff4466;--lamp:#f5c76a;
-  --font-display:'Cinzel',serif;--font-body:'Cormorant Garamond',serif;
-  --font-type:'Special Elite',cursive;
+/* ═══════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  color: #c8a060;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  cursor: default;
+  -webkit-font-smoothing: antialiased;
 }
-html,body{width:100%;height:100%;overflow:hidden;background:var(--black);color:var(--bone);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
 
-/* ââ SCREENS ââ */
-.screen{position:fixed;inset:0;display:none;overflow:hidden}
-.screen.active{display:block}
-.screen-fade{animation:fadeIn 1.5s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+/* ═══════════════════════════════════════════════
+   SCENE SYSTEM
+   ═══════════════════════════════════════════════ */
+.scene {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease, visibility 0s 1.2s;
+  z-index: 1;
+  will-change: opacity;
+}
+.scene.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 1.2s ease, visibility 0s 0s;
+  z-index: 10;
+}
+.scene.behind {
+  opacity: 1;
+  visibility: visible;
+  z-index: 5;
+}
 
-/* ââ CODE SCREEN ââ */
-#screen-code.active{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--black);z-index:100}
-#code-prompt{font-size:22px;font-style:italic;color:var(--mist);line-height:1.7;margin-bottom:40px;letter-spacing:1px;text-align:center;animation:fadeIn 3s ease}
-#code-input{background:transparent;border:none;border-bottom:1px solid var(--ash);color:var(--bone);font-family:var(--font-type);font-size:24px;text-align:center;width:280px;padding:8px;outline:none;caret-color:var(--bone);letter-spacing:3px}
-#code-input::placeholder{color:var(--stone)}
-#code-error{margin-top:24px;font-size:15px;color:var(--ash);font-style:italic;min-height:24px;text-align:center}
-#code-error a{color:var(--gold-dim);text-decoration:underline}
+/* ═══════════════════════════════════════════════
+   2.5D BACKGROUND LAYER
+   ═══════════════════════════════════════════════ */
+.scene-bg {
+  position: absolute;
+  inset: -20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
 
-/* ââ PARALLAX SCENE ââ */
-.parallax-scene{position:absolute;inset:0;overflow:hidden}
-.parallax-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;will-change:transform;transition:transform 0.1s ease-out}
+/* Vignette overlay */
+.scene-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+  pointer-events: none;
+}
 
-/* ââ ALLEY ââ */
-#alley-bg{background:linear-gradient(to bottom,#05050a 0%,#0a0a15 40%,#0f0f1a 70%,#111118 100%)}
-#alley-walls{background:linear-gradient(to right,rgba(0,0,0,0.95) 0%,rgba(15,15,25,0.3) 20%,rgba(15,15,25,0.3) 80%,rgba(0,0,0,0.95) 100%)}
-#alley-neon{pointer-events:none}
-.neon-bar{position:absolute;height:4px;border-radius:2px}
-.neon-left{top:22%;left:8%;width:100px;background:var(--neon-red);box-shadow:0 0 15px var(--neon-red),0 0 40px var(--neon-red);animation:flicker1 4s infinite}
-.neon-right{top:20%;right:10%;width:0;overflow:hidden;font-family:var(--font-display);font-size:16px;color:var(--neon-pink);text-shadow:0 0 10px var(--neon-pink),0 0 30px var(--neon-pink);letter-spacing:5px;animation:flicker2 6s infinite}
-@keyframes flicker1{0%,100%{opacity:0.7}5%{opacity:0.3}50%{opacity:0.6}55%{opacity:0.9}}
-@keyframes flicker2{0%,100%{opacity:0.5}20%{opacity:0.2}70%{opacity:0.7}}
-#alley-ground{background:linear-gradient(to top,rgba(10,10,18,0.95) 0%,transparent 40%)}
-.puddle{position:absolute;bottom:10%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,42,42,0.08),transparent);pointer-events:none}
-#alley-door{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:100px;height:180px;cursor:pointer;transition:all 0.5s ease}
-#alley-door:hover{filter:brightness(1.3)}
-.door-frame{width:100%;height:100%;background:linear-gradient(to bottom,#1a1512,#0f0d0a);border:2px solid #2a2218;border-radius:50px 50px 0 0;position:relative;box-shadow:0 0 30px rgba(245,199,106,0.1)}
-.door-handle{position:absolute;top:55%;right:18px;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
-.door-light{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:120px;height:40px;background:radial-gradient(ellipse,rgba(245,199,106,0.15),transparent);pointer-events:none}
-.door-label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);font-family:var(--font-display);font-size:10px;letter-spacing:3px;color:var(--ash);opacity:0;transition:opacity 0.3s;white-space:nowrap}
-#alley-door:hover .door-label{opacity:1}
+/* ═══════════════════════════════════════════════
+   FLOATING DUST PARTICLES
+   ═══════════════════════════════════════════════ */
+.dust-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.dust {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: rgba(200, 160, 96, 0.3);
+  border-radius: 50%;
+  animation: dustFloat linear infinite;
+}
+@keyframes dustFloat {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
+}
 
-/* ââ SHOP ââ */
-#shop-bg{background:radial-gradient(ellipse at 50% 30%,rgba(245,199,106,0.08),transparent 60%),linear-gradient(to bottom,#12100e,#0e0c0a)}
-#shop-shelves{display:flex;justify-content:center;gap:40px;position:absolute;top:15%;left:50%;transform:translateX(-50%)}
-.shelf-item{cursor:pointer;transition:transform 0.3s,filter 0.3s;text-align:center;position:relative}
-.shelf-item:hover{transform:translateY(-5px);filter:brightness(1.2)}
-.item-img{width:70px;height:90px;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
-.item-label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:var(--ash);opacity:0;transition:opacity 0.3s;text-transform:uppercase}
-.shelf-item:hover .item-label{opacity:1}
+/* ═══════════════════════════════════════════════
+   HOTSPOTS
+   ═══════════════════════════════════════════════ */
+.hotspot {
+  position: absolute;
+  cursor: pointer;
+  z-index: 20;
+  transition: transform 0.3s ease;
+}
+.hotspot:hover { transform: scale(1.05); }
 
-/* Placeholder item visuals */
-.whip-ph{width:6px;height:70px;background:linear-gradient(to bottom,var(--bone),#1a0e08);border-radius:3px;box-shadow:0 0 15px rgba(139,0,0,0.4);margin:0 auto}
-.wig-ph{width:40px;height:45px;background:radial-gradient(ellipse at 50% 40%,#cc2233,#881122);border-radius:50% 50% 40% 40%}
-.hourglass-ph{width:30px;height:50px;background:linear-gradient(to bottom,var(--gold-dim) 0%,var(--gold-dim) 20%,transparent 20%,transparent 40%,rgba(139,0,0,0.5) 40%,rgba(139,0,0,0.5) 60%,transparent 60%,transparent 80%,var(--gold-dim) 80%);border-radius:4px}
-.box-ph{width:40px;height:30px;background:linear-gradient(to bottom,#2a2218,#1a1510);border:1px solid #3a3228;border-radius:2px;position:relative}
-.box-ph::before{content:'';position:absolute;top:-4px;left:-1px;right:-1px;height:6px;background:#3a2a1a;border:1px solid #3a3228;border-radius:2px 2px 0 0}
-.glove-ph{width:25px;height:40px;background:#111;border-radius:8px 8px 4px 4px;opacity:0.4}
+.hotspot-indicator {
+  position: absolute;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,160,96,0.6), transparent 70%);
+  animation: hotspotPulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+@keyframes hotspotPulse {
+  0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%,-50%) scale(1.8); opacity: 0.2; }
+}
 
-/* Shopkeeper */
-#shopkeeper{position:absolute;bottom:25%;left:50%;transform:translateX(-50%);cursor:pointer;transition:transform 0.3s}
-#shopkeeper:hover{transform:translateX(-50%) scale(1.02)}
-.sk-silhouette{width:60px;height:120px;background:linear-gradient(to bottom,#2a1a10 0%,#0e0c0a 30%,#0e0c0a 100%);border-radius:20px 20px 0 0;position:relative;margin:0 auto}
-.sk-eyes{position:absolute;top:15px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
-.sk-eye{width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px var(--gold)}
-.sk-label{font-family:var(--font-display);font-size:9px;letter-spacing:2px;color:var(--ash);text-align:center;margin-top:8px;opacity:0;transition:opacity 0.3s}
-#shopkeeper:hover .sk-label{opacity:1}
+.hotspot-label {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #c8a060;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  text-shadow: 0 0 10px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
+.hotspot:hover .hotspot-label { opacity: 1; }
 
-/* Counter */
-#shop-counter{position:absolute;bottom:22%;left:50%;transform:translateX(-50%);width:60%;max-width:500px;height:6px;background:linear-gradient(to right,#1a1510,#2a2118,#1a1510);border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,0.5)}
+/* ═══════════════════════════════════════════════
+   SCENE 0: CODE ENTRY
+   ═══════════════════════════════════════════════ */
+#code-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0a0a0a;
+}
+#code-screen .brand {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  color: #3a3025;
+  margin-bottom: 60px;
+  animation: brandFade 3s ease forwards;
+}
+@keyframes brandFade {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+#code-screen .prompt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: #5a4a35;
+  margin-bottom: 30px;
+  animation: promptFade 3s ease 0.5s both;
+}
+@keyframes promptFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+#code-input {
+  background: none;
+  border: none;
+  border-bottom: 1px solid #2a2218;
+  color: #c8a060;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  text-align: center;
+  width: 240px;
+  padding: 8px 0;
+  outline: none;
+  caret-color: #c8a060;
+  animation: inputFade 3s ease 1s both;
+}
+@keyframes inputFade {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+#code-input::placeholder { color: #2a2218; }
+#code-error {
+  font-size: 13px;
+  color: #6b1c1c;
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-style: italic;
+}
 
-/* Lamp glow */
-#shop-lamp{position:absolute;top:8%;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(245,199,106,0.12),transparent 70%);pointer-events:none;animation:lampPulse 8s infinite}
-@keyframes lampPulse{0%,100%{opacity:1}50%{opacity:0.85}}
+/* ═══════════════════════════════════════════════
+   SCENE 1: ALLEY
+   ═══════════════════════════════════════════════ */
+#alley .scene-bg {
+  background-image: url('img/alley.png');
+}
+#alley .door-hotspot {
+  left: 16%; top: 18%;
+  width: 16%; height: 62%;
+}
 
-/* Stairs */
-#shop-stairs{position:absolute;bottom:5%;left:50%;transform:translateX(-50%);cursor:pointer;display:flex;gap:3px;align-items:flex-end;padding:10px}
-#shop-stairs:hover .stairs-label{opacity:1}
-.stair{width:20px;background:#1a1512;border:1px solid #2a2218}
-.stairs-label{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-family:var(--font-display);font-size:9px;letter-spacing:3px;color:var(--ash);white-space:nowrap;opacity:0;transition:opacity 0.3s}
+/* ═══════════════════════════════════════════════
+   SCENE 2: THRESHOLD (brief transition)
+   ═══════════════════════════════════════════════ */
+#threshold .scene-bg {
+  background-image: url('img/threshold2.png');
+}
 
-/* Nav buttons */
-.nav-back{position:fixed;top:20px;left:20px;z-index:50;background:none;border:1px solid var(--stone);color:var(--ash);font-family:var(--font-display);font-size:10px;letter-spacing:2px;padding:8px 16px;cursor:pointer;transition:all 0.3s;display:none}
-.nav-back:hover{border-color:var(--bone);color:var(--bone)}
+/* ═══════════════════════════════════════════════
+   SCENE 3: SHOP INTERIOR
+   ═══════════════════════════════════════════════ */
+#shop .scene-bg {
+  background-image: url('img/shop.png');
+}
 
-/* ââ CHAT (AI Shopkeeper) ââ */
-#chat-overlay{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;justify-content:center;background:rgba(5,5,5,0.7);backdrop-filter:blur(4px)}
-#chat-overlay.open{display:flex}
-#chat-box{width:90%;max-width:480px;max-height:60vh;background:var(--coal);border:1px solid #2a2218;border-bottom:none;display:flex;flex-direction:column;animation:slideUp 0.4s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-#chat-header{padding:16px 20px;border-bottom:1px solid var(--stone);display:flex;justify-content:space-between;align-items:center}
-#chat-header h3{font-family:var(--font-display);font-size:14px;font-weight:400;letter-spacing:3px;color:var(--bone)}
-#chat-close{background:none;border:none;color:var(--ash);font-size:20px;cursor:pointer}
-#chat-messages{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;min-height:200px}
-.msg{max-width:85%;padding:10px 14px;font-size:16px;line-height:1.6;border-radius:2px}
-.msg-sk{align-self:flex-start;background:rgba(26,21,16,0.8);border-left:2px solid var(--gold-dim);color:var(--mist);font-style:italic}
-.msg-user{align-self:flex-end;background:rgba(42,34,24,0.5);border-right:2px solid var(--stone);color:var(--bone)}
-.msg-typing{align-self:flex-start;color:var(--ash);font-style:italic;font-size:14px}
-#chat-input-wrap{padding:12px 16px;border-top:1px solid var(--stone);display:flex;gap:8px}
-#chat-input{flex:1;background:var(--dark);border:1px solid var(--stone);color:var(--bone);font-family:var(--font-body);font-size:15px;padding:10px 14px;outline:none}
-#chat-input:focus{border-color:var(--gold-dim)}
-#chat-send{background:var(--gold-dim);border:none;color:var(--black);font-family:var(--font-display);font-size:11px;letter-spacing:2px;padding:10px 18px;cursor:pointer}
-#chat-send:hover{background:var(--gold)}
+/* ═══════════════════════════════════════════════
+   SCENE 4: SHELF CLOSE-UP
+   ═══════════════════════════════════════════════ */
+#shelf-view .scene-bg {
+  background-image: url('img/shelf.png');
+}
 
-/* ââ PANELS ââ */
-.panel-overlay{position:fixed;inset:0;z-index:150;display:none;align-items:center;justify-content:center;background:rgba(5,5,5,0.92);backdrop-filter:blur(8px)}
-.panel-overlay.open{display:flex}
-.panel{background:var(--coal);border:1px solid #2a2218;max-width:560px;width:90%;max-height:85vh;overflow-y:auto;padding:40px;position:relative}
-.panel::-webkit-scrollbar{width:4px}
-.panel::-webkit-scrollbar-thumb{background:var(--stone);border-radius:2px}
-.panel-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--ash);font-size:22px;cursor:pointer}
-.panel h2{font-family:var(--font-display);font-size:24px;font-weight:400;color:var(--bone);letter-spacing:4px;margin-bottom:24px}
-.panel h3{font-family:var(--font-display);font-size:14px;font-weight:400;color:var(--gold-dim);letter-spacing:3px;margin:20px 0 10px;text-transform:uppercase}
-.panel p{font-size:17px;line-height:1.8;color:var(--mist);margin-bottom:12px}
-.btn-primary{display:inline-block;margin-top:16px;padding:12px 28px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-display);font-size:12px;letter-spacing:3px;cursor:pointer;transition:all 0.3s}
-.btn-primary:hover{background:var(--gold);color:var(--black)}
-.btn-secondary{display:inline-block;margin-top:8px;margin-left:8px;padding:12px 28px;background:transparent;border:1px solid var(--stone);color:var(--ash);font-family:var(--font-display);font-size:12px;letter-spacing:3px;cursor:pointer;transition:all 0.3s}
-.btn-secondary:hover{border-color:var(--bone);color:var(--bone)}
-.waitlist-tag{display:inline-block;padding:4px 12px;border:1px solid var(--ash);color:var(--ash);font-family:var(--font-display);font-size:10px;letter-spacing:2px;margin-bottom:16px}
-.email-form{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
-.email-form input{flex:1;min-width:200px;padding:10px 14px;background:var(--dark);border:1px solid var(--stone);color:var(--bone);font-family:var(--font-body);font-size:15px;outline:none}
-.email-form button{padding:10px 20px;background:var(--gold-dim);border:none;color:var(--black);font-family:var(--font-display);font-size:11px;letter-spacing:2px;cursor:pointer}
-.chapter-text{max-height:400px;overflow-y:auto;padding-right:12px}
-.chapter-text p{text-indent:2em;margin-bottom:8px;font-size:16px;line-height:1.9;color:var(--mist)}
-.chapter-text p:first-child{text-indent:0}
+/* ═══════════════════════════════════════════════
+   SCENE 5: SHOPKEEPER
+   ═══════════════════════════════════════════════ */
+#shopkeeper-view .scene-bg {
+  background-image: url('img/shopkeeper.jpg');
+}
 
-/* ââ COIN DISPLAY ââ */
-#coin-display{position:fixed;top:20px;right:20px;z-index:100;display:none;align-items:center;gap:8px;background:rgba(10,10,10,0.85);border:1px solid var(--gold-dim);border-radius:24px;padding:8px 16px;font-family:var(--font-display);font-size:14px;color:var(--gold);backdrop-filter:blur(8px)}
-.coin-icon{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold),var(--gold-dim));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--black)}
+/* ═══════════════════════════════════════════════
+   SCENE 6: CINEMA
+   ═══════════════════════════════════════════════ */
+#cinema-view .scene-bg {
+  background-image: url('img/cinema.png');
+}
 
-/* ââ TRANSITION ââ */
-#transition{position:fixed;inset:0;z-index:1000;background:var(--black);opacity:0;pointer-events:none;transition:opacity 0.6s ease}
-#transition.active{opacity:1;pointer-events:all}
+/* ═══════════════════════════════════════════════
+   ITEM OVERLAY
+   ═══════════════════════════════════════════════ */
+#item-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5,5,5,0.92);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.6s ease;
+  cursor: pointer;
+}
+#item-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+#item-overlay .item-inner {
+  position: relative;
+  max-width: 800px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+#item-overlay .item-img {
+  width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  border-radius: 2px;
+  filter: drop-shadow(0 0 40px rgba(200,160,96,0.1));
+  animation: itemZoomIn 0.6s ease both;
+}
+@keyframes itemZoomIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+#item-overlay .item-title {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #c8a060;
+}
+#item-overlay .item-lore {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #8a7a65;
+  text-align: center;
+  max-width: 500px;
+  font-style: italic;
+}
+#item-overlay .item-book {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #4a3a28;
+  padding: 8px 20px;
+  border: 1px solid #2a2218;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#item-overlay .item-book:hover {
+  color: #c8a060;
+  border-color: #c8a060;
+}
+#item-overlay .close-x {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  color: #4a3a28;
+  cursor: pointer;
+  transition: color 0.3s;
+  letter-spacing: 2px;
+}
+#item-overlay .close-x:hover { color: #c8a060; }
 
-/* ââ WELCOME ââ */
-#welcome-msg{position:fixed;top:30px;left:50%;transform:translateX(-50%);z-index:90;font-style:italic;font-size:14px;color:var(--gold-dim);opacity:0;transition:opacity 1s;letter-spacing:2px;pointer-events:none}
+/* ═══════════════════════════════════════════════
+   SHOPKEEPER CHAT
+   ═══════════════════════════════════════════════ */
+#chat-panel {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(10,8,5,0.97) 70%, transparent);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 30px 20px;
+}
+#chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-right: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2218 transparent;
+}
+.chat-msg {
+  max-width: 80%;
+  font-size: 15px;
+  line-height: 1.7;
+  animation: msgFade 0.5s ease both;
+}
+@keyframes msgFade {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.chat-msg.shopkeeper {
+  color: #8a7a65;
+  font-style: italic;
+  align-self: flex-start;
+}
+.chat-msg.shopkeeper::before {
+  content: '— ';
+  color: #4a3a28;
+}
+.chat-msg.visitor {
+  color: #c8a060;
+  align-self: flex-end;
+  text-align: right;
+}
+#chat-input-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  align-items: center;
+}
+#chat-input {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #2a2218;
+  color: #c8a060;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  padding: 8px 0;
+  outline: none;
+  caret-color: #c8a060;
+}
+#chat-input::placeholder { color: #3a3025; font-style: italic; }
+#chat-send {
+  background: none;
+  border: 1px solid #2a2218;
+  color: #5a4a35;
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+#chat-send:hover {
+  border-color: #c8a060;
+  color: #c8a060;
+}
 
-@media(max-width:600px){
-  #code-prompt{font-size:18px}
-  #code-input{font-size:20px;width:240px}
-  .panel{padding:24px}
-  #shop-shelves{gap:16px;flex-wrap:wrap}
-  .item-img{width:50px;height:65px}
+/* ═══════════════════════════════════════════════
+   NAV UI
+   ═══════════════════════════════════════════════ */
+.nav-back {
+  position: absolute;
+  top: 20px; left: 20px;
+  z-index: 30;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #4a3a28;
+  cursor: pointer;
+  transition: color 0.3s;
+  text-shadow: 0 0 15px rgba(0,0,0,0.9);
+}
+.nav-back:hover { color: #c8a060; }
+.nav-back::before { content: '← '; }
+
+#coin-counter {
+  position: fixed;
+  top: 18px; right: 20px;
+  z-index: 50;
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #5a4a35;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+#coin-counter.show { opacity: 1; }
+#coin-counter .coin-icon {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #c8a060, #6b5030);
+  border: 1px solid #a08050;
+}
+
+/* ═══════════════════════════════════════════════
+   BOOK PANEL (slides up from bottom)
+   ═══════════════════════════════════════════════ */
+#book-panel {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 110;
+  background: linear-gradient(to top, #0a0808 60%, rgba(10,8,8,0.95) 80%, transparent);
+  padding: 40px 30px 30px;
+  transform: translateY(100%);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  max-height: 70vh;
+  overflow-y: auto;
+}
+#book-panel.open { transform: translateY(0); }
+#book-panel .panel-close {
+  position: absolute;
+  top: 10px; right: 20px;
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: #4a3a28;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+#book-panel .panel-close:hover { color: #c8a060; }
+.book-header {
+  font-family: 'Cinzel', serif;
+  font-size: 24px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #c8a060;
+  margin-bottom: 6px;
+}
+.book-sub {
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #5a4a35;
+  font-family: 'Cinzel', serif;
+  margin-bottom: 20px;
+}
+.book-excerpt {
+  font-size: 16px;
+  line-height: 1.9;
+  color: #7a6a55;
+  max-width: 600px;
+  font-style: italic;
+  margin-bottom: 30px;
+}
+.buy-options {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.buy-btn {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border: 1px solid #2a2218;
+  color: #8a7a65;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: none;
+  text-decoration: none;
+  display: inline-block;
+}
+.buy-btn:hover {
+  border-color: #c8a060;
+  color: #c8a060;
+  background: rgba(200,160,96,0.05);
+}
+.buy-btn.primary {
+  border-color: #6b1c1c;
+  color: #c8a060;
+  background: rgba(107,28,28,0.2);
+}
+.buy-btn.primary:hover {
+  background: rgba(107,28,28,0.4);
+}
+
+/* ═══════════════════════════════════════════════
+   CINEMA SCREEN
+   ═══════════════════════════════════════════════ */
+.cinema-screen {
+  position: absolute;
+  top: 15%; left: 22%;
+  width: 56%; height: 48%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+.cinema-screen iframe {
+  width: 100%; height: 100%;
+  border: none;
+}
+.cinema-screen .placeholder-text {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: #3a3025;
+  text-transform: uppercase;
+}
+
+/* ═══════════════════════════════════════════════
+   AMBIENT FLICKER
+   ═══════════════════════════════════════════════ */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.85; }
+  94% { opacity: 1; }
+  96% { opacity: 0.9; }
+  97% { opacity: 1; }
+}
+.flickering { animation: flicker 8s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hotspot-label { font-size: 9px; letter-spacing: 2px; }
+  #chat-panel { height: 50%; padding: 30px 16px 16px; }
+  .chat-msg { font-size: 14px; max-width: 90%; }
+  #item-overlay .item-lore { font-size: 14px; }
+  .book-header { font-size: 18px; }
+  .buy-options { flex-direction: column; }
+  .cinema-screen { top: 18%; left: 12%; width: 76%; height: 40%; }
+}
+
+/* ═══════════════════════════════════════════════
+   PRELOADER
+   ═══════════════════════════════════════════════ */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+}
+#preloader.done { opacity: 0; pointer-events: none; }
+#preloader .loader-text {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: #2a2218;
+  animation: loaderPulse 1.5s ease-in-out infinite;
+}
+@keyframes loaderPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
 }
 </style>
 </head>
 <body>
 
-<div id="transition"></div>
-<div id="coin-display"><div class="coin-icon">NM</div><span id="coin-count">0</span></div>
-<div id="welcome-msg">The shopkeeper remembers you.</div>
-<button class="nav-back" id="nav-back">â BACK</button>
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="loader-text">Namenlos</div>
+</div>
 
-<!-- ââââââ CODE SCREEN ââââââ -->
-<div class="screen active" id="screen-code">
-  <div style="text-align:center;max-width:500px;padding:20px;margin:auto">
-    <div id="code-prompt">The shop has no address.<br>But it has a word.<br><br>Say it.</div>
-    <input type="text" id="code-input" placeholder="_ _ _ _ _ _ _" autocomplete="off" spellcheck="false" autofocus>
-    <div id="code-error"></div>
+<!-- COIN COUNTER -->
+<div id="coin-counter">
+  <div class="coin-icon"></div>
+  <span id="coin-count">0</span>
+</div>
+
+<!-- ═══════ SCENE 0: CODE ENTRY ═══════ -->
+<div id="code-screen" class="scene active">
+  <div class="brand">Namenlos</div>
+  <div class="prompt">The shop has no address. But it has a word.</div>
+  <input type="text" id="code-input" placeholder="say it" autocomplete="off" spellcheck="false">
+  <div id="code-error">The shop doesn't recognize that word.</div>
+</div>
+
+<!-- ═══════ SCENE 1: ALLEY ═══════ -->
+<div id="alley" class="scene">
+  <div class="scene-bg" data-parallax="true"></div>
+  <div class="dust-container"></div>
+  <div class="hotspot door-hotspot" data-goto="threshold">
+    <div class="hotspot-indicator" style="top:50%;left:50%"></div>
+    <div class="hotspot-label">Enter</div>
   </div>
 </div>
 
-<!-- ââââââ ALLEY ââââââ -->
-<div class="screen" id="screen-alley">
-  <div class="parallax-scene">
-    <div class="parallax-layer" id="alley-bg" data-depth="0.1"></div>
-    <div class="parallax-layer" id="alley-walls" data-depth="0.3"></div>
-    <div class="parallax-layer" id="alley-neon" data-depth="0.35">
-      <div class="neon-bar neon-left"></div>
-      <div class="neon-right">PARâ¦ISE</div>
-    </div>
-    <div class="parallax-layer" id="alley-ground" data-depth="0.5">
-      <div class="puddle" style="left:30%;width:100px;height:40px"></div>
-      <div class="puddle" style="left:55%;width:80px;height:30px;bottom:15%"></div>
-      <div class="puddle" style="left:20%;width:60px;height:25px;bottom:20%"></div>
-    </div>
-    <div id="alley-door" data-depth="0.4" onclick="goTo('shop')">
-      <div class="door-frame">
-        <div class="door-handle"></div>
-      </div>
-      <div class="door-light"></div>
-      <div class="door-label">ENTER THE SHOP</div>
-    </div>
+<!-- ═══════ SCENE 2: THRESHOLD ═══════ -->
+<div id="threshold" class="scene">
+  <div class="scene-bg" data-parallax="true"></div>
+  <div class="dust-container"></div>
+</div>
+
+<!-- ═══════ SCENE 3: SHOP ═══════ -->
+<div id="shop" class="scene">
+  <div class="scene-bg flickering" data-parallax="true"></div>
+  <div class="dust-container"></div>
+  
+  <!-- Hotspot: Left shelves → shelf close-up -->
+  <div class="hotspot" style="left:2%;top:10%;width:35%;height:75%" data-goto="shelf-view">
+    <div class="hotspot-indicator" style="top:40%;left:50%"></div>
+    <div class="hotspot-label" style="top:42%;bottom:auto;left:50%">Shelves</div>
+  </div>
+  
+  <!-- Hotspot: Counter area → shopkeeper -->
+  <div class="hotspot" style="left:38%;top:55%;width:25%;height:35%" data-goto="shopkeeper-view">
+    <div class="hotspot-indicator" style="top:20%;left:50%"></div>
+    <div class="hotspot-label" style="top:22%;bottom:auto">The Shopkeeper</div>
+  </div>
+
+  <!-- Hotspot: Right side / deep → cinema -->
+  <div class="hotspot" style="right:5%;top:35%;width:18%;height:30%" data-goto="cinema-view">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">Cinema Below ↓</div>
   </div>
 </div>
 
-<!-- ââââââ SHOP ââââââ -->
-<div class="screen" id="screen-shop">
-  <div class="parallax-scene">
-    <div class="parallax-layer" id="shop-bg" data-depth="0.1"></div>
-    <div id="shop-lamp" data-depth="0.6"></div>
+<!-- ═══════ SCENE 4: SHELF CLOSE-UP ═══════ -->
+<div id="shelf-view" class="scene">
+  <div class="scene-bg" data-parallax="true"></div>
+  <div class="dust-container"></div>
+  <div class="nav-back" data-goto="shop">Back to shop</div>
 
-    <div id="shop-shelves" data-depth="0.25">
-      <div class="shelf-item" onclick="openPanel('whip')">
-        <div class="item-img"><div class="whip-ph"></div></div>
-        <div class="item-label">Skin Me</div>
-      </div>
-      <div class="shelf-item" onclick="openPanel('wig')">
-        <div class="item-img"><div class="wig-ph"></div></div>
-        <div class="item-label">Carry Me</div>
-      </div>
-      <div class="shelf-item" onclick="openPanel('hourglass')">
-        <div class="item-img"><div class="hourglass-ph"></div></div>
-        <div class="item-label">Book 3</div>
-      </div>
-      <div class="shelf-item" onclick="openPanel('box')">
-        <div class="item-img"><div class="box-ph"></div></div>
-        <div class="item-label">Lay Me</div>
-      </div>
-      <div class="shelf-item" onclick="openPanel('glove')" style="opacity:0.5">
-        <div class="item-img"><div class="glove-ph"></div></div>
-        <div class="item-label"></div>
-      </div>
-    </div>
-
-    <div id="shopkeeper" data-depth="0.3" onclick="openChat()">
-      <div class="sk-silhouette"><div class="sk-eyes"><div class="sk-eye"></div><div class="sk-eye"></div></div></div>
-      <div class="sk-label">THE SHOPKEEPER</div>
-    </div>
-
-    <div id="shop-counter" data-depth="0.35"></div>
-
-    <div id="shop-stairs" onclick="goTo('cinema')">
-      <div class="stair" style="height:8px"></div>
-      <div class="stair" style="height:14px"></div>
-      <div class="stair" style="height:20px"></div>
-      <div class="stair" style="height:26px"></div>
-      <div class="stair" style="height:32px"></div>
-      <div class="stairs-label">CINEMA BELOW â</div>
-    </div>
+  <!-- Item hotspots on the shelf -->
+  <!-- Hourglass (left) -->
+  <div class="hotspot" style="left:2%;top:45%;width:14%;height:45%" data-item="hourglass">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">Hourglass</div>
   </div>
+  
+  <!-- Glove (center-left) -->
+  <div class="hotspot" style="left:18%;top:45%;width:20%;height:45%" data-item="glove">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">The Glove</div>
+  </div>
+
+  <!-- Mirror (center-right) -->
+  <div class="hotspot" style="left:52%;top:45%;width:14%;height:45%" data-item="mirror">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">Mirror</div>
+  </div>
+
+  <!-- Hourglass right -->
+  <div class="hotspot" style="right:2%;top:45%;width:14%;height:45%" data-item="hourglass">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">Hourglass</div>
+  </div>
+
+  <!-- Ornate box (top shelf center) -->
+  <div class="hotspot" style="left:30%;top:5%;width:22%;height:38%" data-item="tarot">
+    <div class="hotspot-indicator"></div>
+    <div class="hotspot-label">The Box</div>
+  </div>
+
+  <!-- Wig — hidden in back, we'll make it a separate nav -->
 </div>
 
-<!-- ââââââ CINEMA ââââââ -->
-<div class="screen" id="screen-cinema">
-  <div class="parallax-scene">
-    <div class="parallax-layer" style="background:linear-gradient(to bottom,#0a0606,#0d0808)" data-depth="0.1"></div>
-    <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--neon-red);box-shadow:0 0 20px var(--neon-red);opacity:0.6" data-depth="0.15"></div>
-    <!-- Screen -->
-    <div style="position:absolute;top:12%;left:50%;transform:translateX(-50%);width:55%;max-width:450px;height:28%;background:#111;border:2px solid #222;cursor:pointer;display:flex;align-items:center;justify-content:center" data-depth="0.2" onclick="openPanel('episode')">
-      <span style="font-family:var(--font-display);font-size:13px;letter-spacing:4px;color:var(--ash)">â¶ EPISODE 1</span>
-    </div>
-    <!-- Seats placeholder -->
-    <div style="position:absolute;bottom:8%;left:50%;transform:translateX(-50%);width:70%;max-width:500px;display:flex;gap:4px;flex-wrap:wrap;justify-content:center" data-depth="0.4">
-      <script>document.currentScript.parentElement.innerHTML+=Array(32).fill(0).map((_,i)=>'<div style="width:28px;height:22px;background:'+(Math.random()<0.3?'#100a0a':'#1a1515')+';border:1px solid #2a2020;border-radius:3px 3px 0 0"></div>').join('')</script>
-    </div>
-  </div>
-</div>
-
-<!-- ââââââ CHAT OVERLAY ââââââ -->
-<div id="chat-overlay">
-  <div id="chat-box">
-    <div id="chat-header">
-      <h3>THE SHOPKEEPER</h3>
-      <button id="chat-close" onclick="closeChat()">Ã</button>
-    </div>
+<!-- ═══════ SCENE 5: SHOPKEEPER ═══════ -->
+<div id="shopkeeper-view" class="scene">
+  <div class="scene-bg" data-parallax="true"></div>
+  <div class="nav-back" data-goto="shop">Back to shop</div>
+  
+  <div id="chat-panel">
     <div id="chat-messages">
-      <div class="msg msg-sk">"Welcome. Or welcome back. The shop doesn't distinguish."</div>
+      <div class="chat-msg shopkeeper">Welcome. Or welcome back. The shop doesn't distinguish.</div>
     </div>
-    <div id="chat-input-wrap">
-      <input type="text" id="chat-input" placeholder="Say something..." autocomplete="off">
-      <button id="chat-send" onclick="sendChat()">SEND</button>
+    <div id="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Speak..." autocomplete="off">
+      <button id="chat-send">Send</button>
     </div>
   </div>
 </div>
 
-<!-- ââââââ PANELS ââââââ -->
-<div class="panel-overlay" id="panel-whip"><div class="panel">
-  <button class="panel-close" onclick="closePanel('whip')">Ã</button>
-  <h2>SKIN ME</h2>
-  <p style="font-style:italic;color:var(--gold-dim);font-size:14px;letter-spacing:2px">A NAMENLOS NOVEL Â· BOOK 1</p>
-  <p>Paranormal Dark Romance 18+ Â· Berlin</p>
-  <h3>Chapter 1 â Free</h3>
-  <div class="chapter-text">
-    <p>The shop had no sign. No address. No name anyone remembered.</p>
-    <p>Rita found it the way most people find things they shouldn't â by not looking. By turning left when she meant to turn right, by following the alley instead of the avenue.</p>
-    <p>The door was heavy, older than the building around it. Wood so dark it looked burned. A brass handle shaped like a hand â five fingers curled inward, as if gripping something invisible.</p>
-    <p>She pushed.</p>
-    <p>Inside: shelves. Hundreds of them. A kerosene lamp on the counter, the only light, and behind it â a man. Or something shaped like one.</p>
-    <p>"You're early," he said. His voice was dry leaves on stone. "Or late. I can never tell."</p>
-    <p>Rita opened her mouth to speak. But her eyes had already found it. On the center shelf, coiled like a sleeping snake: the whip.</p>
-    <p>Black leather. Braided tight. The handle was bone â smooth from centuries of hands.</p>
-    <p>It was the most beautiful thing she had ever seen.</p>
-    <p>"Don't," the shopkeeper said.</p>
-    <p>But Rita was already reaching.</p>
-    <p style="text-align:center;color:var(--gold-dim);margin-top:20px;font-style:italic">â End of preview â</p>
+<!-- ═══════ SCENE 6: CINEMA ═══════ -->
+<div id="cinema-view" class="scene">
+  <div class="scene-bg" data-parallax="true"></div>
+  <div class="nav-back" data-goto="shop">Back to shop</div>
+  <div class="cinema-screen">
+    <div class="placeholder-text">Episode 1 — Coming Soon</div>
   </div>
-  <h3>Get the Book</h3>
-  <button class="btn-primary" onclick="alert('â Digistore24')">EBOOK â $9.99</button>
-  <button class="btn-secondary" onclick="alert('â Digistore24')">PAPERBACK â $16.99</button>
-  <button class="btn-secondary" onclick="alert('â Digistore24')">PREMIUM â $25</button>
-</div></div>
+</div>
 
-<div class="panel-overlay" id="panel-wig"><div class="panel">
-  <button class="panel-close" onclick="closePanel('wig')">Ã</button>
-  <h2>CARRY ME</h2><div class="waitlist-tag">COMING SOON</div>
-  <p>The red wig on the shelf is watching you. It has been watching everyone.</p>
-  <h3>Waitlist</h3>
-  <div class="email-form"><input type="email" placeholder="your@email.com" id="email-wig"><button onclick="captureEmail('wig')">NOTIFY ME</button></div>
-</div></div>
-
-<div class="panel-overlay" id="panel-hourglass"><div class="panel">
-  <button class="panel-close" onclick="closePanel('hourglass')">Ã</button>
-  <h2>WARUM MÃTTER TÃTEN?</h2><div class="waitlist-tag">COMING SOON</div>
-  <p>The hourglass holds red sand. The sand flows upward. Time inside moves backward.</p>
-  <p>Mystical Thriller</p>
-  <h3>Waitlist</h3>
-  <div class="email-form"><input type="email" placeholder="your@email.com" id="email-hourglass"><button onclick="captureEmail('hourglass')">NOTIFY ME</button></div>
-</div></div>
-
-<div class="panel-overlay" id="panel-box"><div class="panel">
-  <button class="panel-close" onclick="closePanel('box')">Ã</button>
-  <h2>LAY ME</h2><div class="waitlist-tag">COMING SOON</div>
-  <p>Inside the box: a tarot deck. Every card has a name. Every name has a price.</p>
-  <h3>Waitlist</h3>
-  <div class="email-form"><input type="email" placeholder="your@email.com" id="email-box"><button onclick="captureEmail('box')">NOTIFY ME</button></div>
-</div></div>
-
-<div class="panel-overlay" id="panel-glove"><div class="panel">
-  <button class="panel-close" onclick="closePanel('glove')">Ã</button>
-  <h2 style="color:var(--ash)">THE GLOVE</h2>
-  <p style="font-style:italic;color:var(--gold-dim)">You noticed. Most don't.</p>
-  <p>The glove lay on the lowest shelf, forgotten or deliberately hidden. Black kid leather, the left hand only.</p>
-  <p>A woman had come in asking for something to hold. He sold her the glove. She never dropped anything again. But she also couldn't let go.</p>
-  <p>She returned it on a Thursday. Her fingers were raw.</p>
-  <p>"Keep it," she said. "Some things hold too tight."</p>
-  <p style="text-align:center;color:var(--ash);margin-top:20px;font-size:13px;letter-spacing:3px">â A NAMENLOS SHORT STORY â</p>
-</div></div>
-
-<div class="panel-overlay" id="panel-episode"><div class="panel" style="text-align:center">
-  <button class="panel-close" onclick="closePanel('episode')">Ã</button>
-  <h2>EPISODE 1</h2>
-  <div style="background:#000;height:300px;display:flex;align-items:center;justify-content:center;border:1px solid #222">
-    <span style="color:var(--ash);font-family:var(--font-display);font-size:11px;letter-spacing:2px">VIDEO PLAYER<br><br>YouTube iframe here</span>
+<!-- ═══════ ITEM OVERLAY ═══════ -->
+<div id="item-overlay">
+  <div class="item-inner">
+    <div class="close-x">✕ CLOSE</div>
+    <img class="item-img" src="" alt="">
+    <div class="item-title"></div>
+    <div class="item-lore"></div>
+    <div class="item-book" style="display:none"></div>
   </div>
-</div></div>
+</div>
+
+<!-- ═══════ BOOK PANEL ═══════ -->
+<div id="book-panel">
+  <div class="panel-close">✕</div>
+  <div id="book-panel-content"></div>
+</div>
+
 
 <script>
-// âââââââââââââââââââââââââââââââââââââââ
-// STATE
-// âââââââââââââââââââââââââââââââââââââââ
-var S = {
-  screen: 'code',
-  known: localStorage.getItem('namenlos_known') === '1',
-  fromAd: new URLSearchParams(location.search).has('r'),
-  codeAttempts: 0,
-  mouseX: 0,
-  mouseY: 0
+/* ═══════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════ */
+const state = {
+  coins: parseInt(localStorage.getItem('nm-coins') || '0'),
+  known: localStorage.getItem('nm-known') === '1',
+  currentScene: 'code-screen',
+  chatHistory: []
 };
 
-// âââââââââââââââââââââââââââââââââââââââ
-// INIT
-// âââââââââââââââââââââââââââââââââââââââ
-if (S.fromAd || S.known) {
-  document.getElementById('screen-code').classList.remove('active');
-  goTo('alley', true);
-  if (S.known && !S.fromAd) {
-    var w = document.getElementById('welcome-msg');
-    w.style.opacity = '1';
-    setTimeout(function() { w.style.opacity = '0'; }, 3000);
+/* ═══════════════════════════════════════════════
+   ITEM DATA
+   ═══════════════════════════════════════════════ */
+const items = {
+  whip: {
+    img: 'img/whip.png',
+    title: 'The Whip',
+    lore: 'Black leather. Braided tight. The handle is bone — smooth from centuries of hands. Runes burned into ivory, in a language older than the shop itself. It was the most beautiful thing she had ever seen.',
+    book: 'Skin Me',
+    bookId: 'skin-me'
+  },
+  wig: {
+    img: 'img/wig.png',
+    title: 'The Wig',
+    lore: 'Auburn curls spilling over the mannequin\'s shoulder like fire frozen mid-fall. A handwritten note beside it, the ink almost gone. The wig has been watching. It watches everyone.',
+    book: 'Carry Me',
+    bookId: 'carry-me'
+  },
+  mirror: {
+    img: 'img/mirror.png',
+    title: 'The Mirror',
+    lore: 'A round pocket mirror, silver frame tarnished to near-black. Open it and the glass shows not your face, but the face you\'ll wear in ten years. Some people close it. Some can\'t stop looking.',
+    book: null
+  },
+  glove: {
+    img: 'img/glove.png',
+    title: 'The Glove',
+    lore: 'Red kid leather, the left hand only. A woman came in asking for something to hold. He sold her the glove. She never dropped anything again. But she also couldn\'t let go.',
+    book: null
+  },
+  hourglass: {
+    img: 'img/hourglass.png',
+    title: 'The Hourglass',
+    lore: 'The sand is red. The sand flows upward. Time inside moves backward. Every grain is a second someone wished they could take back. The brass is warm to the touch — always.',
+    book: 'Warum Mütter töten?',
+    bookId: 'warum'
+  },
+  tarot: {
+    img: 'img/tarot.png',
+    title: 'The Tarot Box',
+    lore: 'Carved wood, gothic tracery. Inside: a deck. Every card has a name. Every name has a price. The Strength card peeks out, glowing faintly gold. It chose you. You didn\'t choose it.',
+    book: 'Lay Me',
+    bookId: 'lay-me'
+  },
+  coins: {
+    img: 'img/coins.png',
+    title: 'The Drawer',
+    lore: 'Old currencies from places that no longer exist. The shopkeeper accepts any coin — but not money. There is a difference.',
+    book: null
   }
-}
+};
 
-// âââââââââââââââââââââââââââââââââââââââ
-// PARALLAX ENGINE
-// âââââââââââââââââââââââââââââââââââââââ
-document.addEventListener('mousemove', function(e) {
-  S.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-  S.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-});
+/* ═══════════════════════════════════════════════
+   BOOK DATA
+   ═══════════════════════════════════════════════ */
+const books = {
+  'skin-me': {
+    title: 'Skin Me',
+    sub: 'A Namenlos Novel · Book 1 · Paranormal Dark Romance 18+',
+    excerpt: 'The shop had no sign. No address. No name anyone remembered. Rita found it the way most people find things they shouldn\'t — by not looking...',
+    buttons: [
+      { label: 'Standard — $25', url: '#', primary: true },
+      { label: 'Premium — $49', url: '#' },
+      { label: 'Subscribe — $7.99/mo', url: '#' }
+    ]
+  },
+  'carry-me': {
+    title: 'Carry Me',
+    sub: 'A Namenlos Novel · Book 2 · Coming Soon',
+    excerpt: 'The red wig on the shelf is watching you. It has been watching everyone.',
+    buttons: [
+      { label: 'Join Waitlist', url: '#', primary: true }
+    ]
+  },
+  'warum': {
+    title: 'Warum Mütter töten?',
+    sub: 'A Namenlos Novel · Book 3 · Coming Soon',
+    excerpt: 'The hourglass holds red sand. The sand flows upward. Time inside moves backward.',
+    buttons: [
+      { label: 'Join Waitlist', url: '#', primary: true }
+    ]
+  },
+  'lay-me': {
+    title: 'Lay Me',
+    sub: 'A Namenlos Novel · Coming Soon',
+    excerpt: 'Inside the box: a tarot deck. Every card has a name. Every name has a price.',
+    buttons: [
+      { label: 'Join Waitlist', url: '#', primary: true }
+    ]
+  }
+};
 
-function updateParallax() {
-  var activeScreen = document.querySelector('.screen.active');
-  if (!activeScreen) return;
-  var layers = activeScreen.querySelectorAll('[data-depth]');
-  layers.forEach(function(layer) {
-    var depth = parseFloat(layer.getAttribute('data-depth'));
-    var moveX = S.mouseX * depth * 20;
-    var moveY = S.mouseY * depth * 10;
-    layer.style.transform = 'translate(' + moveX + 'px,' + moveY + 'px)';
+/* ═══════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Generate dust particles for each scene
+  document.querySelectorAll('.dust-container').forEach(c => {
+    for (let i = 0; i < 25; i++) {
+      const d = document.createElement('div');
+      d.className = 'dust';
+      d.style.left = Math.random() * 100 + '%';
+      d.style.animationDuration = (8 + Math.random() * 12) + 's';
+      d.style.animationDelay = Math.random() * 10 + 's';
+      d.style.width = d.style.height = (1 + Math.random() * 2) + 'px';
+      c.appendChild(d);
+    }
   });
-  requestAnimationFrame(updateParallax);
-}
-requestAnimationFrame(updateParallax);
 
-// Touch parallax
-document.addEventListener('touchmove', function(e) {
-  var t = e.touches[0];
-  S.mouseX = (t.clientX / window.innerWidth - 0.5) * 2;
-  S.mouseY = (t.clientY / window.innerHeight - 0.5) * 2;
+  // Update coin display
+  updateCoins();
+
+  // Check if returning visitor or direct link
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('r') === '1' || state.known) {
+    state.known = true;
+    localStorage.setItem('nm-known', '1');
+    goTo('alley', true);
+  }
+
+  // Preloader
+  const criticalImages = ['img/alley.png', 'img/shop.png', 'img/shopkeeper.jpg'];
+  let loaded = 0;
+  criticalImages.forEach(src => {
+    const img = new Image();
+    img.onload = img.onerror = () => {
+      loaded++;
+      if (loaded >= criticalImages.length) {
+        setTimeout(() => document.getElementById('preloader').classList.add('done'), 400);
+      }
+    };
+    img.src = src;
+  });
+  // Fallback
+  setTimeout(() => document.getElementById('preloader').classList.add('done'), 3000);
+
+  // Code input
+  const codeInput = document.getElementById('code-input');
+  codeInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const val = codeInput.value.trim().toLowerCase();
+      if (val === 'nimm mich' || val === '547' || val === 'nimm' || val === 'vergiss') {
+        state.known = true;
+        localStorage.setItem('nm-known', '1');
+        if (val === 'vergiss') {
+          // Secret room — earn coins
+          addCoins(5);
+        }
+        goTo('alley');
+      } else {
+        const err = document.getElementById('code-error');
+        err.style.opacity = '1';
+        codeInput.value = '';
+        setTimeout(() => err.style.opacity = '0', 2000);
+      }
+    }
+  });
+
+  // Hotspot clicks → scene navigation
+  document.querySelectorAll('.hotspot[data-goto]').forEach(h => {
+    h.addEventListener('click', () => goTo(h.dataset.goto));
+  });
+
+  // Nav back clicks
+  document.querySelectorAll('.nav-back[data-goto]').forEach(n => {
+    n.addEventListener('click', () => goTo(n.dataset.goto));
+  });
+
+  // Item hotspot clicks
+  document.querySelectorAll('.hotspot[data-item]').forEach(h => {
+    h.addEventListener('click', () => showItem(h.dataset.item));
+  });
+
+  // Item overlay close
+  document.getElementById('item-overlay').querySelector('.close-x').addEventListener('click', closeItem);
+  document.getElementById('item-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('item-overlay')) closeItem();
+  });
+
+  // Book panel close
+  document.getElementById('book-panel').querySelector('.panel-close').addEventListener('click', () => {
+    document.getElementById('book-panel').classList.remove('open');
+  });
+
+  // 2.5D parallax
+  document.addEventListener('mousemove', e => {
+    const cx = (e.clientX / window.innerWidth - 0.5) * 2;
+    const cy = (e.clientY / window.innerHeight - 0.5) * 2;
+    document.querySelectorAll('.scene.active .scene-bg[data-parallax]').forEach(bg => {
+      bg.style.transform = `translate(${-cx * 8}px, ${-cy * 5}px)`;
+    });
+  });
+
+  // Touch parallax (gyroscope-like via touch)
+  let touchStart = null;
+  document.addEventListener('touchstart', e => {
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  });
+  document.addEventListener('touchmove', e => {
+    if (!touchStart) return;
+    const dx = (e.touches[0].clientX - touchStart.x) * 0.05;
+    const dy = (e.touches[0].clientY - touchStart.y) * 0.05;
+    document.querySelectorAll('.scene.active .scene-bg[data-parallax]').forEach(bg => {
+      bg.style.transform = `translate(${-dx}px, ${-dy}px)`;
+    });
+  });
+
+  // Chat
+  document.getElementById('chat-send').addEventListener('click', sendChat);
+  document.getElementById('chat-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendChat();
+  });
 });
 
-// âââââââââââââââââââââââââââââââââââââââ
-// NAVIGATION
-// âââââââââââââââââââââââââââââââââââââââ
-function goTo(screen, instant) {
-  var trans = document.getElementById('transition');
-  var backBtn = document.getElementById('nav-back');
+/* ═══════════════════════════════════════════════
+   SCENE TRANSITIONS
+   ═══════════════════════════════════════════════ */
+function goTo(sceneId, instant) {
+  const current = document.querySelector('.scene.active');
+  const next = document.getElementById(sceneId);
+  if (!next || (current && current.id === sceneId)) return;
 
-  if (!instant) {
-    trans.classList.add('active');
-    setTimeout(function() { switchScreen(screen); setTimeout(function() { trans.classList.remove('active'); }, 100); }, 600);
+  // Special: threshold is a brief pass-through
+  if (sceneId === 'threshold') {
+    if (current) { current.classList.remove('active'); current.classList.add('behind'); }
+    next.classList.add('active');
+    setTimeout(() => {
+      next.classList.remove('active');
+      if (current) current.classList.remove('behind');
+      goTo('shop');
+    }, 1400);
+    state.currentScene = 'shop';
+    return;
+  }
+
+  if (instant) {
+    if (current) { current.classList.remove('active'); current.classList.remove('behind'); }
+    next.classList.add('active');
   } else {
-    switchScreen(screen);
+    if (current) { current.classList.remove('active'); current.classList.add('behind'); }
+    next.classList.add('active');
+    setTimeout(() => {
+      if (current) current.classList.remove('behind');
+    }, 1300);
   }
 
-  function switchScreen(name) {
-    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
-    document.getElementById('screen-' + name).classList.add('active');
-    S.screen = name;
+  state.currentScene = sceneId;
 
-    if (name === 'shop') {
-      backBtn.style.display = 'block';
-      backBtn.textContent = 'â ALLEY';
-      backBtn.onclick = function() { goTo('alley'); };
-    } else if (name === 'cinema') {
-      backBtn.style.display = 'block';
-      backBtn.textContent = 'â SHOP';
-      backBtn.onclick = function() { goTo('shop'); };
-    } else {
-      backBtn.style.display = 'none';
-    }
+  // Show coin counter once in shop
+  if (['shop', 'shelf-view', 'shopkeeper-view', 'cinema-view'].includes(sceneId)) {
+    document.getElementById('coin-counter').classList.add('show');
+  }
+
+  // First visit to shelf earns a coin
+  if (sceneId === 'shelf-view' && !localStorage.getItem('nm-shelf-visited')) {
+    localStorage.setItem('nm-shelf-visited', '1');
+    addCoins(1);
   }
 }
 
-// âââââââââââââââââââââââââââââââââââââââ
-// CODE SCREEN
-// âââââââââââââââââââââââââââââââââââââââ
-document.getElementById('code-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    var val = this.value.trim().toLowerCase().replace(/[\s\-]/g, '');
-    if (val === 'nimmmich') {
-      localStorage.setItem('namenlos_known', '1');
-      S.known = true;
-      document.getElementById('screen-code').style.transition = 'opacity 0.8s';
-      document.getElementById('screen-code').style.opacity = '0';
-      setTimeout(function() {
-        document.getElementById('screen-code').classList.remove('active');
-        document.getElementById('screen-code').style.display = 'none';
-        goTo('alley', true);
-      }, 800);
-    } else {
-      S.codeAttempts++;
-      var msgs = [
-        "The door doesn't recognize you.",
-        "Still wrong. The shopkeeper is listening.",
-        "You're persistent. But the word is not yours yet.",
-        'Try reading Chapter 1. <a href="#" onclick="openPanel(\'whip\');return false">Read free â</a>'
-      ];
-      document.getElementById('code-error').innerHTML = msgs[Math.min(S.codeAttempts - 1, msgs.length - 1)];
-    }
+/* ═══════════════════════════════════════════════
+   ITEM DISPLAY
+   ═══════════════════════════════════════════════ */
+function showItem(key) {
+  const item = items[key];
+  if (!item) return;
+  
+  const overlay = document.getElementById('item-overlay');
+  overlay.querySelector('.item-img').src = item.img;
+  overlay.querySelector('.item-title').textContent = item.title;
+  overlay.querySelector('.item-lore').textContent = item.lore;
+  
+  const bookBtn = overlay.querySelector('.item-book');
+  if (item.book) {
+    bookBtn.textContent = 'Read → ' + item.book;
+    bookBtn.style.display = 'inline-block';
+    bookBtn.onclick = () => { closeItem(); openBook(item.bookId); };
+  } else {
+    bookBtn.style.display = 'none';
   }
-});
 
-// âââââââââââââââââââââââââââââââââââââââ
-// PANELS
-// âââââââââââââââââââââââââââââââââââââââ
-function openPanel(name) {
-  var p = document.getElementById('panel-' + name);
-  if (p) p.classList.add('open');
-}
-function closePanel(name) {
-  var p = document.getElementById('panel-' + name);
-  if (p) p.classList.remove('open');
+  overlay.classList.add('open');
+
+  // Earn coin for first item view
+  const itemKey = 'nm-item-' + key;
+  if (!localStorage.getItem(itemKey)) {
+    localStorage.setItem(itemKey, '1');
+    addCoins(1);
+  }
 }
 
-// âââââââââââââââââââââââââââââââââââââââ
-// AI SHOPKEEPER CHAT
-// âââââââââââââââââââââââââââââââââââââââ
-var chatHistory = [];
-var SHOPKEEPER_SYSTEM = 'You are the shopkeeper of a nameless shop on Oranienstrasse, Berlin. The shop exists outside of time. You speak mysteriously, briefly, with hints. You know the history of every object but share only fragments. Character: calm, ironic, omniscient. Never answer directly. Every answer hints at the book "Skin Me". Objects: The whip (Skin Me) â oldest item, "Nimm mich â and they take it. Every time." The wig (Carry Me) â red, watches visitors. The hourglass (Warum MÃ¼tter tÃ¶ten?) â red sand flows upward. The box (Lay Me) â tarot deck inside. The glove â forgotten on bottom shelf. There is a secret room below the cinema. Code: "vergiss". Hint only to the most persistent. Rules: max 2-3 sentences. Never break character. If asked about non-shop topics: "The shop does not answer such questions. But the whip... it listens to everything." Reply in the visitor language (Russian, English, German).';
-
-function openChat() {
-  document.getElementById('chat-overlay').classList.add('open');
-  document.getElementById('chat-input').focus();
-}
-function closeChat() {
-  document.getElementById('chat-overlay').classList.remove('open');
+function closeItem() {
+  document.getElementById('item-overlay').classList.remove('open');
 }
 
-document.getElementById('chat-input').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') sendChat();
-});
+/* ═══════════════════════════════════════════════
+   BOOK PANEL
+   ═══════════════════════════════════════════════ */
+function openBook(bookId) {
+  const book = books[bookId];
+  if (!book) return;
 
-function sendChat() {
-  var input = document.getElementById('chat-input');
-  var msg = input.value.trim();
+  const content = document.getElementById('book-panel-content');
+  content.innerHTML = `
+    <div class="book-header">${book.title}</div>
+    <div class="book-sub">${book.sub}</div>
+    <div class="book-excerpt">${book.excerpt}</div>
+    <div class="buy-options">
+      ${book.buttons.map(b => 
+        `<a class="buy-btn ${b.primary ? 'primary' : ''}" href="${b.url}">${b.label}</a>`
+      ).join('')}
+    </div>
+  `;
+
+  document.getElementById('book-panel').classList.add('open');
+}
+
+/* ═══════════════════════════════════════════════
+   COINS
+   ═══════════════════════════════════════════════ */
+function addCoins(n) {
+  state.coins += n;
+  localStorage.setItem('nm-coins', state.coins);
+  updateCoins();
+}
+function updateCoins() {
+  document.getElementById('coin-count').textContent = state.coins;
+}
+
+/* ═══════════════════════════════════════════════
+   SHOPKEEPER CHAT (Claude API)
+   ═══════════════════════════════════════════════ */
+const SHOPKEEPER_SYSTEM = `You are the Shopkeeper of a nameless antique shop in a Kreuzberg back alley, Berlin. You are ancient, ageless, gender-ambiguous. You speak in short, cryptic, poetic sentences. You know things about people before they tell you. You sell artifacts — each one cursed or blessed, depending on the buyer. You never explain the rules. You sometimes quote prices in memories, not money. You are patient but unsettling. Never break character. Never mention AI, Claude, or technology. Keep responses under 50 words. Speak in English with occasional German words. You remember: the whip (Skin Me), the wig (Carry Me), the hourglass (Warum Mütter töten?), the tarot box (Lay Me), the red glove, the mirror. Each artifact belongs to a story. If asked about an artifact, give a cryptic hint about its story without spoilers.`;
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
   if (!msg) return;
   input.value = '';
 
-  // Add user message
-  addMsg(msg, 'user');
-  chatHistory.push({ role: 'user', content: msg });
+  // Add visitor message
+  appendChatMsg(msg, 'visitor');
 
-  // Show typing
-  var typing = document.createElement('div');
-  typing.className = 'msg msg-typing';
-  typing.textContent = '...';
-  document.getElementById('chat-messages').appendChild(typing);
-  document.getElementById('chat-messages').scrollTop = 99999;
+  // Add thinking indicator
+  const thinkingEl = appendChatMsg('...', 'shopkeeper');
 
-  // Call Claude API
-  fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 200,
-      system: SHOPKEEPER_SYSTEM,
-      messages: chatHistory
-    })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    typing.remove();
-    var reply = data.content && data.content[0] ? data.content[0].text : '"..."';
-    chatHistory.push({ role: 'assistant', content: reply });
-    addMsg(reply, 'sk');
-  })
-  .catch(function() {
-    typing.remove();
-    // Fallback: offline responses
-    var fallback = [
-      '"The whip has been here longer than I have. Which is saying something."',
-      '"You ask many questions. The shop prefers listeners."',
-      '"Nimm mich â and they take it. Every time. I warn them."',
-      '"There are rooms you haven\'t seen. Not everyone finds them."',
-      '"The shop remembers everyone who enters. Even those who forget."'
-    ];
-    var reply = fallback[Math.floor(Math.random() * fallback.length)];
-    chatHistory.push({ role: 'assistant', content: reply });
-    addMsg(reply, 'sk');
-  });
-}
+  state.chatHistory.push({ role: 'user', content: msg });
 
-function addMsg(text, type) {
-  var div = document.createElement('div');
-  div.className = 'msg msg-' + type;
-  div.textContent = text;
-  document.getElementById('chat-messages').appendChild(div);
-  document.getElementById('chat-messages').scrollTop = 99999;
-}
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 150,
+        system: SHOPKEEPER_SYSTEM,
+        messages: state.chatHistory.slice(-10)
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(c => c.text || '').join('') || 'The shopkeeper says nothing. But watches.';
+    
+    state.chatHistory.push({ role: 'assistant', content: reply });
+    thinkingEl.textContent = '— ' + reply;
 
-// âââââââââââââââââââââââââââââââââââââââ
-// EMAIL CAPTURE (Kit)
-// âââââââââââââââââââââââââââââââââââââââ
-function captureEmail(source) {
-  var inp = document.getElementById('email-' + source);
-  if (!inp) return;
-  var em = inp.value.trim();
-  if (!em || em.indexOf('@') < 0) { inp.style.borderColor = 'var(--neon-red)'; return; }
-
-  // Send to Kit
-  var kf = document.getElementById('kit-form');
-  if (!kf) {
-    kf = document.createElement('form');
-    kf.id = 'kit-form'; kf.method = 'post';
-    kf.action = 'https://app.kit.com/forms/9207421/subscriptions';
-    kf.target = 'kit-frame'; kf.style.display = 'none';
-    var ki = document.createElement('input');
-    ki.name = 'email_address'; ki.type = 'hidden';
-    kf.appendChild(ki);
-    document.body.appendChild(kf);
-    var ifr = document.createElement('iframe');
-    ifr.name = 'kit-frame'; ifr.style.display = 'none';
-    document.body.appendChild(ifr);
+    // Earn coin for first chat
+    if (!localStorage.getItem('nm-chatted')) {
+      localStorage.setItem('nm-chatted', '1');
+      addCoins(2);
+    }
+  } catch (e) {
+    thinkingEl.textContent = '— ' + getOfflineReply(msg);
   }
-  kf.querySelector('input').value = em;
-  kf.submit();
+}
 
-  inp.value = '';
-  inp.style.borderColor = 'var(--gold)';
-  inp.placeholder = 'The shopkeeper remembers.';
-  inp.disabled = true;
+function appendChatMsg(text, role) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.textContent = (role === 'shopkeeper' ? '— ' : '') + text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+// Fallback replies if API fails
+function getOfflineReply(msg) {
+  const replies = [
+    "Some questions answer themselves. Given time.",
+    "You remind me of someone. They didn't listen either.",
+    "The shop remembers what you've forgotten.",
+    "Price depends on what you're willing to lose.",
+    "That artifact was waiting. Not for you, perhaps. But waiting.",
+    "Wiedersehen. Or perhaps — Lebwohl.",
+    "Touch nothing. Or touch everything. The shop doesn't judge.",
+    "You're early. Or late. I can never tell.",
+    "The drawer has coins from countries that no longer exist. Like memories."
+  ];
+  return replies[Math.floor(Math.random() * replies.length)];
 }
 </script>
+
 </body>
 </html>
