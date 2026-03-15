@@ -228,9 +228,22 @@ body{cursor:default}
 /* ═══ MOBILE ═══ */
 /* ═══════════════════════════════════════ */
 @media(max-width:768px){
-  /* Images: no parallax overshoot */
-  .scene-img{width:100%;height:100%;object-fit:cover;transform:translate(-50%,-50%) !important}
-  .hotspots{width:100%;height:100%;transform:translate(-50%,-50%) !important}
+  /* Panoramic: image wider than screen, swipeable */
+  .scene-img{
+    width:auto;height:100%;
+    min-width:160%;
+    object-fit:cover;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
+    transition:none;
+  }
+  .hotspots{
+    width:auto;height:100%;
+    min-width:160%;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
+    transition:none;
+  }
 
   /* Hotspot labels always visible on touch */
   .hotspot .label{opacity:0.6;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px}
@@ -238,6 +251,10 @@ body{cursor:default}
   .whisper{font-size:11px}
   .ember{opacity:0.7}
   #gameCursor{display:none}
+
+  /* Swipe hint */
+  .swipe-hint{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);z-index:61;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#5a4a35;opacity:0;animation:hintFade 4s ease 2s forwards;pointer-events:none}
+  @keyframes hintFade{0%{opacity:0}20%{opacity:0.6}80%{opacity:0.6}100%{opacity:0}}
 
   /* Top bar: compact */
   .top-bar{padding:8px 12px}
@@ -675,6 +692,9 @@ body{cursor:default}
 <!-- GAME CURSOR -->
 <div id="gameCursor"><span class="rune">◈</span></div>
 
+<!-- SWIPE HINT (mobile) -->
+<div class="swipe-hint" id="swipeHint">← swipe to look around →</div>
+
 <!-- OVERLAYS -->
 <div class="vignette"></div>
 <div class="dust" id="dust"></div>
@@ -918,6 +938,60 @@ if(!isMobile) {
     h.addEventListener('mousedown', () => gameCursor.classList.add('active'));
     h.addEventListener('mouseup', () => gameCursor.classList.remove('active'));
   });
+}
+
+// ═══ MOBILE TOUCH PAN ═══
+if(isMobile) {
+  let panX = 0;
+  let startX = 0;
+  let startPanX = 0;
+  let isPanning = false;
+  const maxPan = 120; // max pixels left/right
+
+  document.addEventListener('touchstart', e => {
+    if(e.touches.length === 1) {
+      startX = e.touches[0].clientX;
+      startPanX = panX;
+      isPanning = true;
+    }
+    // Hide swipe hint on first touch
+    const hint = document.getElementById('swipeHint');
+    if(hint) hint.style.display = 'none';
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e => {
+    if(!isPanning || e.touches.length !== 1) return;
+    const dx = e.touches[0].clientX - startX;
+    panX = Math.max(-maxPan, Math.min(maxPan, startPanX + dx));
+    applyPan();
+  }, {passive:true});
+
+  document.addEventListener('touchend', () => {
+    isPanning = false;
+  });
+
+  function applyPan() {
+    const active = document.querySelector('.scene.active');
+    if(!active) return;
+    const img = active.querySelector('.scene-img');
+    const hs = active.querySelector('.hotspots');
+    if(img) img.style.setProperty('--panX', panX + 'px');
+    if(hs) hs.style.setProperty('--panX', panX + 'px');
+  }
+
+  // Reset pan on scene change
+  const origUpdateUI = updateUI;
+  updateUI = function() {
+    origUpdateUI();
+    panX = 0;
+    const active = document.querySelector('.scene.active');
+    if(active) {
+      const img = active.querySelector('.scene-img');
+      const hs = active.querySelector('.hotspots');
+      if(img) img.style.setProperty('--panX', '0px');
+      if(hs) hs.style.setProperty('--panX', '0px');
+    }
+  };
 }
 
 // ═══ PARALLAX ═══
