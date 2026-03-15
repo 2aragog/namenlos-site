@@ -8,719 +8,601 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--text:#999;--text2:#666;--gold:#c8a060;--red:#6b1c1c;--green:#1c4a1c}
-body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:100vh}
-
-/* AUTH SCREEN */
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--border2:#333;--text:#999;--text2:#666;--gold:#c8a060;--red:#6b1c1c;--green:#1c4a1c;--blue:#1c3a5a}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;height:100vh;overflow:hidden;display:flex;flex-direction:column}
 #auth{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:20px}
 #auth .brand{font-family:'Cinzel',serif;font-size:11px;letter-spacing:8px;text-transform:uppercase;color:#2a2218}
-#auth input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:14px;padding:10px 20px;text-align:center;width:260px;outline:none}
+#auth .brand span{color:var(--gold)}
+#auth input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:inherit;font-size:14px;padding:10px 20px;text-align:center;width:280px;outline:none}
 #auth input:focus{border-color:#3a2a18}
-#auth .err{color:var(--red);font-size:11px;height:16px}
-
-/* LAYOUT */
-#app{display:none;height:100vh;flex-direction:column}
-header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg2)}
+#auth .err{color:#a33;font-size:11px;height:16px}
+#app{display:none;flex-direction:column;height:100vh}
+header{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg2);flex-shrink:0}
 header .logo{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#3a3025}
 header .logo span{color:var(--gold)}
-header nav{display:flex;gap:16px;align-items:center}
-header nav a{color:var(--text2);text-decoration:none;font-size:12px;transition:color 0.2s}
-header nav a:hover{color:var(--gold)}
-.btn{padding:6px 14px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.2s}
+header nav{display:flex;gap:12px;align-items:center}
+header nav a,header nav button{color:var(--text2);text-decoration:none;font-size:11px;font-family:inherit;background:none;border:none;cursor:pointer;transition:color 0.2s}
+header nav a:hover,header nav button:hover{color:var(--gold)}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
+.tab{padding:8px 20px;font-size:11px;letter-spacing:1px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:inherit;background:none;border-top:none;border-left:none;border-right:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.panel{display:none;flex:1;overflow:hidden;flex-direction:column}
+.panel.active{display:flex}
+.btn{padding:5px 12px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-family:inherit;font-size:11px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
 .btn:hover{border-color:var(--gold);color:var(--gold)}
 .btn-primary{border-color:var(--gold);color:var(--gold)}
 .btn-danger{border-color:var(--red);color:#a33}
-
-/* TOOLBAR */
-.toolbar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;background:var(--bg);flex-wrap:wrap}
-.toolbar .path{font-size:12px;color:var(--text2);flex:1}
+.btn-danger:hover{background:#1a0a0a;border-color:#a33}
+.toolbar{padding:8px 16px;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center;background:var(--bg);flex-shrink:0;flex-wrap:wrap}
+.toolbar .path{font-size:12px;color:var(--text2);flex:1;min-width:80px}
 .toolbar .path span{color:var(--gold);cursor:pointer}
 .toolbar .path span:hover{text-decoration:underline}
-.search{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;width:200px;outline:none}
+.search{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:4px 10px;font-family:inherit;font-size:11px;width:140px;outline:none}
 .search:focus{border-color:#3a2a18}
-
-/* FILE GRID */
-.content{flex:1;overflow-y:auto;padding:16px 20px}
-.view-toggle{display:flex;gap:4px}
-.view-toggle .btn{padding:4px 10px;font-size:11px}
-.view-toggle .btn.active{background:var(--bg3);border-color:var(--gold);color:var(--gold)}
-
-.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}
+.content{flex:1;overflow-y:auto;padding:12px 16px}
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
 .file-grid.list{grid-template-columns:1fr;gap:2px}
-
-.file-card{border:1px solid var(--border);background:var(--bg2);overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative}
-.file-card:hover{border-color:#3a2a18;transform:translateY(-1px)}
+.file-card{border:1px solid var(--border);background:var(--bg2);overflow:hidden;cursor:pointer;transition:border-color 0.15s,box-shadow 0.15s;position:relative;user-select:none}
+.file-card:hover{border-color:#3a2a18}
 .file-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.file-card.drag-over{border-color:var(--gold)!important;background:rgba(200,160,96,0.06)!important;box-shadow:0 0 20px rgba(200,160,96,0.15) inset!important}
+.file-card.dragging{opacity:0.3;pointer-events:none}
 .file-card .thumb{width:100%;aspect-ratio:16/10;background:#080808;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .file-card .thumb img{width:100%;height:100%;object-fit:cover}
-.file-card .thumb .icon{font-size:28px;opacity:0.2}
-.file-card .info{padding:8px 10px}
-.file-card .info .name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.file-card .info .meta{font-size:10px;color:var(--text2);margin-top:3px}
-.file-card .check{position:absolute;top:6px;right:6px;width:18px;height:18px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);opacity:0;transition:opacity 0.2s}
+.file-card .thumb .icon{font-size:24px;opacity:0.15}
+.file-card .info{padding:6px 8px}
+.file-card .name{font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-card .meta{font-size:9px;color:var(--text2);margin-top:2px}
+.file-card .check{position:absolute;top:4px;right:4px;width:16px;height:16px;border:1px solid var(--border);background:rgba(10,10,10,0.7);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gold);opacity:0;transition:opacity 0.15s}
 .file-card:hover .check,.file-card.selected .check{opacity:1}
-.file-card.selected .check{background:var(--gold);color:var(--bg)}
-
-/* LIST VIEW */
-.file-grid.list .file-card{display:flex;align-items:center;gap:12px}
-.file-grid.list .file-card .thumb{width:48px;height:36px;aspect-ratio:auto;flex-shrink:0}
-.file-grid.list .file-card .info{padding:8px 0;flex:1;display:flex;align-items:center;gap:16px}
-.file-grid.list .file-card .info .name{flex:1}
+.file-card.selected .check{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.file-card[data-type="dir"]{border-left:3px solid #1a1a1a}
+.file-card[data-type="dir"].drag-over{border-left-color:var(--gold)!important}
+.file-grid.list .file-card{display:flex;align-items:center;gap:8px}
+.file-grid.list .file-card .thumb{width:40px;height:30px;aspect-ratio:auto;flex-shrink:0}
+.file-grid.list .file-card .info{padding:4px 0;flex:1;display:flex;align-items:center;gap:12px}
+.file-grid.list .file-card .name{flex:1}
 .file-grid.list .file-card .check{position:static;opacity:1}
-
-/* UPLOAD ZONE */
-.upload-zone{border:2px dashed var(--border);padding:40px;text-align:center;margin-top:12px;transition:all 0.3s;cursor:pointer}
+.upload-zone{border:2px dashed var(--border);padding:20px;text-align:center;margin-bottom:8px;transition:all 0.3s;cursor:pointer}
 .upload-zone.drag{border-color:var(--gold);background:rgba(200,160,96,0.03)}
-.upload-zone p{color:var(--text2);font-size:12px;margin-top:8px}
-.upload-zone .upload-icon{font-size:32px;opacity:0.3}
+.upload-zone p{color:var(--text2);font-size:11px}
 #fileInput{display:none}
-
-/* PROGRESS */
-.progress-bar{height:3px;background:var(--border);margin-top:8px;overflow:hidden;display:none}
+.progress-bar{height:3px;background:var(--border);overflow:hidden;display:none;margin-bottom:8px}
 .progress-bar .fill{height:100%;background:var(--gold);width:0;transition:width 0.3s}
-
-/* PREVIEW MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .modal-bg.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--border);max-width:900px;width:100%;max-height:90vh;overflow-y:auto}
-.modal-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);font-weight:500}
-.modal-body{padding:16px}
-.modal-body img{max-width:100%;max-height:60vh;display:block;margin:0 auto}
-.modal-body .details{margin-top:16px;display:grid;grid-template-columns:100px 1fr;gap:6px;font-size:12px}
+.modal-sm{max-width:420px}
+.modal-header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-family:inherit;font-size:13px;color:var(--gold);font-weight:500}
+.modal-body{padding:14px}
+.modal-body img{max-width:100%;max-height:55vh;display:block;margin:0 auto}
+.modal-body .details{margin-top:12px;display:grid;grid-template-columns:80px 1fr;gap:4px;font-size:11px}
 .modal-body .details dt{color:var(--text2)}
 .modal-body .details dd{color:var(--text)}
-.modal-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
-
-/* TOAST */
-.toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;z-index:200;transform:translateY(60px);opacity:0;transition:all 0.3s}
+.modal-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:6px;justify-content:flex-end}
+.editor-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.editor-toolbar{padding:8px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.editor-toolbar select{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:4px 8px;font-family:inherit;font-size:11px;outline:none;max-width:300px}
+#codeEditor{flex:1;background:var(--bg);color:#ccc;border:none;padding:16px;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.6;resize:none;outline:none;tab-size:2;white-space:pre;overflow:auto}
+.deploy-list{display:flex;flex-direction:column;gap:4px}
+.deploy-item{padding:10px 14px;border:1px solid var(--border);background:var(--bg2);display:flex;gap:12px;align-items:flex-start;font-size:12px}
+.deploy-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#4a4}
+.sr-panel{padding:20px;max-width:720px;margin:0 auto;width:100%;overflow-y:auto}
+.sr-card{background:var(--bg2);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.sr-card h2{font-family:'Cinzel',serif;font-size:15px;letter-spacing:3px;color:var(--gold);font-weight:400;margin-bottom:12px}
+.sr-card h3{font-size:12px;color:var(--text);font-weight:500;margin-bottom:8px}
+.sr-textarea{width:100%;min-height:100px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;line-height:1.7;padding:14px;resize:vertical;outline:none}
+.sr-textarea:focus{border-color:var(--gold)}
+.sr-preview{background:var(--bg);border:1px solid var(--border);padding:16px 16px 16px 36px;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;line-height:1.7;color:#8a7a65;font-style:italic;position:relative;min-height:50px}
+.sr-preview::before{content:'\201C';position:absolute;top:4px;left:10px;font-size:36px;color:#2a2218;font-family:'Cinzel',serif}
+.sr-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-size:11px;color:var(--text2)}
+.sr-history-item{padding:8px 12px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text2);display:flex;justify-content:space-between;gap:12px}
+.sr-history-item:last-child{border-bottom:none}
+.sr-history-item .msg{color:var(--text);font-family:'Cormorant Garamond',serif;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sr-history-item .date{white-space:nowrap;flex-shrink:0}
+.toast{position:fixed;bottom:16px;right:16px;padding:8px 16px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:11px;z-index:200;transform:translateY(50px);opacity:0;transition:all 0.3s;max-width:400px}
 .toast.show{transform:translateY(0);opacity:1}
 .toast.success{border-color:var(--green);color:#4a4}
 .toast.error{border-color:var(--red);color:#a44}
-
-/* STATUS BAR */
-.statusbar{padding:6px 20px;border-top:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;font-size:11px;color:var(--text2)}
-
-@media(max-width:768px){
-  .file-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
-  .toolbar{flex-direction:column;align-items:stretch}
-  .search{width:100%}
-}
+.statusbar{padding:4px 16px;border-top:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;font-size:10px;color:var(--text2);flex-shrink:0}
+.drag-ghost{position:fixed;pointer-events:none;z-index:999;padding:4px 10px;background:var(--gold);color:var(--bg);font-size:11px;font-family:inherit;opacity:0.9;white-space:nowrap;display:none}
+@media(max-width:768px){.file-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}.toolbar{gap:4px}.search{width:100%}}
 </style>
 </head>
 <body>
-
-<!-- AUTH -->
 <div id="auth">
-  <div class="brand">Namenlos <span style="color:#c8a060">Admin</span></div>
-  <input type="password" id="passInput" placeholder="password" autofocus>
+  <div class="brand">Namenlos <span>Admin</span></div>
+  <input type="password" id="passInput" placeholder="token" autofocus>
   <div class="err" id="authErr"></div>
 </div>
-
-<!-- APP -->
 <div id="app">
   <header>
     <div class="logo">Namenlos <span>Admin</span></div>
     <nav>
-      <a href="https://namenlos.black" target="_blank">View Site ↗</a>
+      <a href="https://namenlos.black" target="_blank">Site</a>
       <a href="https://namenlos.black/classic.html" target="_blank">Classic</a>
-      <a href="https://namenlos.black/demo-25d.html" target="_blank">2.5D Demo</a>
-      <button class="btn" onclick="logout()">Logout</button>
+      <a href="https://namenlos.black/dev.html" target="_blank">2.5D</a>
+      <button onclick="logout()">Logout</button>
     </nav>
   </header>
-
-  <div class="toolbar">
-    <div class="path" id="breadcrumb"></div>
-    <input class="search" type="text" placeholder="Search files..." id="searchInput" oninput="filterFiles()">
-    <div class="view-toggle">
-      <button class="btn active" id="gridBtn" onclick="setView('grid')">Grid</button>
-      <button class="btn" id="listBtn" onclick="setView('list')">List</button>
-    </div>
-    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">↑ Upload</button>
-    <button class="btn" onclick="createFolder()">+ Folder</button>
-    <button class="btn" id="selectAllBtn" onclick="selectAll()">Select All</button>
-    <button class="btn" id="deselectBtn" onclick="deselectAll()" style="display:none">Deselect</button>
-    <button class="btn" id="moveBtn" onclick="moveSelected()" style="display:none">Move to...</button>
-    <button class="btn btn-danger" id="deleteBtn" onclick="deleteSelected()" style="display:none">Delete Selected</button>
-    <span class="selection-info" id="selInfo" style="font-size:11px;color:#c8a060;display:none"></span>
+  <div class="tabs">
+    <button class="tab active" data-tab="files">Files</button>
+    <button class="tab" data-tab="editor">Editor</button>
+    <button class="tab" data-tab="deploy">Deploy</button>
+    <button class="tab" data-tab="secret">Secret Room</button>
   </div>
-
-  <div class="content" id="content">
-    <div class="upload-zone" id="dropZone">
-      <div class="upload-icon">↑</div>
-      <p>Drop files here or click Upload</p>
+  <div class="panel active" id="panel-files">
+    <div class="toolbar">
+      <div class="path" id="breadcrumb"></div>
+      <input class="search" type="text" placeholder="Search..." id="searchInput" oninput="renderFiles()">
+      <button class="btn" id="viewBtn" onclick="toggleView()">List</button>
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Upload</button>
+      <button class="btn" onclick="createFolder()">+ Folder</button>
+      <button class="btn" id="selAllBtn" onclick="selectAll()">All</button>
+      <button class="btn" id="deselBtn" onclick="deselectAll()" style="display:none">None</button>
+      <button class="btn" id="moveBtn" onclick="moveSelectedDialog()" style="display:none">Move to...</button>
+      <button class="btn btn-danger" id="delBtn" onclick="deleteSelected()" style="display:none">Delete</button>
+      <span id="selInfo" style="font-size:10px;color:var(--gold);display:none"></span>
+    </div>
+    <div class="content" id="filesContent">
+      <div class="upload-zone" id="dropZone"><p>Drop files here or click Upload</p></div>
       <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+      <input type="file" id="fileInput" multiple>
+      <div class="file-grid" id="fileGrid"></div>
     </div>
-    <input type="file" id="fileInput" multiple accept="image/*,.html,.css,.js,.json,.md">
-    <div class="file-grid" id="fileGrid"></div>
+    <div class="statusbar"><span id="statusLeft">Ready</span><span id="statusRight"></span></div>
   </div>
-
-  <div class="statusbar">
-    <span id="statusLeft">Loading...</span>
-    <span id="statusRight"></span>
+  <div class="panel" id="panel-editor">
+    <div class="editor-wrap">
+      <div class="editor-toolbar">
+        <select id="editorFileSelect" onchange="loadFileForEdit()"><option value="">-- select file --</option></select>
+        <button class="btn btn-primary" onclick="saveFile()">Save</button>
+        <button class="btn" onclick="previewEditFile()">Preview</button>
+        <span id="editorStatus" style="font-size:11px;color:var(--text2)"></span>
+      </div>
+      <textarea id="codeEditor" spellcheck="false" placeholder="Select a file to edit..."></textarea>
+    </div>
+  </div>
+  <div class="panel" id="panel-deploy">
+    <div style="padding:16px;overflow-y:auto;flex:1">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span style="font-size:14px;color:var(--gold)">Recent deployments</span>
+        <button class="btn" onclick="loadDeploys()">Refresh</button>
+      </div>
+      <div id="deployList" class="deploy-list"></div>
+    </div>
+  </div>
+  <div class="panel" id="panel-secret">
+    <div class="sr-panel">
+      <div class="sr-card">
+        <h2>Weekly message</h2>
+        <h3>Current (visible in secret room)</h3>
+        <div class="sr-preview" id="srPreview">Loading...</div>
+        <div class="sr-meta"><span>By: <strong>The Shopkeeper</strong></span><span>Updated: <span id="srDate">--</span></span></div>
+      </div>
+      <div class="sr-card">
+        <h3>Edit message</h3>
+        <textarea class="sr-textarea" id="srEditor" placeholder="Write the shopkeeper's weekly message..."></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-primary" onclick="saveWeeklyMessage()">Publish</button>
+          <button class="btn" onclick="previewSrMessage()">Preview</button>
+        </div>
+      </div>
+      <div class="sr-card">
+        <h3>Tips</h3>
+        <p style="color:var(--text2);font-size:11px;line-height:1.7">This message appears in the secret room (code: "vergiss"). Keep it short and mysterious. Change weekly to give visitors a reason to return.</p>
+      </div>
+      <div class="sr-card"><h3>History</h3><div id="srHistory">Loading...</div></div>
+    </div>
   </div>
 </div>
-
-<!-- PREVIEW MODAL -->
 <div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
-    <div class="modal-header">
-      <h3 id="modalTitle">Preview</h3>
-      <button class="btn" onclick="closeModal()">✕</button>
-    </div>
+    <div class="modal-header"><h3 id="modalTitle">Preview</h3><button class="btn" onclick="closeModal()">X</button></div>
     <div class="modal-body" id="modalBody"></div>
     <div class="modal-footer">
+      <button class="btn" onclick="renameCurrentFile()">Rename</button>
       <button class="btn" onclick="copyUrl()">Copy URL</button>
       <button class="btn" onclick="downloadFile()">Download</button>
       <button class="btn btn-danger" onclick="deleteCurrent()">Delete</button>
     </div>
   </div>
 </div>
-
-<!-- INPUT DIALOG -->
 <div class="modal-bg" id="dialogBg" onclick="if(event.target===this)closeDialog()">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-header">
-      <h3 id="dialogTitle">Input</h3>
-      <button class="btn" onclick="closeDialog()">✕</button>
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3 id="dialogTitle">Input</h3><button class="btn" onclick="closeDialog()">X</button></div>
+    <div class="modal-body">
+      <p id="dialogDesc" style="color:#888;margin-bottom:10px;font-size:12px"></p>
+      <input type="text" id="dialogInput" class="search" style="width:100%;font-size:13px;padding:8px 10px">
+      <p id="dialogErr" style="color:#a44;font-size:11px;margin-top:4px;min-height:14px"></p>
     </div>
-    <div class="modal-body" style="padding:20px">
-      <p id="dialogDesc" style="color:#888;margin-bottom:12px;font-size:12px"></p>
-      <input type="text" id="dialogInput" class="search" style="width:100%;font-size:14px;padding:10px 12px" autocomplete="off">
-      <p id="dialogErr" style="color:#a44;font-size:11px;margin-top:6px;min-height:16px"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeDialog()">Cancel</button>
-      <button class="btn btn-primary" id="dialogOk" onclick="submitDialog()">OK</button>
-    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeDialog()">Cancel</button><button class="btn btn-primary" onclick="submitDialog()">OK</button></div>
   </div>
 </div>
-
-<!-- CONFIRM DIALOG -->
 <div class="modal-bg" id="confirmBg" onclick="if(event.target===this)closeConfirm()">
-  <div class="modal" style="max-width:400px">
-    <div class="modal-header">
-      <h3 id="confirmTitle">Confirm</h3>
-      <button class="btn" onclick="closeConfirm()">✕</button>
-    </div>
-    <div class="modal-body" style="padding:20px">
-      <p id="confirmMsg" style="color:#999;font-size:14px"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeConfirm()">Cancel</button>
-      <button class="btn btn-danger" id="confirmOk">Delete</button>
-    </div>
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3 id="confirmTitle">Confirm</h3><button class="btn" onclick="closeConfirm()">X</button></div>
+    <div class="modal-body"><p id="confirmMsg" style="color:#999;font-size:13px"></p></div>
+    <div class="modal-footer"><button class="btn" onclick="closeConfirm()">Cancel</button><button class="btn btn-danger" id="confirmOk">OK</button></div>
   </div>
 </div>
-
-<!-- TOAST -->
+<div class="drag-ghost" id="dragGhost"></div>
 <div class="toast" id="toast"></div>
-
 <script>
-const REPO = '2aragog/namenlos-site';
-const BRANCH = 'main';
-const PASS_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // sha256 of 'admin'
-let TOKEN = '';
-let currentPath = '';
-let files = [];
-let selected = new Set();
-let currentFile = null;
-let viewMode = 'grid';
+const REPO='2aragog/namenlos-site',BRANCH='main';
+let TOKEN='',currentPath='',files=[],selected=new Set(),currentFile=null,viewMode='grid',lastClicked=null;
 
-// === AUTH ===
-document.getElementById('passInput').addEventListener('keydown', async e => {
-  if (e.key !== 'Enter') return;
-  const pass = e.target.value;
-  const hash = await sha256(pass);
-  // Accept 'admin' or the GitHub token directly
-  if (hash === PASS_HASH || pass.startsWith('ghp_')) {
-    TOKEN = pass.startsWith('ghp_') ? pass : prompt('Enter GitHub token:');
-    if (!TOKEN) return;
-    localStorage.setItem('nm-admin-token', TOKEN);
-    showApp();
-  } else {
-    document.getElementById('authErr').textContent = 'Wrong password';
-    e.target.value = '';
-  }
+// AUTH
+document.getElementById('passInput').addEventListener('keydown',e=>{
+  if(e.key!=='Enter')return;const v=e.target.value.trim();
+  if(v.startsWith('ghp_')||v.startsWith('github_pat_')){TOKEN=v;localStorage.setItem('nm-tk',TOKEN);showApp();}
+  else{document.getElementById('authErr').textContent='Enter GitHub token (ghp_...)';e.target.value='';}
 });
+if(localStorage.getItem('nm-tk')){TOKEN=localStorage.getItem('nm-tk');showApp();}
+function logout(){localStorage.removeItem('nm-tk');location.reload();}
+function showApp(){document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';loadFolder('');loadEditorFiles();}
 
-// Auto-login
-if (localStorage.getItem('nm-admin-token')) {
-  TOKEN = localStorage.getItem('nm-admin-token');
-  showApp();
+// TABS
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();
+}));
+
+// API
+async function api(ep,opts={}){
+  const r=await fetch(`https://api.github.com/repos/${REPO}/${ep}`,{...opts,
+    headers:{'Authorization':`Bearer ${TOKEN}`,'Accept':'application/vnd.github.v3+json',...(opts.headers||{}),...(opts.body?{'Content-Type':'application/json'}:{})}
+  });if(!r.ok){const t=await r.text();throw new Error(`${r.status}: ${t.slice(0,200)}`);}return r.json();
 }
 
-function logout() {
-  localStorage.removeItem('nm-admin-token');
-  location.reload();
-}
-
-function showApp() {
-  document.getElementById('auth').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  loadFolder('');
-}
-
-// === GITHUB API ===
-async function api(endpoint, opts = {}) {
-  const res = await fetch(`https://api.github.com/repos/${REPO}/${endpoint}`, {
-    ...opts,
-    headers: {
-      'Authorization': `Bearer ${TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
-      ...(opts.headers || {}),
-      ...(opts.body ? {'Content-Type': 'application/json'} : {})
-    }
-  });
-  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
-  return res.json();
-}
-
-async function loadFolder(path) {
-  currentPath = path;
-  selected.clear();
-  updateDeleteBtn();
-  updateBreadcrumb();
-  
-  document.getElementById('statusLeft').textContent = 'Loading...';
-  
-  try {
-    const data = await api(`contents/${path}?ref=${BRANCH}`);
-    files = Array.isArray(data) ? data : [data];
-    files.sort((a, b) => {
-      if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
-      return a.name.localeCompare(b.name);
-    });
+// FILE MANAGER
+async function loadFolder(path){
+  currentPath=path;selected.clear();updateSelUI();updateBreadcrumb();
+  document.getElementById('statusLeft').textContent='Loading...';
+  try{
+    const d=await api(`contents/${path}?ref=${BRANCH}`);
+    files=(Array.isArray(d)?d:[d]).sort((a,b)=>{if(a.type!==b.type)return a.type==='dir'?-1:1;return a.name.localeCompare(b.name);});
     renderFiles();
-    const total = files.filter(f => f.type === 'file').length;
-    const dirs = files.filter(f => f.type === 'dir').length;
-    document.getElementById('statusLeft').textContent = `${total} files, ${dirs} folders`;
-    document.getElementById('statusRight').textContent = path || '/';
-  } catch (e) {
-    toast('Error loading: ' + e.message, 'error');
-    document.getElementById('statusLeft').textContent = 'Error';
-  }
+    const fc=files.filter(f=>f.type==='file').length,dc=files.filter(f=>f.type==='dir').length;
+    document.getElementById('statusLeft').textContent=`${fc} files, ${dc} folders`;
+    document.getElementById('statusRight').textContent=path||'/';
+  }catch(e){toast('Error: '+e.message,'error');document.getElementById('statusLeft').textContent='Error';}
 }
 
-function renderFiles() {
-  const grid = document.getElementById('fileGrid');
-  const search = document.getElementById('searchInput').value.toLowerCase();
-  
-  const filtered = files.filter(f => f.name.toLowerCase().includes(search) && f.name !== '.gitkeep');
-  
-  grid.innerHTML = filtered.map(f => {
-    const isImg = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
-    const isDir = f.type === 'dir';
-    const sel = selected.has(f.sha) ? 'selected' : '';
-    const size = f.size ? formatSize(f.size) : '';
-    
-    let thumb = '';
-    if (isDir) {
-      thumb = '<div class="icon">📁</div>';
-    } else if (isImg) {
-      const rawUrl = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
-      thumb = `<img src="${rawUrl}" loading="lazy" alt="${f.name}">`;
-    } else {
-      thumb = '<div class="icon">📄</div>';
-    }
-    
-    return `
-      <div class="file-card ${sel}" data-sha="${f.sha}" data-path="${f.path}" data-type="${f.type}"
-           onclick="handleClick(event, '${f.sha}')" ondblclick="handleDblClick('${f.sha}')">
-        <div class="check">${sel ? '✓' : ''}</div>
-        <div class="thumb">${thumb}</div>
-        <div class="info">
-          <div class="name" title="${f.name}">${f.name}</div>
-          <div class="meta">${isDir ? 'Folder' : size}</div>
-        </div>
-      </div>
-    `;
+function renderFiles(){
+  const grid=document.getElementById('fileGrid');
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const list=files.filter(f=>f.name.toLowerCase().includes(q)&&f.name!=='.gitkeep');
+  grid.innerHTML=list.map(f=>{
+    const isImg=/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
+    const isDir=f.type==='dir';
+    const sel=selected.has(f.path)?'selected':'';
+    const raw=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
+    const thumb=isDir?'<div class="icon">&#128193;</div>':isImg?`<img src="${raw}" loading="lazy">`:'<div class="icon">&#128196;</div>';
+    return `<div class="file-card ${sel}" data-path="${f.path}" data-type="${f.type}" data-name="${f.name}" data-sha="${f.sha}"
+      draggable="true"
+      onclick="handleClick(event,this)" ondblclick="handleDbl(this)"
+      ondragstart="onDragStart(event,this)" ondragend="onDragEnd(event)"
+      ondragover="onDragOver(event,this)" ondragleave="onDragLeave(event,this)" ondrop="onDrop(event,this)">
+      <div class="check">${sel?'&#10003;':''}</div>
+      <div class="thumb">${thumb}</div>
+      <div class="info"><div class="name" title="${f.name}">${f.name}</div><div class="meta">${isDir?'Folder':fmtSize(f.size)}</div></div>
+    </div>`;
   }).join('');
 }
 
-function handleClick(e, sha) {
-  const f = files.find(x => x.sha === sha);
-  if (!f) return;
-  
-  if (f.type === 'dir') {
-    loadFolder(f.path);
-    return;
+// CLICK — select both files AND folders
+function handleClick(e,el){
+  const path=el.dataset.path,type=el.dataset.type;
+  if(type==='dir'&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){loadFolder(path);return;}
+  if(e.shiftKey&&lastClicked){
+    const all=files.filter(f=>f.name!=='.gitkeep');
+    const i1=all.findIndex(f=>f.path===lastClicked),i2=all.findIndex(f=>f.path===path);
+    if(i1>=0&&i2>=0)for(let i=Math.min(i1,i2);i<=Math.max(i1,i2);i++)selected.add(all[i].path);
+  }else if(e.ctrlKey||e.metaKey){selected.has(path)?selected.delete(path):selected.add(path);}
+  else{selected.has(path)?selected.delete(path):selected.add(path);}
+  lastClicked=path;renderFiles();updateSelUI();
+}
+function handleDbl(el){
+  const path=el.dataset.path,type=el.dataset.type;
+  if(type==='dir')loadFolder(path);
+  else{const f=files.find(x=>x.path===path);if(f)openPreview(f);}
+}
+
+// DRAG & DROP TO FOLDERS
+let dragPaths=[];
+const ghostEl=document.getElementById('dragGhost');
+
+function onDragStart(e,el){
+  const path=el.dataset.path;
+  if(!selected.has(path)){selected.clear();selected.add(path);renderFiles();updateSelUI();}
+  dragPaths=[...selected].map(p=>files.find(f=>f.path===p)).filter(f=>f&&f.type==='file');
+  if(!dragPaths.length){e.preventDefault();return;}
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',path);
+  ghostEl.textContent=dragPaths.length>1?`Moving ${dragPaths.length} files`:`Moving ${dragPaths[0].name}`;
+  ghostEl.style.display='block';
+  document.querySelectorAll('.file-card').forEach(c=>{if(selected.has(c.dataset.path)&&c.dataset.type==='file')c.classList.add('dragging');});
+  document.addEventListener('dragover',moveGhost);
+}
+function moveGhost(e){e.preventDefault();ghostEl.style.left=(e.clientX+14)+'px';ghostEl.style.top=(e.clientY+14)+'px';}
+function onDragEnd(e){
+  dragPaths=[];ghostEl.style.display='none';
+  document.querySelectorAll('.file-card').forEach(c=>c.classList.remove('dragging','drag-over'));
+  document.removeEventListener('dragover',moveGhost);
+}
+function onDragOver(e,el){if(el.dataset.type!=='dir')return;e.preventDefault();e.dataTransfer.dropEffect='move';el.classList.add('drag-over');}
+function onDragLeave(e,el){el.classList.remove('drag-over');}
+
+async function onDrop(e,el){
+  e.preventDefault();el.classList.remove('drag-over');
+  if(el.dataset.type!=='dir'||!dragPaths.length)return;
+  // Check if dropping files from desktop
+  if(e.dataTransfer.files&&e.dataTransfer.files.length>0&&!e.dataTransfer.getData('text/plain')){return;}
+  const folderPath=el.dataset.path,folderName=el.dataset.name;
+  const toMove=[...dragPaths];
+  toast(`Moving ${toMove.length} file(s) to ${folderName}...`);
+  let moved=0;
+  for(const f of toMove){
+    try{
+      const data=await api(`contents/${f.path}?ref=${BRANCH}`);
+      const newPath=`${folderPath}/${f.name}`;
+      let destSha;try{destSha=(await api(`contents/${newPath}?ref=${BRANCH}`)).sha;}catch(x){}
+      const body={message:`Move ${f.name} to ${folderName}`,content:data.content,branch:BRANCH};
+      if(destSha)body.sha=destSha;
+      await api(`contents/${newPath}`,{method:'PUT',body:JSON.stringify(body)});
+      await api(`contents/${f.path}`,{method:'DELETE',body:JSON.stringify({message:`Move ${f.name} (del)`,sha:f.sha,branch:BRANCH})});
+      moved++;
+    }catch(err){toast(`Error: ${f.name}: ${err.message}`,'error');}
   }
-  
-  // Toggle selection
-  if (e.shiftKey && lastClickedSha) {
-    // Shift+click: select range
-    const fileList = files.filter(x => x.type === 'file');
-    const i1 = fileList.findIndex(x => x.sha === lastClickedSha);
-    const i2 = fileList.findIndex(x => x.sha === sha);
-    const [start, end] = [Math.min(i1,i2), Math.max(i1,i2)];
-    for (let i = start; i <= end; i++) selected.add(fileList[i].sha);
-  } else if (e.ctrlKey || e.metaKey) {
-    // Ctrl/Cmd+click: add/remove one
-    if (selected.has(sha)) selected.delete(sha);
-    else selected.add(sha);
-  } else {
-    // Normal click: toggle this one
-    if (selected.has(sha)) selected.delete(sha);
-    else selected.add(sha);
+  if(moved)toast(`Moved ${moved} file(s) to ${folderName}`,'success');
+  selected.clear();dragPaths=[];loadFolder(currentPath);
+}
+
+// UPLOAD
+const dropZone=document.getElementById('dropZone'),fileInput=document.getElementById('fileInput');
+dropZone.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();dropZone.classList.add('drag');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();dropZone.classList.remove('drag');if(e.dataTransfer.files.length)uploadFiles(e.dataTransfer.files);});
+dropZone.addEventListener('click',()=>fileInput.click());
+fileInput.addEventListener('change',()=>{uploadFiles(fileInput.files);fileInput.value='';});
+
+async function uploadFiles(fl){
+  const bar=document.getElementById('progressBar'),fill=document.getElementById('progressFill');
+  bar.style.display='block';let done=0;
+  for(const file of fl){
+    try{
+      let b64=await readB64(file);
+      if(/\.(png|jpg|jpeg|webp)$/i.test(file.name)&&file.size>500*1024){
+        try{b64=await compressImage(file,1200,0.82);toast(`Compressed ${file.name}`);}catch(ce){}
+      }
+      const path=currentPath?`${currentPath}/${file.name}`:file.name;
+      let sha;try{sha=(await api(`contents/${path}?ref=${BRANCH}`)).sha;}catch(x){}
+      const body={message:`Upload ${file.name}`,content:b64,branch:BRANCH};if(sha)body.sha=sha;
+      await api(`contents/${path}`,{method:'PUT',body:JSON.stringify(body)});
+      done++;fill.style.width=(done/fl.length*100)+'%';toast(`Uploaded ${file.name}`,'success');
+    }catch(e){toast(`Error: ${file.name}`,'error');}
   }
-  
-  lastClickedSha = sha;
-  renderFiles();
-  updateDeleteBtn();
+  setTimeout(()=>{bar.style.display='none';fill.style.width='0';loadFolder(currentPath);},400);
 }
-
-function handleDblClick(sha) {
-  const f = files.find(x => x.sha === sha);
-  if (f && f.type === 'dir') loadFolder(f.path);
-  else if (f && f.type === 'file') openPreview(f);
-}
-
-let lastClickedSha = null;
-
-function selectAll() {
-  files.filter(f => f.type === 'file').forEach(f => selected.add(f.sha));
-  renderFiles();
-  updateDeleteBtn();
-}
-
-function deselectAll() {
-  selected.clear();
-  renderFiles();
-  updateDeleteBtn();
-}
-
-// === DIALOGS ===
-let dialogResolve = null;
-function openDialog(title, desc, placeholder) {
-  return new Promise(resolve => {
-    dialogResolve = resolve;
-    document.getElementById('dialogTitle').textContent = title;
-    document.getElementById('dialogDesc').textContent = desc || '';
-    document.getElementById('dialogInput').placeholder = placeholder || '';
-    document.getElementById('dialogInput').value = '';
-    document.getElementById('dialogErr').textContent = '';
-    document.getElementById('dialogBg').classList.add('open');
-    setTimeout(() => document.getElementById('dialogInput').focus(), 100);
+function readB64(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(f);});}
+function compressImage(file,maxDim,quality){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>maxDim||h>maxDim){const r=Math.min(maxDim/w,maxDim/h);w=Math.round(w*r);h=Math.round(h*r);}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(c.toDataURL('image/jpeg',quality).split(',')[1]);
+    };
+    img.onerror=reject;img.src=URL.createObjectURL(file);
   });
 }
-function submitDialog() {
-  const val = document.getElementById('dialogInput').value.trim();
-  if (!val) { document.getElementById('dialogErr').textContent = 'Please enter a value'; return; }
-  closeDialog(val);
+
+// SELECT / DELETE / MOVE
+function selectAll(){files.filter(f=>f.name!=='.gitkeep').forEach(f=>selected.add(f.path));renderFiles();updateSelUI();}
+function deselectAll(){selected.clear();renderFiles();updateSelUI();}
+function updateSelUI(){
+  const n=selected.size,show=n>0;
+  ['deselBtn','moveBtn','delBtn'].forEach(id=>document.getElementById(id).style.display=show?'inline-block':'none');
+  const info=document.getElementById('selInfo');info.style.display=show?'inline-block':'none';
+  if(n)info.textContent=n+' selected';
 }
-function closeDialog(val) {
-  document.getElementById('dialogBg').classList.remove('open');
-  if (dialogResolve) { dialogResolve(val || null); dialogResolve = null; }
+async function deleteSelected(){
+  const items=[...selected].map(p=>files.find(f=>f.path===p)).filter(Boolean);
+  if(!items.length)return;
+  if(!await openConfirm('Delete',`Delete ${items.length} item(s)? This cannot be undone.`))return;
+  for(const f of items){
+    if(f.type==='dir'){
+      try{
+        const contents=await api(`contents/${f.path}?ref=${BRANCH}`);
+        const arr=Array.isArray(contents)?contents:[contents];
+        for(const c of arr){if(c.type==='file')await api(`contents/${c.path}`,{method:'DELETE',body:JSON.stringify({message:`Del ${c.name}`,sha:c.sha,branch:BRANCH})});}
+        toast(`Deleted folder ${f.name}`,'success');
+      }catch(e){toast(`Error: ${f.name}`,'error');}
+    }else{
+      try{await api(`contents/${f.path}`,{method:'DELETE',body:JSON.stringify({message:`Del ${f.name}`,sha:f.sha,branch:BRANCH})});toast(`Deleted ${f.name}`,'success');}
+      catch(e){toast(`Error: ${f.name}`,'error');}
+    }
+  }
+  selected.clear();loadFolder(currentPath);
 }
-document.getElementById('dialogInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitDialog();
-  if (e.key === 'Escape') closeDialog();
+async function moveSelectedDialog(){
+  const items=[...selected].map(p=>files.find(f=>f.path===p)).filter(f=>f&&f.type==='file');
+  if(!items.length){toast('Select files to move','error');return;}
+  const dest=await openDialog('Move files',`Move ${items.length} file(s) to:`,currentPath||'img');
+  if(!dest)return;let moved=0;
+  for(const f of items){
+    try{
+      const data=await api(`contents/${f.path}?ref=${BRANCH}`);
+      await api(`contents/${dest}/${f.name}`,{method:'PUT',body:JSON.stringify({message:`Move ${f.name}`,content:data.content,branch:BRANCH})});
+      await api(`contents/${f.path}`,{method:'DELETE',body:JSON.stringify({message:`Move (del)`,sha:f.sha,branch:BRANCH})});moved++;
+    }catch(e){toast(`Error: ${f.name}`,'error');}
+  }
+  if(moved)toast(`Moved ${moved} file(s)`,'success');selected.clear();loadFolder(currentPath);
+}
+
+// CREATE FOLDER
+async function createFolder(){
+  const name=await openDialog('New folder','Folder name:','my-folder');if(!name)return;
+  const fn=name.replace(/[^a-zA-Z0-9_.-]/g,'-');
+  const path=currentPath?`${currentPath}/${fn}/.gitkeep`:`${fn}/.gitkeep`;
+  try{await api(`contents/${path}`,{method:'PUT',body:JSON.stringify({message:`Create ${fn}`,content:btoa(''),branch:BRANCH})});toast(`Created "${fn}"`,'success');loadFolder(currentPath);}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// RENAME
+async function renameCurrentFile(){
+  if(!currentFile)return;
+  const newName=await openDialog('Rename',`Rename "${currentFile.name}":`,currentFile.name);
+  if(!newName||newName===currentFile.name)return;
+  try{
+    const data=await api(`contents/${currentFile.path}?ref=${BRANCH}`);
+    const dir=currentFile.path.substring(0,currentFile.path.lastIndexOf('/'));
+    const newPath=dir?`${dir}/${newName}`:newName;
+    await api(`contents/${newPath}`,{method:'PUT',body:JSON.stringify({message:`Rename to ${newName}`,content:data.content,branch:BRANCH})});
+    await api(`contents/${currentFile.path}`,{method:'DELETE',body:JSON.stringify({message:`Rename (del old)`,sha:currentFile.sha,branch:BRANCH})});
+    toast(`Renamed to ${newName}`,'success');closeModal();loadFolder(currentPath);
+  }catch(e){toast('Error: '+e.message,'error');}
+}
+
+// PREVIEW
+function openPreview(f){
+  currentFile=f;const isImg=/\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
+  const raw=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
+  const site=`https://namenlos.black/${f.path}`;
+  document.getElementById('modalTitle').textContent=f.name;
+  document.getElementById('modalBody').innerHTML=`
+    ${isImg?`<img src="${raw}">`:'<div style="padding:20px;text-align:center;color:#555">No preview</div>'}
+    <dl class="details"><dt>Path</dt><dd>${f.path}</dd><dt>Size</dt><dd>${fmtSize(f.size)}</dd>
+    <dt>URL</dt><dd><a href="${site}" target="_blank" style="color:var(--gold)">${site}</a></dd></dl>`;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');currentFile=null;}
+function copyUrl(){if(!currentFile)return;navigator.clipboard.writeText(`https://namenlos.black/${currentFile.path}`);toast('URL copied','success');}
+function downloadFile(){if(!currentFile)return;const a=document.createElement('a');a.href=`https://raw.githubusercontent.com/${REPO}/${BRANCH}/${currentFile.path}`;a.download=currentFile.name;a.click();}
+async function deleteCurrent(){
+  if(!currentFile)return;if(!await openConfirm('Delete',`Delete "${currentFile.name}"?`))return;
+  try{await api(`contents/${currentFile.path}`,{method:'DELETE',body:JSON.stringify({message:`Del ${currentFile.name}`,sha:currentFile.sha,branch:BRANCH})});toast('Deleted','success');closeModal();loadFolder(currentPath);}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+
+// EDITOR
+let editorFiles=[];
+async function loadEditorFiles(){
+  try{
+    const root=await api(`contents/?ref=${BRANCH}`);
+    editorFiles=root.filter(f=>f.type==='file'&&/\.(html|css|js|json|md)$/i.test(f.name));
+    const sel=document.getElementById('editorFileSelect');
+    sel.innerHTML='<option value="">-- select file --</option>'+editorFiles.map(f=>`<option value="${f.path}">${f.name}</option>`).join('');
+  }catch(e){}
+}
+async function loadFileForEdit(){
+  const path=document.getElementById('editorFileSelect').value;const ed=document.getElementById('codeEditor');
+  if(!path){ed.value='';return;}
+  document.getElementById('editorStatus').textContent='Loading...';
+  try{
+    const data=await api(`contents/${path}?ref=${BRANCH}`);
+    ed.value=decodeURIComponent(escape(atob(data.content)));
+    ed.dataset.sha=data.sha;ed.dataset.path=path;
+    document.getElementById('editorStatus').textContent=`${(data.size/1024).toFixed(1)} KB`;
+  }catch(e){toast('Error loading','error');document.getElementById('editorStatus').textContent='Error';}
+}
+async function saveFile(){
+  const ed=document.getElementById('codeEditor');const path=ed.dataset.path;if(!path)return;
+  document.getElementById('editorStatus').textContent='Saving...';
+  try{
+    const content=btoa(unescape(encodeURIComponent(ed.value)));
+    await api(`contents/${path}`,{method:'PUT',body:JSON.stringify({message:`Edit ${path.split('/').pop()}`,content,sha:ed.dataset.sha,branch:BRANCH})});
+    const updated=await api(`contents/${path}?ref=${BRANCH}`);ed.dataset.sha=updated.sha;
+    document.getElementById('editorStatus').textContent='Saved!';toast('Saved','success');
+  }catch(e){toast('Error: '+e.message,'error');document.getElementById('editorStatus').textContent='Error';}
+}
+function previewEditFile(){const path=document.getElementById('codeEditor').dataset.path;if(path)window.open(`https://namenlos.black/${path}`,'_blank');}
+document.getElementById('codeEditor').addEventListener('keydown',e=>{
+  if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart;t.value=t.value.substring(0,s)+'  '+t.value.substring(t.selectionEnd);t.selectionStart=t.selectionEnd=s+2;}
+  if(e.key==='s'&&(e.ctrlKey||e.metaKey)){e.preventDefault();saveFile();}
 });
 
-function openConfirm(title, msg) {
-  return new Promise(resolve => {
-    document.getElementById('confirmTitle').textContent = title;
-    document.getElementById('confirmMsg').textContent = msg;
-    document.getElementById('confirmBg').classList.add('open');
-    document.getElementById('confirmOk').onclick = () => { document.getElementById('confirmBg').classList.remove('open'); resolve(true); };
+// DEPLOY
+async function loadDeploys(){
+  const list=document.getElementById('deployList');list.innerHTML='<div style="color:var(--text2);padding:8px">Loading...</div>';
+  try{
+    const commits=await api(`commits?sha=${BRANCH}&per_page=15`);
+    list.innerHTML=commits.map(c=>{const d=new Date(c.commit.author.date);
+      return `<div class="deploy-item"><div class="deploy-dot"></div><div style="flex:1"><div style="color:var(--text)">${esc(c.commit.message)}</div><div style="font-size:10px;color:var(--text2);margin-top:2px">${timeAgo(d)} &middot; ${c.sha.slice(0,7)}</div></div></div>`;
+    }).join('');
+  }catch(e){list.innerHTML=`<div style="color:#a44;padding:8px">Error: ${e.message}</div>`;}
+}
+
+// SECRET ROOM
+const SR_PATH='data/secret-room.json';
+async function loadSecretRoom(){
+  try{
+    const data=await api(`contents/${SR_PATH}?ref=${BRANCH}`);
+    const json=JSON.parse(decodeURIComponent(escape(atob(data.content))));
+    document.getElementById('srPreview').textContent=json.message||'(empty)';
+    document.getElementById('srDate').textContent=json.date||'--';
+    document.getElementById('srEditor').value=json.message||'';
+    const hist=json.history||[];
+    document.getElementById('srHistory').innerHTML=hist.length?hist.map(h=>`<div class="sr-history-item"><span class="msg">${esc(h.message)}</span><span class="date">${h.date}</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:8px">No history yet</div>';
+  }catch(e){
+    document.getElementById('srPreview').textContent='(not created yet)';
+    document.getElementById('srHistory').innerHTML='<div style="color:var(--text2);font-size:11px;padding:8px">Save a message to create it.</div>';
+  }
+}
+async function saveWeeklyMessage(){
+  const msg=document.getElementById('srEditor').value.trim();if(!msg){toast('Write a message first','error');return;}
+  const date=new Date().toISOString().split('T')[0];
+  let existing={message:'',history:[]},sha;
+  try{const data=await api(`contents/${SR_PATH}?ref=${BRANCH}`);existing=JSON.parse(decodeURIComponent(escape(atob(data.content))));sha=data.sha;}catch(e){}
+  if(existing.message){existing.history=existing.history||[];existing.history.unshift({message:existing.message,date:existing.date||'?'});if(existing.history.length>20)existing.history=existing.history.slice(0,20);}
+  existing.message=msg;existing.date=date;
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(existing,null,2))));
+  const body={message:'Update weekly message',content,branch:BRANCH};if(sha)body.sha=sha;
+  try{await api(`contents/${SR_PATH}`,{method:'PUT',body:JSON.stringify(body)});toast('Published!','success');loadSecretRoom();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+function previewSrMessage(){document.getElementById('srPreview').textContent=document.getElementById('srEditor').value.trim()||'(empty)';}
+
+// DIALOGS
+let dialogResolve=null;
+function openDialog(title,desc,placeholder){
+  return new Promise(r=>{dialogResolve=r;document.getElementById('dialogTitle').textContent=title;
+    document.getElementById('dialogDesc').textContent=desc||'';
+    const inp=document.getElementById('dialogInput');inp.placeholder=placeholder||'';inp.value=placeholder||'';
+    document.getElementById('dialogErr').textContent='';document.getElementById('dialogBg').classList.add('open');
+    setTimeout(()=>{inp.focus();inp.select();},80);
   });
 }
-function closeConfirm() {
-  document.getElementById('confirmBg').classList.remove('open');
+function submitDialog(){const v=document.getElementById('dialogInput').value.trim();if(!v){document.getElementById('dialogErr').textContent='Required';return;}closeDialog(v);}
+function closeDialog(v){document.getElementById('dialogBg').classList.remove('open');if(dialogResolve){dialogResolve(v||null);dialogResolve=null;}}
+document.getElementById('dialogInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitDialog();if(e.key==='Escape')closeDialog();});
+function openConfirm(title,msg){return new Promise(r=>{document.getElementById('confirmTitle').textContent=title;document.getElementById('confirmMsg').textContent=msg;document.getElementById('confirmBg').classList.add('open');document.getElementById('confirmOk').onclick=()=>{document.getElementById('confirmBg').classList.remove('open');r(true);};});}
+function closeConfirm(){document.getElementById('confirmBg').classList.remove('open');}
+
+// HELPERS
+function updateBreadcrumb(){
+  const parts=currentPath.split('/').filter(Boolean);let html='<span onclick="loadFolder(\'\')">root</span>',p='';
+  for(const x of parts){p+=(p?'/':'')+x;const pp=p;html+=` / <span onclick="loadFolder('${pp}')">${x}</span>`;}
+  document.getElementById('breadcrumb').innerHTML=html;
 }
+function toggleView(){viewMode=viewMode==='grid'?'list':'grid';document.getElementById('fileGrid').className='file-grid'+(viewMode==='list'?' list':'');document.getElementById('viewBtn').textContent=viewMode==='grid'?'List':'Grid';}
+function fmtSize(b){if(!b)return'';if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'KB';return(b/1048576).toFixed(1)+'MB';}
+function timeAgo(d){const s=Math.floor((Date.now()-d)/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');clearTimeout(t._timer);t._timer=setTimeout(()=>t.className='toast',3000);}
 
-// === CREATE FOLDER ===
-async function createFolder() {
-  const name = await openDialog('New Folder', 'Enter folder name (letters, numbers, dashes)', 'my-folder');
-  if (!name) return;
-  const folderName = name.replace(/[^a-zA-Z0-9_-]/g, '-');
-  const path = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
-  
-  try {
-    await api(`contents/${path}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        message: `Create folder ${folderName}`,
-        content: btoa(''),
-        branch: BRANCH
-      })
-    });
-    toast(`Folder "${folderName}" created`, 'success');
-    loadFolder(currentPath);
-  } catch (e) {
-    toast(`Error: ${e.message}`, 'error');
-  }
-}
-
-// === MOVE FILES ===
-async function moveSelected() {
-  const count = selected.size;
-  if (count === 0) return;
-  
-  const dest = await openDialog('Move Files', `Move ${count} file(s) to folder (e.g. img/items)`, currentPath || 'folder-name');
-  if (!dest) return;
-  const destPath = dest.trim();
-  
-  let moved = 0;
-  for (const sha of selected) {
-    const f = files.find(x => x.sha === sha);
-    if (!f || f.type !== 'file') continue;
-    
-    try {
-      const fileData = await api(`contents/${f.path}?ref=${BRANCH}`);
-      const newPath = destPath ? `${destPath}/${f.name}` : f.name;
-      await api(`contents/${newPath}`, {
-        method: 'PUT',
-        body: JSON.stringify({
-          message: `Move ${f.name} to ${destPath || 'root'}`,
-          content: fileData.content,
-          branch: BRANCH
-        })
-      });
-      await api(`contents/${f.path}`, {
-        method: 'DELETE',
-        body: JSON.stringify({
-          message: `Move ${f.name} (delete old)`,
-          sha: f.sha,
-          branch: BRANCH
-        })
-      });
-      moved++;
-      toast(`Moved ${f.name} (${moved}/${count})`, 'success');
-    } catch (e) {
-      toast(`Error moving ${f.name}: ${e.message}`, 'error');
-    }
-  }
-  
-  selected.clear();
-  loadFolder(currentPath);
-}
-
-// === UPLOAD ===
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); uploadFiles(e.dataTransfer.files); });
-dropZone.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', () => uploadFiles(fileInput.files));
-
-async function uploadFiles(fileList) {
-  const bar = document.getElementById('progressBar');
-  const fill = document.getElementById('progressFill');
-  bar.style.display = 'block';
-  
-  const total = fileList.length;
-  let done = 0;
-  
-  for (const file of fileList) {
-    try {
-      const base64 = await readAsBase64(file);
-      const path = currentPath ? `${currentPath}/${file.name}` : file.name;
-      
-      // Check if file exists (for update)
-      let sha = undefined;
-      try {
-        const existing = await api(`contents/${path}?ref=${BRANCH}`);
-        sha = existing.sha;
-      } catch(e) {} // File doesn't exist
-      
-      const body = {
-        message: `Upload ${file.name}`,
-        content: base64,
-        branch: BRANCH,
-      };
-      if (sha) body.sha = sha;
-      
-      await api(`contents/${path}`, {
-        method: 'PUT',
-        body: JSON.stringify(body)
-      });
-      
-      done++;
-      fill.style.width = (done / total * 100) + '%';
-      toast(`Uploaded ${file.name}`, 'success');
-    } catch (e) {
-      toast(`Error uploading ${file.name}: ${e.message}`, 'error');
-    }
-  }
-  
-  setTimeout(() => {
-    bar.style.display = 'none';
-    fill.style.width = '0';
-    loadFolder(currentPath);
-  }, 500);
-}
-
-function readAsBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result.split(',')[1]);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-// === DELETE ===
-async function deleteSelected() {
-  const count = selected.size;
-  const ok = await openConfirm('Delete Files', `Delete ${count} file(s)? This cannot be undone.`);
-  if (!ok) return;
-  
-  for (const sha of selected) {
-    const f = files.find(x => x.sha === sha);
-    if (!f || f.type !== 'file') continue;
-    try {
-      await api(`contents/${f.path}`, {
-        method: 'DELETE',
-        body: JSON.stringify({
-          message: `Delete ${f.name}`,
-          sha: f.sha,
-          branch: BRANCH
-        })
-      });
-      toast(`Deleted ${f.name}`, 'success');
-    } catch (e) {
-      toast(`Error deleting ${f.name}: ${e.message}`, 'error');
-    }
-  }
-  selected.clear();
-  loadFolder(currentPath);
-}
-
-async function deleteCurrent() {
-  if (!currentFile) return;
-  const ok = await openConfirm('Delete File', `Delete "${currentFile.name}"? This cannot be undone.`);
-  if (!ok) return;
-  try {
-    await api(`contents/${currentFile.path}`, {
-      method: 'DELETE',
-      body: JSON.stringify({
-        message: `Delete ${currentFile.name}`,
-        sha: currentFile.sha,
-        branch: BRANCH
-      })
-    });
-    toast(`Deleted ${currentFile.name}`, 'success');
-    closeModal();
-    loadFolder(currentPath);
-  } catch (e) {
-    toast(`Error: ${e.message}`, 'error');
-  }
-}
-
-// === PREVIEW ===
-function openPreview(f) {
-  currentFile = f;
-  const modal = document.getElementById('modal');
-  const body = document.getElementById('modalBody');
-  document.getElementById('modalTitle').textContent = f.name;
-  
-  const isImg = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
-  const rawUrl = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
-  const siteUrl = `https://namenlos.black/${f.path}`;
-  
-  body.innerHTML = `
-    ${isImg ? `<img src="${rawUrl}" alt="${f.name}">` : `<div style="padding:20px;text-align:center;color:#666">No preview available</div>`}
-    <dl class="details">
-      <dt>Path</dt><dd>${f.path}</dd>
-      <dt>Size</dt><dd>${formatSize(f.size)}</dd>
-      <dt>Site URL</dt><dd><a href="${siteUrl}" target="_blank" style="color:var(--gold)">${siteUrl}</a></dd>
-      <dt>SHA</dt><dd style="font-size:10px">${f.sha}</dd>
-    </dl>
-  `;
-  modal.classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('open');
-  currentFile = null;
-}
-
-function copyUrl() {
-  if (!currentFile) return;
-  const url = `https://namenlos.black/${currentFile.path}`;
-  navigator.clipboard.writeText(url);
-  toast('URL copied!', 'success');
-}
-
-function downloadFile() {
-  if (!currentFile) return;
-  const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${currentFile.path}`;
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = currentFile.name;
-  a.click();
-}
-
-// === UI HELPERS ===
-function updateBreadcrumb() {
-  const parts = currentPath.split('/').filter(Boolean);
-  let html = '<span onclick="loadFolder(\'\')">root</span>';
-  let path = '';
-  for (const p of parts) {
-    path += (path ? '/' : '') + p;
-    const pp = path;
-    html += ` / <span onclick="loadFolder('${pp}')">${p}</span>`;
-  }
-  document.getElementById('breadcrumb').innerHTML = html;
-}
-
-function updateDeleteBtn() {
-  const btn = document.getElementById('deleteBtn');
-  const desel = document.getElementById('deselectBtn');
-  const moveBtn = document.getElementById('moveBtn');
-  const info = document.getElementById('selInfo');
-  const count = selected.size;
-  const show = count > 0;
-  btn.style.display = show ? 'inline-block' : 'none';
-  desel.style.display = show ? 'inline-block' : 'none';
-  moveBtn.style.display = show ? 'inline-block' : 'none';
-  info.style.display = show ? 'inline-block' : 'none';
-  if (count > 0) {
-    btn.textContent = `✕ Delete (${count})`;
-    info.textContent = `${count} selected`;
-  }
-}
-
-function setView(mode) {
-  viewMode = mode;
-  document.getElementById('fileGrid').className = 'file-grid' + (mode === 'list' ? ' list' : '');
-  document.getElementById('gridBtn').classList.toggle('active', mode === 'grid');
-  document.getElementById('listBtn').classList.toggle('active', mode === 'list');
-}
-
-function filterFiles() { renderFiles(); }
-
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/1024/1024).toFixed(1) + ' MB';
-}
-
-function toast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show ' + type;
-  setTimeout(() => t.className = 'toast', 3000);
-}
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Keyboard shortcuts
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-  if (e.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
-    e.preventDefault();
-    const parts = currentPath.split('/').filter(Boolean);
-    parts.pop();
-    loadFolder(parts.join('/'));
-  }
+// KEYBOARD
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeDialog();closeConfirm();}
+  if(e.key==='Backspace'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();const p=currentPath.split('/').filter(Boolean);p.pop();loadFolder(p.join('/'));}
+  if(e.key==='a'&&(e.ctrlKey||e.metaKey)&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();selectAll();}
 });
 </script>
 </body>
