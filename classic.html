@@ -26,7 +26,7 @@ nav *{pointer-events:auto}
 
 /* HERO */
 .hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
-.hero-bg{position:absolute;inset:-20px;background:url('img/alley.png') center/cover no-repeat;filter:brightness(0.3);z-index:0;transition:transform 0.15s ease-out}
+.hero-bg{position:absolute;inset:-20px;background:url('img/Shop/001-Alley.png') center/cover no-repeat;filter:brightness(0.3);z-index:0;transition:transform 0.15s ease-out}
 .hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,#0a0a0a 100%)}
 .hero-content{position:relative;z-index:2;animation:fadeUp 2s ease both}
 @keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
@@ -76,7 +76,7 @@ section{padding:100px 30px;max-width:900px;margin:0 auto}
 
 /* SHOPKEEPER */
 .shopkeeper-section{display:flex;gap:40px;align-items:center}
-.shopkeeper-img{width:40%;aspect-ratio:3/4;background:url('img/shopkeeper.jpg') center/cover;border:1px solid #1a1510;flex-shrink:0}
+.shopkeeper-img{width:40%;aspect-ratio:3/4;background:url('img/Shop/003-Shopkeeper.png') center/cover;border:1px solid #1a1510;flex-shrink:0}
 .shopkeeper-text{flex:1}
 .shopkeeper-quote{font-size:20px;font-style:italic;color:#6a5a45;margin-bottom:16px;line-height:1.7}
 .shopkeeper-quote::before{content:'"';font-family:'Cinzel',serif;font-size:40px;color:#2a2218;line-height:0;vertical-align:-12px;margin-right:4px}
@@ -121,7 +121,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 </div>
 
 <!-- SHOP INTERIOR -->
-<div class="full-img" id="inside" style="background-image:url('img/shop.png')"></div>
+<div class="full-img" id="inside" style="background-image:url('img/Shop/002-Main-hall.jpg')"></div>
 
 <!-- SHOPKEEPER -->
 <section>
@@ -145,7 +145,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
   <div class="items-grid">
 
     <div class="item-card reveal" onclick="location.href='#skin-me'">
-      <img src="img/whip.png" alt="The Whip" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Whip" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-badge">Skin Me</div>
       <div class="item-info">
         <div class="item-name">The Whip</div>
@@ -154,7 +154,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/wig.png" alt="The Wig" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Wig" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-badge">Carry Me</div>
       <div class="item-info">
         <div class="item-name">The Wig</div>
@@ -163,7 +163,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/hourglass.png" alt="The Hourglass" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Hourglass" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-badge">Book 3</div>
       <div class="item-info">
         <div class="item-name">The Hourglass</div>
@@ -172,7 +172,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/tarot.png" alt="The Tarot Box" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Tarot Box" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-badge">Lay Me</div>
       <div class="item-info">
         <div class="item-name">The Tarot Box</div>
@@ -181,7 +181,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/glove.png" alt="The Glove" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Glove" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-info">
         <div class="item-name">The Glove</div>
         <div class="item-lore">Red kid leather, left hand only. She never dropped anything again. But she couldn't let go.</div>
@@ -189,7 +189,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/mirror.png" alt="The Mirror" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/Shop/004-Display-case.png" alt="The Mirror" onerror="this.style.background='#1a1510';this.style.height='200px'">
       <div class="item-info">
         <div class="item-name">The Mirror</div>
         <div class="item-lore">It shows not your face, but the face you'll wear in ten years.</div>
@@ -200,7 +200,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 </section>
 
 <!-- SHOP SHELF IMAGE -->
-<div class="full-img" style="background-image:url('img/shelf.png')"></div>
+<div class="full-img" style="background-image:url('img/Shop/005-Books.png')"></div>
 
 <!-- BOOKS -->
 <section id="books">
@@ -209,7 +209,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- SKIN ME -->
   <div class="book-section reveal" id="skin-me">
-    <div class="book-img" style="background-image:url('img/whip.png')"></div>
+    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
     <div class="book-text">
       <h3>Skin Me</h3>
       <div class="genre">Paranormal Dark Romance 18+ · Berlin</div>
@@ -226,7 +226,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- CARRY ME -->
   <div class="book-section reverse reveal">
-    <div class="book-img" style="background-image:url('img/wig.png')"></div>
+    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
     <div class="book-text">
       <h3>Carry Me</h3>
       <div class="genre">Coming Soon</div>
@@ -241,7 +241,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- WARUM MÜTTER TÖTEN? -->
   <div class="book-section reveal">
-    <div class="book-img" style="background-image:url('img/hourglass.png')"></div>
+    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
     <div class="book-text">
       <h3>Warum Mütter töten?</h3>
       <div class="genre">Mystical Thriller · Coming Soon</div>
@@ -256,7 +256,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- LAY ME -->
   <div class="book-section reverse reveal">
-    <div class="book-img" style="background-image:url('img/tarot.png')"></div>
+    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
     <div class="book-text">
       <h3>Lay Me</h3>
       <div class="genre">Dark Romance 18+ · Coming Soon</div>
@@ -269,7 +269,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 </section>
 
 <!-- CINEMA -->
-<div class="full-img" style="background-image:url('img/cinema.png')"></div>
+<div class="full-img" style="background-image:url('img/Shop/007-Cinema.png')"></div>
 <section id="cinema">
   <div class="cinema-banner reveal">
     <div class="section-title">Cinema Below</div>
