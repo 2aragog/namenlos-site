@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Namenlos</title>
+<meta name="description" content="The shop has no address. But it has a word.">
+<meta property="og:title" content="Namenlos">
+<meta property="og:description" content="The shop has no address. But it has a word.">
+<meta property="og:url" content="https://namenlos.black">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--black:#0a0a0a;--deep:#060606;--ash:#2a2a2a;--silver:#6b6b6b;--mist:#999;--bone:#c8c0b8;--cream:#e8e0d8;--blood:#8b1a1a;--blood-glow:#a52222}
+
+html,body{height:100%;overflow:hidden;background:var(--deep)}
+body{font-family:'Josefin Sans',sans-serif;color:var(--cream)}
+
+/* ===== CODE SCREEN ===== */
+#codeScreen{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--deep);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity 1.5s ease,visibility 1.5s ease;
+}
+#codeScreen.hidden{opacity:0;visibility:hidden;pointer-events:none}
+
+.code-prompt{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;font-style:italic;
+  font-size:clamp(0.9rem,2.5vw,1.2rem);
+  color:var(--silver);
+  letter-spacing:0.05em;
+  margin-bottom:40px;
+  text-align:center;
+  padding:0 20px;
+  animation:fi 3s ease-out both;
+  line-height:1.6;
+}
+
+.code-input-wrap{
+  display:flex;align-items:center;
+  gap:4px;
+  animation:fi 3s ease-out 0.5s both;
+}
+
+.code-prefix{
+  font-family:'Josefin Sans',sans-serif;
+  font-weight:200;font-size:1rem;
+  color:var(--silver);
+  letter-spacing:0.1em;
+}
+
+#codeInput{
+  background:transparent;border:none;outline:none;
+  font-family:'Josefin Sans',sans-serif;
+  font-weight:300;font-size:1rem;
+  color:var(--cream);
+  letter-spacing:0.15em;
+  width:200px;
+  caret-color:var(--blood);
+}
+#codeInput::placeholder{color:var(--ash)}
+
+.code-line{
+  width:200px;height:1px;
+  background:linear-gradient(to right,transparent,var(--ash),transparent);
+  margin-top:2px;
+  animation:fi 3s ease-out 0.8s both;
+}
+
+.code-error{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;font-style:italic;
+  font-size:0.85rem;
+  color:var(--blood-glow);
+  margin-top:30px;
+  min-height:1.2em;
+  text-align:center;
+  padding:0 20px;
+  opacity:0;
+  transition:opacity 0.5s ease;
+}
+.code-error.visible{opacity:1}
+
+.code-link{
+  color:var(--bone);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.code-link:hover{color:var(--cream)}
+
+.code-remembered{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:300;font-style:italic;
+  font-size:0.85rem;
+  color:var(--silver);
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  opacity:0;transition:opacity 1s ease;
+  z-index:1001;
+}
+.code-remembered.visible{opacity:1}
+
+/* ===== MAIN SITE ===== */
+#mainSite{
+  position:fixed;inset:0;
+  background:var(--deep);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow-x:hidden;
+}
+
+body::after{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.7) 100%);
+  pointer-events:none;z-index:50;
+}
+
+.atm{
+  position:fixed;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,26,26,.08) 0%,transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:breathe 8s ease-in-out infinite;
+  pointer-events:none;z-index:1;
+}
+@keyframes breathe{
+  0%,100%{opacity:.4;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+}
+
+.c{
+  position:relative;z-index:10;
+  text-align:center;display:flex;flex-direction:column;align-items:center;
+  padding:20px;
+}
+
+.lt{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--silver));margin-bottom:40px;animation:fsd 2s ease-out .3s both}
+.b{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,8vw,7rem);letter-spacing:.35em;text-transform:uppercase;color:var(--cream);text-indent:.35em;line-height:1;animation:fi 2.5s ease-out .6s both;position:relative}
+.b::after{content:'';position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);width:40px;height:1px;background:var(--blood);animation:el 2s ease-out 1.5s both}
+@keyframes el{from{width:0;opacity:0}to{width:40px;opacity:1}}
+.t{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:clamp(.85rem,2vw,1.1rem);color:var(--mist);letter-spacing:.15em;margin-top:36px;animation:fi 2s ease-out 1.2s both}
+.s{font-family:'Josefin Sans',sans-serif;font-weight:200;font-size:clamp(.65rem,1.2vw,.75rem);letter-spacing:.5em;text-transform:uppercase;color:var(--silver);margin-top:50px;text-indent:.5em;animation:fi 2s ease-out 1.8s both}
+
+.su{margin-top:44px;animation:fi 2s ease-out 2.2s both;display:flex;flex-direction:column;align-items:center;gap:16px}
+.sl{font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:.85rem;color:var(--silver);letter-spacing:.1em}
+.sf{display:flex;align-items:stretch;width:100%;max-width:380px}
+.si{flex:1;background:transparent;border:1px solid var(--ash);border-right:none;padding:12px 18px;font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:.8rem;letter-spacing:.08em;color:var(--cream);outline:none;transition:border-color .4s;min-width:0}
+.si::placeholder{color:var(--silver)}.si:focus{border-color:var(--blood)}
+.sb{background:transparent;border:1px solid var(--ash);padding:12px 22px;font-family:'Josefin Sans',sans-serif;font-weight:300;font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .4s;white-space:nowrap}
+.sb:hover{border-color:var(--blood);color:var(--cream);background:rgba(139,26,26,.1)}
+.ss{display:none;font-family:'Cormorant Garamond',serif;font-weight:300;font-style:italic;font-size:.9rem;color:var(--bone)}.ss.v{display:block;animation:fi .6s ease-out both}
+.sf.h,.sl.h{display:none}
+.lb{width:1px;height:60px;background:linear-gradient(to top,transparent,var(--silver));margin-top:44px;animation:fsu 2s ease-out 2.6s both}
+
+.cg{position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(139,26,26,.04) 0%,transparent 70%);pointer-events:none;z-index:3;transform:translate(-50%,-50%);transition:left .3s ease-out,top .3s ease-out}
+
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes fsd{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fsu{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:600px){
+  .lt,.lb{height:40px}
+  .b{letter-spacing:.2em;text-indent:.2em}
+  .s{letter-spacing:.3em;text-indent:.3em}
+  .sf{flex-direction:column;max-width:300px}
+  .si{border-right:1px solid var(--ash);border-bottom:none;text-align:center}
+  .sb{border-top:1px solid var(--ash)}
+}
+</style>
+</head>
+<body>
+
+<!-- CODE SCREEN -->
+<div id="codeScreen">
+  <p class="code-prompt">The shop has no address.<br>But it has a number.<br><br>Say it.</p>
+  <div class="code-input-wrap">
+    <span class="code-prefix">&gt;</span>
+    <input type="text" id="codeInput" placeholder="_ _ _" maxlength="10" autocomplete="off" autofocus>
+  </div>
+  <div class="code-line"></div>
+  <p class="code-error" id="codeError"></p>
+</div>
+<div class="code-remembered" id="codeRemembered">The shopkeeper remembers you.</div>
+
+<!-- MAIN SITE -->
+<div id="mainSite" style="opacity:0;transition:opacity 2s ease">
+  <div class="atm"></div>
+  <div class="cg" id="cg"></div>
+  <div class="c">
+    <div class="lt"></div>
+    <h1 class="b">Namenlos</h1>
+    <p class="t">dark romance</p>
+    <p class="s">coming soon</p>
+    <div class="su">
+      <p class="sl" id="sl">be the first to know</p>
+      <div class="sf" id="sf">
+        <input type="email" class="si" id="ei" placeholder="your@email.com" autocomplete="email">
+        <button type="button" class="sb" id="sb">notify me</button>
+      </div>
+      <p class="ss" id="ss">the darkness will find you</p>
+    </div>
+    <div class="lb"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const CODE = '547';
+  const codeScreen = document.getElementById('codeScreen');
+  const codeInput = document.getElementById('codeInput');
+  const codeError = document.getElementById('codeError');
+  const mainSite = document.getElementById('mainSite');
+  const remembered = document.getElementById('codeRemembered');
+  let attempts = 0;
+
+  const errors = [
+    "The door doesn't recognize you.",
+    "Still wrong. The shopkeeper is listening.",
+    "You're persistent. That's something. But the number is not yours yet.",
+    'Try reading Chapter 1. The whip whispers the answer. <a class="code-link" href="mailto:?subject=Namenlos&body=namenlos.black">Get the first chapter</a>'
+  ];
+
+  // Check if coming from ad (?r=1)
+  const params = new URLSearchParams(window.location.search);
+  const fromAd = params.get('r') === '1';
+
+  // Check if already known (localStorage)
+  const isKnown = localStorage.getItem('namenlos_known') === '1';
+
+  // Check if coming from ad via session
+  const sessionAd = sessionStorage.getItem('namenlos_ad') === '1';
+
+  if (fromAd) {
+    sessionStorage.setItem('namenlos_ad', '1');
+    enterShop(false);
+  } else if (isKnown) {
+    enterShop(true);
+  } else {
+    // Show code screen
+    codeScreen.style.display = 'flex';
+    codeInput.focus();
+  }
+
+  codeInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      const val = codeInput.value.trim().replace(/[\s\-]/g, '');
+      if (val === CODE) {
+        localStorage.setItem('namenlos_known', '1');
+        enterShop(false);
+      } else {
+        attempts++;
+        const idx = Math.min(attempts - 1, errors.length - 1);
+        codeError.innerHTML = errors[idx];
+        codeError.classList.add('visible');
+        codeInput.value = '';
+        codeInput.style.borderBottomColor = 'var(--blood)';
+        setTimeout(() => { codeInput.style.borderBottomColor = ''; }, 1000);
+      }
+    }
+  });
+
+  function enterShop(wasKnown) {
+    codeScreen.classList.add('hidden');
+    mainSite.style.opacity = '1';
+
+    if (wasKnown) {
+      remembered.classList.add('visible');
+      setTimeout(() => { remembered.classList.remove('visible'); }, 3000);
+    }
+  }
+
+  // Particles
+  function cp(){
+    const p=document.createElement('div');
+    p.style.cssText='position:fixed;width:'+(Math.random()*1.5+.5)+'px;height:'+(Math.random()*1.5+.5)+'px;background:#6b6b6b;border-radius:50%;opacity:0;pointer-events:none;z-index:2;left:'+Math.random()*100+'vw;bottom:-10px;animation:fu '+(Math.random()*10+8)+'s linear infinite';
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),20000);
+  }
+  setInterval(cp,800);
+  for(let i=0;i<8;i++) setTimeout(cp,i*300);
+
+  // Cursor glow
+  const g=document.getElementById('cg');
+  document.addEventListener('mousemove',e=>{g.style.left=e.clientX+'px';g.style.top=e.clientY+'px'});
+
+  // Email signup
+  function hs(){
+    const e=document.getElementById('ei').value.trim();
+    if(!e||!e.includes('@'))return;
+    // Send to Kit via hidden form
+    var kf=document.getElementById("kit-form");if(!kf){kf=document.createElement("form");kf.id="kit-form";kf.method="post";kf.action="https://app.kit.com/forms/9207421/subscriptions";kf.target="kit-iframe";kf.style.display="none";var ki=document.createElement("input");ki.name="email_address";ki.type="hidden";kf.appendChild(ki);document.body.appendChild(kf);var ifr=document.createElement("iframe");ifr.name="kit-iframe";ifr.style.display="none";document.body.appendChild(ifr);}kf.querySelector("input").value=e;kf.submit();
+    
+    
+    localStorage.setItem('namenlos_email',e);
+    document.getElementById('sf').classList.add('h');
+    document.getElementById('sl').classList.add('h');
+    document.getElementById('ss').classList.add('v');
+  }
+  document.getElementById('sb').addEventListener('click',hs);
+  document.getElementById('ei').addEventListener('keydown',e=>{if(e.key==='Enter')hs()});
+
+  // Add particle animation keyframes dynamically
+  const style = document.createElement('style');
+  style.textContent = '@keyframes fu{0%{opacity:0;transform:translateY(0) translateX(0)}10%{opacity:.6}90%{opacity:.2}100%{opacity:0;transform:translateY(-100vh) translateX(30px)}}';
+  document.head.appendChild(style);
+})();
+</script>
+
+</body>
+</html>
