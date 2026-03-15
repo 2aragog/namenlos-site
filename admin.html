@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAMENLOS — Admin</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--text:#999;--text2:#666;--gold:#c8a060;--red:#6b1c1c;--green:#1c4a1c}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:100vh}
+
+/* AUTH SCREEN */
+#auth{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:20px}
+#auth .brand{font-family:'Cinzel',serif;font-size:11px;letter-spacing:8px;text-transform:uppercase;color:#2a2218}
+#auth input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:14px;padding:10px 20px;text-align:center;width:260px;outline:none}
+#auth input:focus{border-color:#3a2a18}
+#auth .err{color:var(--red);font-size:11px;height:16px}
+
+/* LAYOUT */
+#app{display:none;height:100vh;flex-direction:column}
+header{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--bg2)}
+header .logo{font-family:'Cinzel',serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#3a3025}
+header .logo span{color:var(--gold)}
+header nav{display:flex;gap:16px;align-items:center}
+header nav a{color:var(--text2);text-decoration:none;font-size:12px;transition:color 0.2s}
+header nav a:hover{color:var(--gold)}
+.btn{padding:6px 14px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;transition:all 0.2s}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn-primary{border-color:var(--gold);color:var(--gold)}
+.btn-danger{border-color:var(--red);color:#a33}
+
+/* TOOLBAR */
+.toolbar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;background:var(--bg);flex-wrap:wrap}
+.toolbar .path{font-size:12px;color:var(--text2);flex:1}
+.toolbar .path span{color:var(--gold);cursor:pointer}
+.toolbar .path span:hover{text-decoration:underline}
+.search{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:5px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;width:200px;outline:none}
+.search:focus{border-color:#3a2a18}
+
+/* FILE GRID */
+.content{flex:1;overflow-y:auto;padding:16px 20px}
+.view-toggle{display:flex;gap:4px}
+.view-toggle .btn{padding:4px 10px;font-size:11px}
+.view-toggle .btn.active{background:var(--bg3);border-color:var(--gold);color:var(--gold)}
+
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}
+.file-grid.list{grid-template-columns:1fr;gap:2px}
+
+.file-card{border:1px solid var(--border);background:var(--bg2);overflow:hidden;cursor:pointer;transition:all 0.2s;position:relative}
+.file-card:hover{border-color:#3a2a18;transform:translateY(-1px)}
+.file-card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.file-card .thumb{width:100%;aspect-ratio:16/10;background:#080808;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.file-card .thumb img{width:100%;height:100%;object-fit:cover}
+.file-card .thumb .icon{font-size:28px;opacity:0.2}
+.file-card .info{padding:8px 10px}
+.file-card .info .name{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-card .info .meta{font-size:10px;color:var(--text2);margin-top:3px}
+.file-card .check{position:absolute;top:6px;right:6px;width:18px;height:18px;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold);opacity:0;transition:opacity 0.2s}
+.file-card:hover .check,.file-card.selected .check{opacity:1}
+.file-card.selected .check{background:var(--gold);color:var(--bg)}
+
+/* LIST VIEW */
+.file-grid.list .file-card{display:flex;align-items:center;gap:12px}
+.file-grid.list .file-card .thumb{width:48px;height:36px;aspect-ratio:auto;flex-shrink:0}
+.file-grid.list .file-card .info{padding:8px 0;flex:1;display:flex;align-items:center;gap:16px}
+.file-grid.list .file-card .info .name{flex:1}
+.file-grid.list .file-card .check{position:static;opacity:1}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border);padding:40px;text-align:center;margin-top:12px;transition:all 0.3s;cursor:pointer}
+.upload-zone.drag{border-color:var(--gold);background:rgba(200,160,96,0.03)}
+.upload-zone p{color:var(--text2);font-size:12px;margin-top:8px}
+.upload-zone .upload-icon{font-size:32px;opacity:0.3}
+#fileInput{display:none}
+
+/* PROGRESS */
+.progress-bar{height:3px;background:var(--border);margin-top:8px;overflow:hidden;display:none}
+.progress-bar .fill{height:100%;background:var(--gold);width:0;transition:width 0.3s}
+
+/* PREVIEW MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);max-width:900px;width:100%;max-height:90vh;overflow-y:auto}
+.modal-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-header h3{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold);font-weight:500}
+.modal-body{padding:16px}
+.modal-body img{max-width:100%;max-height:60vh;display:block;margin:0 auto}
+.modal-body .details{margin-top:16px;display:grid;grid-template-columns:100px 1fr;gap:6px;font-size:12px}
+.modal-body .details dt{color:var(--text2)}
+.modal-body .details dd{color:var(--text)}
+.modal-footer{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;padding:10px 18px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:12px;z-index:200;transform:translateY(60px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:var(--green);color:#4a4}
+.toast.error{border-color:var(--red);color:#a44}
+
+/* STATUS BAR */
+.statusbar{padding:6px 20px;border-top:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;font-size:11px;color:var(--text2)}
+
+@media(max-width:768px){
+  .file-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .search{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="auth">
+  <div class="brand">Namenlos <span style="color:#c8a060">Admin</span></div>
+  <input type="password" id="passInput" placeholder="password" autofocus>
+  <div class="err" id="authErr"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="logo">Namenlos <span>Admin</span></div>
+    <nav>
+      <a href="https://namenlos.black" target="_blank">View Site ↗</a>
+      <a href="https://namenlos.black/classic.html" target="_blank">Classic</a>
+      <a href="https://namenlos.black/demo-25d.html" target="_blank">2.5D Demo</a>
+      <button class="btn" onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <div class="toolbar">
+    <div class="path" id="breadcrumb"></div>
+    <input class="search" type="text" placeholder="Search files..." id="searchInput" oninput="filterFiles()">
+    <div class="view-toggle">
+      <button class="btn active" id="gridBtn" onclick="setView('grid')">Grid</button>
+      <button class="btn" id="listBtn" onclick="setView('list')">List</button>
+    </div>
+    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">↑ Upload</button>
+    <button class="btn btn-danger" id="deleteBtn" onclick="deleteSelected()" style="display:none">Delete Selected</button>
+  </div>
+
+  <div class="content" id="content">
+    <div class="upload-zone" id="dropZone">
+      <div class="upload-icon">↑</div>
+      <p>Drop files here or click Upload</p>
+      <div class="progress-bar" id="progressBar"><div class="fill" id="progressFill"></div></div>
+    </div>
+    <input type="file" id="fileInput" multiple accept="image/*,.html,.css,.js,.json,.md">
+    <div class="file-grid" id="fileGrid"></div>
+  </div>
+
+  <div class="statusbar">
+    <span id="statusLeft">Loading...</span>
+    <span id="statusRight"></span>
+  </div>
+</div>
+
+<!-- PREVIEW MODAL -->
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Preview</h3>
+      <button class="btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="copyUrl()">Copy URL</button>
+      <button class="btn" onclick="downloadFile()">Download</button>
+      <button class="btn btn-danger" onclick="deleteCurrent()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const REPO = '2aragog/namenlos-site';
+const BRANCH = 'main';
+const PASS_HASH = '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918'; // sha256 of 'admin'
+let TOKEN = '';
+let currentPath = '';
+let files = [];
+let selected = new Set();
+let currentFile = null;
+let viewMode = 'grid';
+
+// === AUTH ===
+document.getElementById('passInput').addEventListener('keydown', async e => {
+  if (e.key !== 'Enter') return;
+  const pass = e.target.value;
+  const hash = await sha256(pass);
+  // Accept 'admin' or the GitHub token directly
+  if (hash === PASS_HASH || pass.startsWith('ghp_')) {
+    TOKEN = pass.startsWith('ghp_') ? pass : prompt('Enter GitHub token:');
+    if (!TOKEN) return;
+    localStorage.setItem('nm-admin-token', TOKEN);
+    showApp();
+  } else {
+    document.getElementById('authErr').textContent = 'Wrong password';
+    e.target.value = '';
+  }
+});
+
+// Auto-login
+if (localStorage.getItem('nm-admin-token')) {
+  TOKEN = localStorage.getItem('nm-admin-token');
+  showApp();
+}
+
+function logout() {
+  localStorage.removeItem('nm-admin-token');
+  location.reload();
+}
+
+function showApp() {
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  loadFolder('');
+}
+
+// === GITHUB API ===
+async function api(endpoint, opts = {}) {
+  const res = await fetch(`https://api.github.com/repos/${REPO}/${endpoint}`, {
+    ...opts,
+    headers: {
+      'Authorization': `Bearer ${TOKEN}`,
+      'Accept': 'application/vnd.github.v3+json',
+      ...(opts.headers || {}),
+      ...(opts.body ? {'Content-Type': 'application/json'} : {})
+    }
+  });
+  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function loadFolder(path) {
+  currentPath = path;
+  selected.clear();
+  updateDeleteBtn();
+  updateBreadcrumb();
+  
+  document.getElementById('statusLeft').textContent = 'Loading...';
+  
+  try {
+    const data = await api(`contents/${path}?ref=${BRANCH}`);
+    files = Array.isArray(data) ? data : [data];
+    files.sort((a, b) => {
+      if (a.type !== b.type) return a.type === 'dir' ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+    renderFiles();
+    const total = files.filter(f => f.type === 'file').length;
+    const dirs = files.filter(f => f.type === 'dir').length;
+    document.getElementById('statusLeft').textContent = `${total} files, ${dirs} folders`;
+    document.getElementById('statusRight').textContent = path || '/';
+  } catch (e) {
+    toast('Error loading: ' + e.message, 'error');
+    document.getElementById('statusLeft').textContent = 'Error';
+  }
+}
+
+function renderFiles() {
+  const grid = document.getElementById('fileGrid');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  
+  const filtered = files.filter(f => f.name.toLowerCase().includes(search));
+  
+  grid.innerHTML = filtered.map(f => {
+    const isImg = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
+    const isDir = f.type === 'dir';
+    const sel = selected.has(f.sha) ? 'selected' : '';
+    const size = f.size ? formatSize(f.size) : '';
+    
+    let thumb = '';
+    if (isDir) {
+      thumb = '<div class="icon">📁</div>';
+    } else if (isImg) {
+      const rawUrl = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
+      thumb = `<img src="${rawUrl}" loading="lazy" alt="${f.name}">`;
+    } else {
+      thumb = '<div class="icon">📄</div>';
+    }
+    
+    return `
+      <div class="file-card ${sel}" data-sha="${f.sha}" data-path="${f.path}" data-type="${f.type}"
+           onclick="handleClick(event, '${f.sha}')" ondblclick="handleDblClick('${f.sha}')">
+        <div class="check">${sel ? '✓' : ''}</div>
+        <div class="thumb">${thumb}</div>
+        <div class="info">
+          <div class="name" title="${f.name}">${f.name}</div>
+          <div class="meta">${isDir ? 'Folder' : size}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function handleClick(e, sha) {
+  if (e.ctrlKey || e.metaKey) {
+    if (selected.has(sha)) selected.delete(sha);
+    else selected.add(sha);
+  } else {
+    const f = files.find(x => x.sha === sha);
+    if (f && f.type === 'file') {
+      openPreview(f);
+      return;
+    }
+    if (f && f.type === 'dir') {
+      loadFolder(f.path);
+      return;
+    }
+  }
+  renderFiles();
+  updateDeleteBtn();
+}
+
+function handleDblClick(sha) {
+  const f = files.find(x => x.sha === sha);
+  if (f && f.type === 'dir') loadFolder(f.path);
+}
+
+// === UPLOAD ===
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); uploadFiles(e.dataTransfer.files); });
+dropZone.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', () => uploadFiles(fileInput.files));
+
+async function uploadFiles(fileList) {
+  const bar = document.getElementById('progressBar');
+  const fill = document.getElementById('progressFill');
+  bar.style.display = 'block';
+  
+  const total = fileList.length;
+  let done = 0;
+  
+  for (const file of fileList) {
+    try {
+      const base64 = await readAsBase64(file);
+      const path = currentPath ? `${currentPath}/${file.name}` : file.name;
+      
+      // Check if file exists (for update)
+      let sha = undefined;
+      try {
+        const existing = await api(`contents/${path}?ref=${BRANCH}`);
+        sha = existing.sha;
+      } catch(e) {} // File doesn't exist
+      
+      const body = {
+        message: `Upload ${file.name}`,
+        content: base64,
+        branch: BRANCH,
+      };
+      if (sha) body.sha = sha;
+      
+      await api(`contents/${path}`, {
+        method: 'PUT',
+        body: JSON.stringify(body)
+      });
+      
+      done++;
+      fill.style.width = (done / total * 100) + '%';
+      toast(`Uploaded ${file.name}`, 'success');
+    } catch (e) {
+      toast(`Error uploading ${file.name}: ${e.message}`, 'error');
+    }
+  }
+  
+  setTimeout(() => {
+    bar.style.display = 'none';
+    fill.style.width = '0';
+    loadFolder(currentPath);
+  }, 500);
+}
+
+function readAsBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// === DELETE ===
+async function deleteSelected() {
+  const count = selected.size;
+  if (!confirm(`Delete ${count} file(s)?`)) return;
+  
+  for (const sha of selected) {
+    const f = files.find(x => x.sha === sha);
+    if (!f || f.type !== 'file') continue;
+    try {
+      await api(`contents/${f.path}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          message: `Delete ${f.name}`,
+          sha: f.sha,
+          branch: BRANCH
+        })
+      });
+      toast(`Deleted ${f.name}`, 'success');
+    } catch (e) {
+      toast(`Error deleting ${f.name}: ${e.message}`, 'error');
+    }
+  }
+  selected.clear();
+  loadFolder(currentPath);
+}
+
+async function deleteCurrent() {
+  if (!currentFile || !confirm(`Delete ${currentFile.name}?`)) return;
+  try {
+    await api(`contents/${currentFile.path}`, {
+      method: 'DELETE',
+      body: JSON.stringify({
+        message: `Delete ${currentFile.name}`,
+        sha: currentFile.sha,
+        branch: BRANCH
+      })
+    });
+    toast(`Deleted ${currentFile.name}`, 'success');
+    closeModal();
+    loadFolder(currentPath);
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+// === PREVIEW ===
+function openPreview(f) {
+  currentFile = f;
+  const modal = document.getElementById('modal');
+  const body = document.getElementById('modalBody');
+  document.getElementById('modalTitle').textContent = f.name;
+  
+  const isImg = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
+  const rawUrl = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${f.path}`;
+  const siteUrl = `https://namenlos.black/${f.path}`;
+  
+  body.innerHTML = `
+    ${isImg ? `<img src="${rawUrl}" alt="${f.name}">` : `<div style="padding:20px;text-align:center;color:#666">No preview available</div>`}
+    <dl class="details">
+      <dt>Path</dt><dd>${f.path}</dd>
+      <dt>Size</dt><dd>${formatSize(f.size)}</dd>
+      <dt>Site URL</dt><dd><a href="${siteUrl}" target="_blank" style="color:var(--gold)">${siteUrl}</a></dd>
+      <dt>SHA</dt><dd style="font-size:10px">${f.sha}</dd>
+    </dl>
+  `;
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentFile = null;
+}
+
+function copyUrl() {
+  if (!currentFile) return;
+  const url = `https://namenlos.black/${currentFile.path}`;
+  navigator.clipboard.writeText(url);
+  toast('URL copied!', 'success');
+}
+
+function downloadFile() {
+  if (!currentFile) return;
+  const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${currentFile.path}`;
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = currentFile.name;
+  a.click();
+}
+
+// === UI HELPERS ===
+function updateBreadcrumb() {
+  const parts = currentPath.split('/').filter(Boolean);
+  let html = '<span onclick="loadFolder(\'\')">root</span>';
+  let path = '';
+  for (const p of parts) {
+    path += (path ? '/' : '') + p;
+    const pp = path;
+    html += ` / <span onclick="loadFolder('${pp}')">${p}</span>`;
+  }
+  document.getElementById('breadcrumb').innerHTML = html;
+}
+
+function updateDeleteBtn() {
+  const btn = document.getElementById('deleteBtn');
+  btn.style.display = selected.size > 0 ? 'inline-block' : 'none';
+  if (selected.size > 0) btn.textContent = `Delete (${selected.size})`;
+}
+
+function setView(mode) {
+  viewMode = mode;
+  document.getElementById('fileGrid').className = 'file-grid' + (mode === 'list' ? ' list' : '');
+  document.getElementById('gridBtn').classList.toggle('active', mode === 'grid');
+  document.getElementById('listBtn').classList.toggle('active', mode === 'list');
+}
+
+function filterFiles() { renderFiles(); }
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+
+function toast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Backspace' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
+    e.preventDefault();
+    const parts = currentPath.split('/').filter(Boolean);
+    parts.pop();
+    loadFolder(parts.join('/'));
+  }
+});
+</script>
+</body>
+</html>
