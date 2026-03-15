@@ -201,32 +201,7 @@ imgs.forEach(img => {
 });
 if (loaded >= imgs.length) setTimeout(() => document.getElementById('loading').classList.add('done'), 300);
 
-// Check if layers have black background (no transparency)
-// If so, use mix-blend-mode: lighten to composite
-window.addEventListener('load', () => {
-  // Test first non-bg layer for transparency
-  const testImg = new Image();
-  testImg.crossOrigin = 'anonymous';
-  testImg.src = 'img/shop_enter/002_0000_Layer-1.png';
-  testImg.onload = () => {
-    const c = document.createElement('canvas');
-    c.width = 1; c.height = 1;
-    const ctx = c.getContext('2d');
-    // Sample a corner pixel (should be transparent if properly exported)
-    ctx.drawImage(testImg, 0, 0, 1, 1);
-    const pixel = ctx.getImageData(0, 0, 1, 1).data;
-    if (pixel[3] < 10) {
-      // Has transparency — perfect, normal compositing
-      console.log('Layers have transparency — using normal blend');
-    } else {
-      // Black background — use lighten blend mode
-      console.log('Layers on black bg — using lighten blend');
-      layers.forEach((l, i) => {
-        if (i > 0) l.style.mixBlendMode = 'lighten';
-      });
-    }
-  };
-});
+// All layers are RGBA with proper transparency — normal compositing
 </script>
 </body>
 </html>
