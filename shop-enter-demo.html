@@ -3,22 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NAMENLOS — Shop Enter 2.5D</title>
+<title>NAMENLOS — Shop</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;font-family:'Cinzel',serif}
+
+/* Single fullscreen image with slight oversize for parallax breathing */
 .scene{position:relative;width:100%;height:100%;overflow:hidden}
-.layer{
+.scene-img{
   position:absolute;
   top:50%;left:50%;
   transform:translate(-50%,-50%);
+  width:110%;height:110%;
+  object-fit:cover;
   will-change:transform;
-  width:112%;height:112%;
 }
-.layer img{display:block;width:100%;height:100%;object-fit:cover}
-.glow img{filter:brightness(1.15) contrast(1.05)}
+
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:40;
-  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.7) 100%)}
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.65) 100%)}
+
 .dust{position:fixed;inset:0;pointer-events:none;z-index:35}
 .dust span{position:absolute;width:2px;height:2px;background:rgba(200,170,100,0.3);border-radius:50%;animation:float linear infinite}
 @keyframes float{
@@ -26,11 +29,13 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
   10%{opacity:1}90%{opacity:1}
   100%{transform:translateY(-10vh) translateX(40px);opacity:0}
 }
+
 .info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;
   background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;
   display:flex;justify-content:space-between;align-items:center;pointer-events:none}
 .info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:monospace}
 .info .title{color:#c8a060;font-size:13px;letter-spacing:5px}
+
 #loading{position:fixed;inset:0;background:#000;z-index:999;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
@@ -45,19 +50,8 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
   <div class="bar"><div class="fill" id="loadFill"></div></div>
 </div>
 
-<div class="scene" id="scene">
-  <!-- BG: slow parallax — the room breathes -->
-  <div class="layer" data-depth="0.3">
-    <img src="img/shop_enter/002_0014_Background.png" alt="shop">
-  </div>
-  <!-- LAMP: medium parallax -->
-  <div class="layer glow" data-depth="0.7">
-    <img src="img/shop_enter/002_0001_Layer-2.png" alt="lamp">
-  </div>
-  <!-- SHOPKEEPER: closest to viewer -->
-  <div class="layer" data-depth="1.2">
-    <img src="img/shop_enter/002_0000_Layer-1.png" alt="shopkeeper">
-  </div>
+<div class="scene">
+  <img class="scene-img" id="bg" src="img/shop_enter/shop.png" alt="The Nameless Shop">
 </div>
 
 <div class="vignette"></div>
@@ -68,37 +62,34 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 </div>
 
 <script>
-const layers=document.querySelectorAll('.layer');
-const maxShift=20;
-let targetX=0,targetY=0,currentX=0,currentY=0;
+// Subtle parallax on single image
+const bg = document.getElementById('bg');
+let tx=0,ty=0,cx=0,cy=0;
+const shift=12;
 
 document.addEventListener('mousemove',e=>{
-  targetX=(e.clientX/innerWidth-0.5)*2;
-  targetY=(e.clientY/innerHeight-0.5)*2;
+  tx=(e.clientX/innerWidth-0.5)*2;
+  ty=(e.clientY/innerHeight-0.5)*2;
 });
 
-(function animate(){
-  currentX+=(targetX-currentX)*0.06;
-  currentY+=(targetY-currentY)*0.06;
-  layers.forEach(l=>{
-    const d=parseFloat(l.dataset.depth)||0;
-    const mx=-currentX*maxShift*d;
-    const my=-currentY*maxShift*d*0.4;
-    l.style.transform=`translate(calc(-50% + ${mx}px), calc(-50% + ${my}px))`;
-  });
-  requestAnimationFrame(animate);
+(function anim(){
+  cx+=(tx-cx)*0.05;
+  cy+=(ty-cy)*0.05;
+  bg.style.transform=`translate(calc(-50% + ${-cx*shift}px), calc(-50% + ${-cy*shift*0.4}px))`;
+  requestAnimationFrame(anim);
 })();
 
 if(window.DeviceOrientationEvent){
   window.addEventListener('deviceorientation',e=>{
     if(e.gamma!==null){
-      targetX=Math.max(-1,Math.min(1,e.gamma/25));
-      targetY=Math.max(-1,Math.min(1,(e.beta-45)/25));
+      tx=Math.max(-1,Math.min(1,e.gamma/25));
+      ty=Math.max(-1,Math.min(1,(e.beta-45)/25));
     }
   });
 }
 
-const dustEl=document.getElementById('dust');
+// Dust
+const d=document.getElementById('dust');
 for(let i=0;i<25;i++){
   const s=document.createElement('span');
   s.style.left=Math.random()*100+'%';
@@ -107,14 +98,14 @@ for(let i=0;i<25;i++){
   const sz=1+Math.random()*2;
   s.style.width=s.style.height=sz+'px';
   s.style.opacity=0.2+Math.random()*0.3;
-  dustEl.appendChild(s);
+  d.appendChild(s);
 }
 
-const imgs=document.querySelectorAll('.layer img');
-let loaded=0;const fill=document.getElementById('loadFill');const total=imgs.length;
-function chk(){fill.style.width=(loaded/total*100)+'%';if(loaded>=total)setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
-imgs.forEach(img=>{if(img.complete){loaded++;chk();}else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}});
-chk();
+// Loading
+const img=document.getElementById('bg');
+const fill=document.getElementById('loadFill');
+function done(){fill.style.width='100%';setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
+if(img.complete)done();else{img.onload=done;img.onerror=done;}
 </script>
 </body>
 </html>
