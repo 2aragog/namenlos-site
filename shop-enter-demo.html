@@ -8,20 +8,80 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;font-family:'Cinzel',serif}
 
-/* Single fullscreen image with slight oversize for parallax breathing */
 .scene{position:relative;width:100%;height:100%;overflow:hidden}
 .scene-img{
-  position:absolute;
-  top:50%;left:50%;
+  position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
   width:110%;height:110%;
-  object-fit:cover;
+  object-fit:cover;will-change:transform;
+}
+
+/* ═══ HOTSPOTS ═══ */
+.hotspots{
+  position:absolute;inset:0;z-index:30;
+  /* hotspots move with the image */
+  top:50%;left:50%;
+  width:110%;height:110%;
+  transform:translate(-50%,-50%);
   will-change:transform;
 }
+.hotspot{
+  position:absolute;
+  cursor:pointer;
+  border:1px solid transparent;
+  border-radius:6px;
+  transition:all 0.5s ease;
+}
+/* Idle: faint golden pulse to hint "something is here" */
+.hotspot::before{
+  content:'';
+  position:absolute;inset:-2px;
+  border-radius:8px;
+  border:1px solid rgba(200,160,80,0);
+  transition:all 0.5s ease;
+}
+/* Hover: golden glow */
+.hotspot:hover{
+  background:rgba(200,160,80,0.08);
+  border-color:rgba(200,160,80,0.35);
+  box-shadow:0 0 25px rgba(200,160,80,0.15), inset 0 0 20px rgba(200,160,80,0.08);
+}
+.hotspot:hover::before{
+  border-color:rgba(200,160,80,0.2);
+  box-shadow:0 0 40px rgba(200,160,80,0.1);
+}
+/* Label */
+.hotspot .label{
+  position:absolute;
+  bottom:-30px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.9);
+  color:#c8a060;
+  font-size:10px;
+  padding:4px 14px;
+  white-space:nowrap;
+  opacity:0;
+  transition:opacity 0.4s;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  pointer-events:none;
+  border:1px solid rgba(200,160,80,0.2);
+}
+.hotspot:hover .label{opacity:1}
+
+/* Subtle idle shimmer on hotspots */
+@keyframes shimmer{
+  0%,100%{border-color:rgba(200,160,80,0)}
+  50%{border-color:rgba(200,160,80,0.12)}
+}
+.hotspot{animation:shimmer 4s ease-in-out infinite}
+.hotspot:nth-child(2){animation-delay:1s}
+.hotspot:nth-child(3){animation-delay:2s}
+.hotspot:nth-child(4){animation-delay:0.5s}
+.hotspot:nth-child(5){animation-delay:1.5s}
 
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:40;
   background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.65) 100%)}
-
 .dust{position:fixed;inset:0;pointer-events:none;z-index:35}
 .dust span{position:absolute;width:2px;height:2px;background:rgba(200,170,100,0.3);border-radius:50%;animation:float linear infinite}
 @keyframes float{
@@ -29,13 +89,11 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
   10%{opacity:1}90%{opacity:1}
   100%{transform:translateY(-10vh) translateX(40px);opacity:0}
 }
-
 .info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;
   background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;
   display:flex;justify-content:space-between;align-items:center;pointer-events:none}
 .info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:monospace}
 .info .title{color:#c8a060;font-size:13px;letter-spacing:5px}
-
 #loading{position:fixed;inset:0;background:#000;z-index:999;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
@@ -52,6 +110,36 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 
 <div class="scene">
   <img class="scene-img" id="bg" src="img/shop_enter/shop.png" alt="The Nameless Shop">
+  
+  <!-- Hotspots: positioned as % of the image -->
+  <div class="hotspots" id="hotspots">
+    
+    <!-- Lamp on counter -->
+    <div class="hotspot" data-id="lamp" style="left:22%;top:25%;width:10%;height:32%">
+      <span class="label">The Lamp</span>
+    </div>
+    
+    <!-- Counter / display case -->
+    <div class="hotspot" data-id="counter" style="left:12%;top:57%;width:38%;height:22%">
+      <span class="label">The Counter</span>
+    </div>
+    
+    <!-- Red door -->
+    <div class="hotspot" data-id="door" style="left:42%;top:30%;width:14%;height:52%">
+      <span class="label">The Red Door</span>
+    </div>
+    
+    <!-- Shelves (left wall) -->
+    <div class="hotspot" data-id="shelves" style="left:8%;top:8%;width:34%;height:22%">
+      <span class="label">The Shelves</span>
+    </div>
+    
+    <!-- Vitrine / glass cabinet (right) -->
+    <div class="hotspot" data-id="vitrine" style="left:78%;top:12%;width:18%;height:65%">
+      <span class="label">The Cabinet</span>
+    </div>
+    
+  </div>
 </div>
 
 <div class="vignette"></div>
@@ -62,8 +150,9 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 </div>
 
 <script>
-// Subtle parallax on single image
-const bg = document.getElementById('bg');
+// Parallax — image AND hotspots move together
+const bg=document.getElementById('bg');
+const hs=document.getElementById('hotspots');
 let tx=0,ty=0,cx=0,cy=0;
 const shift=12;
 
@@ -75,7 +164,9 @@ document.addEventListener('mousemove',e=>{
 (function anim(){
   cx+=(tx-cx)*0.05;
   cy+=(ty-cy)*0.05;
-  bg.style.transform=`translate(calc(-50% + ${-cx*shift}px), calc(-50% + ${-cy*shift*0.4}px))`;
+  const t=`translate(calc(-50% + ${-cx*shift}px), calc(-50% + ${-cy*shift*0.4}px))`;
+  bg.style.transform=t;
+  hs.style.transform=t;
   requestAnimationFrame(anim);
 })();
 
@@ -87,6 +178,15 @@ if(window.DeviceOrientationEvent){
     }
   });
 }
+
+// Hotspot clicks
+document.querySelectorAll('.hotspot').forEach(h=>{
+  h.addEventListener('click',()=>{
+    const id=h.dataset.id;
+    console.log('Clicked:',id);
+    // Placeholder — later these navigate to scenes
+  });
+});
 
 // Dust
 const d=document.getElementById('dust');
