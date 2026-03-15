@@ -137,7 +137,10 @@ header nav a:hover{color:var(--gold)}
       <button class="btn" id="listBtn" onclick="setView('list')">List</button>
     </div>
     <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">↑ Upload</button>
+    <button class="btn" id="selectAllBtn" onclick="selectAll()">Select All</button>
+    <button class="btn" id="deselectBtn" onclick="deselectAll()" style="display:none">Deselect</button>
     <button class="btn btn-danger" id="deleteBtn" onclick="deleteSelected()" style="display:none">Delete Selected</button>
+    <span class="selection-info" id="selInfo" style="font-size:11px;color:#c8a060;display:none"></span>
   </div>
 
   <div class="content" id="content">
@@ -298,20 +301,33 @@ function renderFiles() {
 }
 
 function handleClick(e, sha) {
-  if (e.ctrlKey || e.metaKey) {
+  const f = files.find(x => x.sha === sha);
+  if (!f) return;
+  
+  if (f.type === 'dir') {
+    loadFolder(f.path);
+    return;
+  }
+  
+  // Toggle selection
+  if (e.shiftKey && lastClickedSha) {
+    // Shift+click: select range
+    const fileList = files.filter(x => x.type === 'file');
+    const i1 = fileList.findIndex(x => x.sha === lastClickedSha);
+    const i2 = fileList.findIndex(x => x.sha === sha);
+    const [start, end] = [Math.min(i1,i2), Math.max(i1,i2)];
+    for (let i = start; i <= end; i++) selected.add(fileList[i].sha);
+  } else if (e.ctrlKey || e.metaKey) {
+    // Ctrl/Cmd+click: add/remove one
     if (selected.has(sha)) selected.delete(sha);
     else selected.add(sha);
   } else {
-    const f = files.find(x => x.sha === sha);
-    if (f && f.type === 'file') {
-      openPreview(f);
-      return;
-    }
-    if (f && f.type === 'dir') {
-      loadFolder(f.path);
-      return;
-    }
+    // Normal click: toggle this one
+    if (selected.has(sha)) selected.delete(sha);
+    else selected.add(sha);
   }
+  
+  lastClickedSha = sha;
   renderFiles();
   updateDeleteBtn();
 }
@@ -319,6 +335,21 @@ function handleClick(e, sha) {
 function handleDblClick(sha) {
   const f = files.find(x => x.sha === sha);
   if (f && f.type === 'dir') loadFolder(f.path);
+  else if (f && f.type === 'file') openPreview(f);
+}
+
+let lastClickedSha = null;
+
+function selectAll() {
+  files.filter(f => f.type === 'file').forEach(f => selected.add(f.sha));
+  renderFiles();
+  updateDeleteBtn();
+}
+
+function deselectAll() {
+  selected.clear();
+  renderFiles();
+  updateDeleteBtn();
 }
 
 // === UPLOAD ===
@@ -491,8 +522,16 @@ function updateBreadcrumb() {
 
 function updateDeleteBtn() {
   const btn = document.getElementById('deleteBtn');
-  btn.style.display = selected.size > 0 ? 'inline-block' : 'none';
-  if (selected.size > 0) btn.textContent = `Delete (${selected.size})`;
+  const desel = document.getElementById('deselectBtn');
+  const info = document.getElementById('selInfo');
+  const count = selected.size;
+  btn.style.display = count > 0 ? 'inline-block' : 'none';
+  desel.style.display = count > 0 ? 'inline-block' : 'none';
+  info.style.display = count > 0 ? 'inline-block' : 'none';
+  if (count > 0) {
+    btn.textContent = `✕ Delete (${count})`;
+    info.textContent = `${count} selected`;
+  }
 }
 
 function setView(mode) {
