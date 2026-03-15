@@ -137,8 +137,10 @@ header nav a:hover{color:var(--gold)}
       <button class="btn" id="listBtn" onclick="setView('list')">List</button>
     </div>
     <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">↑ Upload</button>
+    <button class="btn" onclick="createFolder()">+ Folder</button>
     <button class="btn" id="selectAllBtn" onclick="selectAll()">Select All</button>
     <button class="btn" id="deselectBtn" onclick="deselectAll()" style="display:none">Deselect</button>
+    <button class="btn" id="moveBtn" onclick="moveSelected()" style="display:none">Move to...</button>
     <button class="btn btn-danger" id="deleteBtn" onclick="deleteSelected()" style="display:none">Delete Selected</button>
     <span class="selection-info" id="selInfo" style="font-size:11px;color:#c8a060;display:none"></span>
   </div>
@@ -352,6 +354,81 @@ function deselectAll() {
   updateDeleteBtn();
 }
 
+// === CREATE FOLDER ===
+async function createFolder() {
+  const name = prompt('Folder name:');
+  if (!name || !name.trim()) return;
+  const folderName = name.trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+  const path = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
+  
+  try {
+    await api(`contents/${path}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: `Create folder ${folderName}`,
+        content: btoa(''),
+        branch: BRANCH
+      })
+    });
+    toast(`Folder "${folderName}" created`, 'success');
+    loadFolder(currentPath);
+  } catch (e) {
+    toast(`Error: ${e.message}`, 'error');
+  }
+}
+
+// === MOVE FILES ===
+async function moveSelected() {
+  const count = selected.size;
+  if (count === 0) return;
+  
+  // Build folder list from known structure
+  const dest = prompt(`Move ${count} file(s) to folder:\n\nExamples: img, img/layers, img/items\n\nCurrent: ${currentPath || 'root'}`);
+  if (!dest && dest !== '') return;
+  const destPath = dest.trim();
+  
+  let moved = 0;
+  for (const sha of selected) {
+    const f = files.find(x => x.sha === sha);
+    if (!f || f.type !== 'file') continue;
+    
+    try {
+      // Get file content
+      const fileData = await api(`contents/${f.path}?ref=${BRANCH}`);
+      const content = fileData.content;
+      
+      // Create in new location
+      const newPath = destPath ? `${destPath}/${f.name}` : f.name;
+      await api(`contents/${newPath}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          message: `Move ${f.name} to ${destPath || 'root'}`,
+          content: content,
+          branch: BRANCH
+        })
+      });
+      
+      // Delete from old location
+      await api(`contents/${f.path}`, {
+        method: 'DELETE',
+        body: JSON.stringify({
+          message: `Move ${f.name} (delete old)`,
+          sha: f.sha,
+          branch: BRANCH
+        })
+      });
+      
+      moved++;
+      toast(`Moved ${f.name} (${moved}/${count})`, 'success');
+    } catch (e) {
+      toast(`Error moving ${f.name}: ${e.message}`, 'error');
+    }
+  }
+  
+  selected.clear();
+  loadFolder(currentPath);
+}
+
 // === UPLOAD ===
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
@@ -523,11 +600,14 @@ function updateBreadcrumb() {
 function updateDeleteBtn() {
   const btn = document.getElementById('deleteBtn');
   const desel = document.getElementById('deselectBtn');
+  const moveBtn = document.getElementById('moveBtn');
   const info = document.getElementById('selInfo');
   const count = selected.size;
-  btn.style.display = count > 0 ? 'inline-block' : 'none';
-  desel.style.display = count > 0 ? 'inline-block' : 'none';
-  info.style.display = count > 0 ? 'inline-block' : 'none';
+  const show = count > 0;
+  btn.style.display = show ? 'inline-block' : 'none';
+  desel.style.display = show ? 'inline-block' : 'none';
+  moveBtn.style.display = show ? 'inline-block' : 'none';
+  info.style.display = show ? 'inline-block' : 'none';
   if (count > 0) {
     btn.textContent = `✕ Delete (${count})`;
     info.textContent = `${count} selected`;
