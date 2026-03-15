@@ -1,113 +1,139 @@
-<!-- v2 --><!DOCTYPE html>
+<!-- v3 --><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NAMENLOS</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinzel',serif}
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
 /* ═══ SCENES ═══ */
-.scene{
-  position:fixed;inset:0;
-  opacity:0;pointer-events:none;
-  transition:opacity 0.8s ease;
-  z-index:1;
-}
+.scene{position:fixed;inset:0;opacity:0;pointer-events:none;transition:opacity 0.8s ease;z-index:1}
 .scene.active{opacity:1;pointer-events:all;z-index:10}
-.scene-img{
-  position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  width:110%;height:110%;
-  object-fit:cover;will-change:transform;
-}
+.scene-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110%;height:110%;object-fit:cover;will-change:transform}
 
 /* ═══ HOTSPOTS ═══ */
-.hotspots{
-  position:absolute;top:50%;left:50%;
-  width:110%;height:110%;
-  transform:translate(-50%,-50%);
-  will-change:transform;z-index:30;
-}
-.hotspot{
-  position:absolute;cursor:pointer;
-  border:1px solid transparent;
-  border-radius:6px;
-  transition:all 0.5s ease;
-  animation:shimmer 4s ease-in-out infinite;
-}
+.hotspots{position:absolute;top:50%;left:50%;width:110%;height:110%;transform:translate(-50%,-50%);will-change:transform;z-index:30}
+.hotspot{position:absolute;cursor:pointer;border:1px solid transparent;border-radius:6px;transition:all 0.5s ease;animation:shimmer 4s ease-in-out infinite}
 .hotspot:nth-child(2){animation-delay:1s}
 .hotspot:nth-child(3){animation-delay:2s}
 .hotspot:nth-child(4){animation-delay:0.5s}
 .hotspot:nth-child(5){animation-delay:1.5s}
-@keyframes shimmer{
-  0%,100%{border-color:rgba(200,160,80,0)}
-  50%{border-color:rgba(200,160,80,0.12)}
-}
-.hotspot:hover{
-  background:rgba(200,160,80,0.08);
-  border-color:rgba(200,160,80,0.35);
-  box-shadow:0 0 25px rgba(200,160,80,0.15), inset 0 0 20px rgba(200,160,80,0.08);
-  animation:none;
-}
-.hotspot .label{
-  position:absolute;bottom:-30px;left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,0,0,0.9);color:#c8a060;
-  font-size:10px;padding:4px 14px;
-  white-space:nowrap;opacity:0;
-  transition:opacity 0.4s;
-  letter-spacing:3px;text-transform:uppercase;
-  pointer-events:none;
-  border:1px solid rgba(200,160,80,0.2);
-}
+@keyframes shimmer{0%,100%{border-color:rgba(200,160,80,0)}50%{border-color:rgba(200,160,80,0.12)}}
+.hotspot:hover{background:rgba(200,160,80,0.08);border-color:rgba(200,160,80,0.35);box-shadow:0 0 25px rgba(200,160,80,0.15),inset 0 0 20px rgba(200,160,80,0.08);animation:none}
+.hotspot .label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#c8a060;font-size:10px;padding:4px 14px;white-space:nowrap;opacity:0;transition:opacity 0.4s;letter-spacing:3px;text-transform:uppercase;pointer-events:none;border:1px solid rgba(200,160,80,0.2)}
 .hotspot:hover .label{opacity:1}
 
+/* ═══ TOP BAR ═══ */
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:55;display:flex;align-items:center;padding:12px 20px;pointer-events:none}
+.top-bar>*{pointer-events:all}
+.logo-link{position:absolute;left:50%;transform:translateX(-50%);font-family:'Cinzel',serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#3a3025;text-decoration:none;transition:color 0.3s}
+.logo-link:hover{color:#c8a060}
+
 /* ═══ BACK BUTTON ═══ */
-.back-btn{
-  position:fixed;top:20px;left:24px;z-index:50;
-  color:#c8a060;font-size:11px;letter-spacing:3px;
-  text-transform:uppercase;cursor:pointer;
-  opacity:0;pointer-events:none;
-  transition:opacity 0.5s;
-  font-family:'Cinzel',serif;
-  text-decoration:none;
-  padding:8px 16px;
-  border:1px solid rgba(200,160,80,0.2);
-  background:rgba(0,0,0,0.7);
-}
+.back-btn{color:#c8a060;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.5s;font-family:'Cinzel',serif;text-decoration:none;padding:8px 16px;border:1px solid rgba(200,160,80,0.2);background:rgba(0,0,0,0.7)}
 .back-btn:hover{border-color:rgba(200,160,80,0.5);background:rgba(0,0,0,0.9)}
 .back-btn.visible{opacity:1;pointer-events:all}
 
+/* ═══ NAV MENU ═══ */
+.nav-toggle{position:fixed;top:12px;right:20px;z-index:56;cursor:pointer;padding:8px 16px;border:1px solid rgba(200,160,80,0.2);background:rgba(0,0,0,0.7);color:#c8a060;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;transition:all 0.3s}
+.nav-toggle:hover{border-color:rgba(200,160,80,0.5);background:rgba(0,0,0,0.9)}
+.nav-panel{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:rgba(8,5,3,0.97);border-left:1px solid rgba(200,160,80,0.1);z-index:200;transition:right 0.4s cubic-bezier(0.22,1,0.36,1);padding:60px 24px 30px;overflow-y:auto}
+.nav-panel.open{right:0}
+.nav-close{position:absolute;top:14px;right:16px;cursor:pointer;color:#5a4a35;font-size:20px;background:none;border:none;font-family:'Cinzel',serif;transition:color 0.3s}
+.nav-close:hover{color:#c8a060}
+.nav-panel h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#3a3025;margin:24px 0 12px;font-weight:400}
+.nav-panel h3:first-child{margin-top:0}
+.nav-item{display:block;padding:10px 0;color:#6a5a45;font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-bottom:1px solid rgba(200,160,80,0.05);transition:all 0.3s;text-decoration:none}
+.nav-item:hover{color:#c8a060;padding-left:8px}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.nav-overlay.open{opacity:1;pointer-events:all}
+
 /* ═══ OVERLAYS ═══ */
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:40;
-  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.65) 100%)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:40;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.65) 100%)}
 .dust{position:fixed;inset:0;pointer-events:none;z-index:35}
 .dust span{position:absolute;width:2px;height:2px;background:rgba(200,170,100,0.3);border-radius:50%;animation:float linear infinite}
-@keyframes float{
-  0%{transform:translateY(100vh) translateX(0);opacity:0}
-  10%{opacity:1}90%{opacity:1}
-  100%{transform:translateY(-10vh) translateX(40px);opacity:0}
-}
-.info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;
-  background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;
-  display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+@keyframes float{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) translateX(40px);opacity:0}}
+.info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
 .info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:monospace}
 .info .title{color:#c8a060;font-size:13px;letter-spacing:5px}
 
+/* ═══ MODAL ═══ */
+.modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s}
+.modal.open{opacity:1;pointer-events:all}
+.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px)}
+.modal-content{position:relative;z-index:1;background:rgba(15,12,8,0.97);border:1px solid rgba(200,160,80,0.15);max-width:500px;width:90%;max-height:85vh;overflow-y:auto}
+.modal-close{position:absolute;top:12px;right:16px;cursor:pointer;color:#5a4a35;font-size:22px;background:none;border:none;font-family:'Cinzel',serif;z-index:2;transition:color 0.3s}
+.modal-close:hover{color:#c8a060}
+.modal-img{width:100%;height:220px;object-fit:cover;display:block}
+.modal-body{padding:24px}
+.modal-body h2{font-family:'Cinzel',serif;font-size:18px;letter-spacing:4px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:6px}
+.modal-body .modal-genre{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;margin-bottom:16px}
+.modal-body .modal-lore{font-family:'Cormorant Garamond',serif;font-size:16px;color:#6a5a45;font-style:italic;line-height:1.7;margin-bottom:20px}
+.modal-body .modal-book-link{display:inline-block;margin-top:4px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 24px;border:1px solid #6b1c1c;color:#c8a060;background:rgba(107,28,28,0.15);cursor:pointer;transition:all 0.3s;text-decoration:none}
+.modal-body .modal-book-link:hover{background:rgba(107,28,28,0.3);border-color:#c8a060}
+.modal-body .dev-badge{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;padding:8px 16px;border:1px solid rgba(200,160,80,0.1);margin-top:4px}
+.buy-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.buy-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;border:1px solid #2a2218;color:#8a7a65;cursor:pointer;transition:all 0.3s;background:none;text-decoration:none;display:inline-block}
+.buy-btn:hover{border-color:#c8a060;color:#c8a060;background:rgba(200,160,96,0.05)}
+.buy-btn.primary{border-color:#6b1c1c;color:#c8a060;background:rgba(107,28,28,0.15)}
+.buy-btn.primary:hover{background:rgba(107,28,28,0.3)}
+
+/* ═══ BOOKS PANEL ═══ */
+.books-panel{position:absolute;bottom:0;left:0;right:0;z-index:31;background:linear-gradient(transparent,rgba(0,0,0,0.95) 30%);padding:30px 5% 20px;overflow-x:auto}
+.books-panel h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#5a4a35;margin-bottom:12px;font-weight:400}
+.books-row{display:flex;gap:16px;padding-bottom:8px;overflow-x:auto}
+.book-card{flex:0 0 120px;cursor:pointer;transition:transform 0.3s}
+.book-card:hover{transform:translateY(-6px)}
+.book-card img{width:120px;height:170px;object-fit:cover;border:1px solid rgba(200,160,80,0.1);display:block}
+.book-card .bc-placeholder{width:120px;height:170px;background:#0f0d0a;border:1px solid rgba(200,160,80,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}
+.book-card .bc-placeholder .bc-icon{font-size:28px;color:#2a2218;margin-bottom:8px}
+.book-card .bc-placeholder .bc-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#3a3025;margin-bottom:4px}
+.book-card .bc-placeholder .bc-status{font-family:'Cormorant Garamond',serif;font-size:10px;color:#2a2218;font-style:italic}
+.book-card .bc-name{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5a4a45;margin-top:6px;text-align:center}
+
+/* ═══ SHOPKEEPER CHAT ═══ */
+.chat-panel{position:absolute;bottom:0;right:0;width:360px;max-width:100%;height:50%;z-index:31;background:rgba(8,5,3,0.95);border-left:1px solid rgba(200,160,80,0.1);border-top:1px solid rgba(200,160,80,0.1);display:flex;flex-direction:column}
+@media(max-width:600px){.chat-panel{width:100%;height:45%}}
+.chat-header{padding:12px 16px;border-bottom:1px solid rgba(200,160,80,0.08);font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#5a4a35}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{max-width:85%;font-family:'Cormorant Garamond',serif;font-size:15px;line-height:1.6;padding:10px 14px;border-radius:2px}
+.chat-msg.bot{align-self:flex-start;background:rgba(200,160,80,0.06);color:#8a7a65;border:1px solid rgba(200,160,80,0.08)}
+.chat-msg.user{align-self:flex-end;background:rgba(107,28,28,0.1);color:#6a5a45;border:1px solid rgba(107,28,28,0.15)}
+.chat-nav-btn{display:inline-block;margin:4px 4px 0 0;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border:1px solid rgba(200,160,80,0.2);color:#c8a060;cursor:pointer;background:none;transition:all 0.3s}
+.chat-nav-btn:hover{background:rgba(200,160,80,0.08);border-color:#c8a060}
+.chat-input-row{display:flex;border-top:1px solid rgba(200,160,80,0.08)}
+.chat-input-row input{flex:1;background:transparent;border:none;color:#8a7a65;font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px 16px;outline:none}
+.chat-input-row input::placeholder{color:#2a2218}
+.chat-input-row button{background:none;border:none;border-left:1px solid rgba(200,160,80,0.08);color:#5a4a35;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;padding:0 16px;cursor:pointer;transition:color 0.3s}
+.chat-input-row button:hover{color:#c8a060}
+
+/* ═══ SECRET ROOM ═══ */
+.room-content{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;overflow-y:auto}
+.room-content h2{font-family:'Cinzel',serif;font-size:20px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:8px}
+.room-content .room-sub{font-family:'Cormorant Garamond',serif;font-size:14px;color:#5a4a35;font-style:italic;margin-bottom:30px}
+.author-card{background:rgba(15,12,8,0.8);border:1px solid rgba(200,160,80,0.1);padding:24px;max-width:420px;text-align:left}
+.author-card p{font-family:'Cormorant Garamond',serif;font-size:15px;color:#6a5a45;line-height:1.7;margin-bottom:12px}
+.author-card .author-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-top:16px}
+.guestbook{margin-top:24px;width:100%;max-width:420px}
+.guestbook textarea{width:100%;height:60px;background:rgba(15,12,8,0.6);border:1px solid rgba(200,160,80,0.1);color:#6a5a45;font-family:'Cormorant Garamond',serif;font-size:14px;padding:10px;resize:none;outline:none}
+.guestbook textarea::placeholder{color:#2a2218}
+.guestbook button{margin-top:8px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:8px 20px;border:1px solid rgba(200,160,80,0.2);color:#5a4a35;background:none;cursor:pointer;transition:all 0.3s}
+.guestbook button:hover{color:#c8a060;border-color:#c8a060}
+.guestbook-entries{margin-top:16px;max-height:120px;overflow-y:auto}
+.guestbook-entries .entry{font-family:'Cormorant Garamond',serif;font-size:13px;color:#3a3025;font-style:italic;padding:6px 0;border-bottom:1px solid rgba(200,160,80,0.04)}
+
 /* ═══ LOADING ═══ */
-#loading{position:fixed;inset:0;background:#000;z-index:999;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
+#loading{position:fixed;inset:0;background:#000;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
 #loading .text{color:#2a2218;font-size:11px;letter-spacing:8px;text-transform:uppercase;font-family:'Cinzel',serif}
 #loading .bar{width:200px;height:1px;background:#1a1a1a}
 #loading .fill{height:100%;background:#c8a060;width:0;transition:width 0.3s}
 
 /* ═══ TRANSITION ═══ */
-#transition{position:fixed;inset:0;background:#000;z-index:80;
-  opacity:0;pointer-events:none;transition:opacity 0.4s}
+#transition{position:fixed;inset:0;background:#000;z-index:80;opacity:0;pointer-events:none;transition:opacity 0.4s}
 #transition.active{opacity:1}
 </style>
 </head>
@@ -117,7 +143,6 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   <div class="text">Namenlos</div>
   <div class="bar"><div class="fill" id="loadFill"></div></div>
 </div>
-
 <div id="transition"></div>
 
 <!-- ═══════ SCENE: ALLEY ═══════ -->
@@ -138,25 +163,17 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
     <div class="hotspot" data-goto="shopkeeper" style="left:18%;top:15%;width:18%;height:50%">
       <span class="label">The Shopkeeper</span>
     </div>
-    <!-- Shelves (left wall upper) -->
+    <!-- Shelves left = books -->
     <div class="hotspot" data-goto="books" style="left:5%;top:5%;width:32%;height:18%">
       <span class="label">The Books</span>
     </div>
-    <!-- Counter / display -->
-    <div class="hotspot" data-goto="display" style="left:10%;top:58%;width:35%;height:20%">
-      <span class="label">The Display Case</span>
+    <!-- Cabinet right = artifacts -->
+    <div class="hotspot" data-goto="display" style="left:78%;top:10%;width:18%;height:65%">
+      <span class="label">The Cabinet</span>
     </div>
     <!-- Red door -->
     <div class="hotspot" data-goto="corridor" style="left:42%;top:28%;width:14%;height:52%">
       <span class="label">The Red Door</span>
-    </div>
-    <!-- Vitrine right -->
-    <div class="hotspot" data-goto="display" style="left:78%;top:10%;width:18%;height:65%">
-      <span class="label">The Cabinet</span>
-    </div>
-    <!-- Cash register area (counter left) -->
-    <div class="hotspot" data-goto="cash" style="left:7%;top:54%;width:10%;height:15%">
-      <span class="label">The Drawer</span>
     </div>
   </div>
 </div>
@@ -165,38 +182,47 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-shopkeeper">
   <img class="scene-img" src="img/Shop/003-Shopkeeper.png" alt="shopkeeper">
   <div class="hotspots"></div>
+  <div class="chat-panel">
+    <div class="chat-header">The Shopkeeper</div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg bot">Welcome. Or welcome back. The shop doesn't distinguish.<br><br>What are you looking for?<br><button class="chat-nav-btn" onclick="chatGo('books')">Books</button> <button class="chat-nav-btn" onclick="chatGo('display')">Artifacts</button> <button class="chat-nav-btn" onclick="chatGo('corridor')">Cinema</button> <button class="chat-nav-btn" onclick="chatGo('cash')">Pay</button></div>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Ask the shopkeeper..." onkeydown="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()">Ask</button>
+    </div>
+  </div>
 </div>
 
-<!-- ═══════ SCENE: DISPLAY CASE ═══════ -->
+<!-- ═══════ SCENE: DISPLAY CASE (ARTIFACTS) ═══════ -->
 <div class="scene" id="scene-display">
   <img class="scene-img" src="img/Shop/004-Display-case.png" alt="display">
   <div class="hotspots">
-    <!-- 8 cells in a 4×2 grid -->
-    <!-- Row 1: mirror, hourglass, tarot box, wig -->
-    <div class="hotspot" data-item="mirror" style="left:2%;top:2%;width:23%;height:46%">
-      <span class="label">Mirror</span>
+    <!-- Row 1: mirror, hourglass, tarot, wig -->
+    <div class="hotspot" data-artifact="mirror" style="left:2%;top:2%;width:23%;height:46%">
+      <span class="label">The Mirror</span>
     </div>
-    <div class="hotspot" data-item="hourglass" style="left:26%;top:2%;width:23%;height:46%">
-      <span class="label">Hourglass</span>
+    <div class="hotspot" data-artifact="hourglass" style="left:26%;top:2%;width:23%;height:46%">
+      <span class="label">The Hourglass</span>
     </div>
-    <div class="hotspot" data-item="tarot" style="left:50%;top:2%;width:23%;height:46%">
-      <span class="label">The Box</span>
+    <div class="hotspot" data-artifact="tarot" style="left:50%;top:2%;width:23%;height:46%">
+      <span class="label">The Tarot Box</span>
     </div>
-    <div class="hotspot" data-item="wig" style="left:74%;top:2%;width:24%;height:46%">
+    <div class="hotspot" data-artifact="wig" style="left:74%;top:2%;width:24%;height:46%">
       <span class="label">The Wig</span>
     </div>
     <!-- Row 2: glove, whip, compass, scrolls -->
-    <div class="hotspot" data-item="glove" style="left:2%;top:52%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="glove" style="left:2%;top:52%;width:23%;height:46%">
       <span class="label">The Glove</span>
     </div>
-    <div class="hotspot" data-item="whip" style="left:26%;top:52%;width:23%;height:46%">
+    <div class="hotspot" data-artifact="whip" style="left:26%;top:52%;width:23%;height:46%">
       <span class="label">The Whip</span>
     </div>
-    <div class="hotspot" data-item="compass" style="left:50%;top:52%;width:23%;height:46%">
-      <span class="label">Compass</span>
+    <div class="hotspot" data-artifact="compass" style="left:50%;top:52%;width:23%;height:46%">
+      <span class="label">The Compass</span>
     </div>
-    <div class="hotspot" data-item="scrolls" style="left:74%;top:52%;width:24%;height:46%">
-      <span class="label">Scrolls</span>
+    <div class="hotspot" data-artifact="scrolls" style="left:74%;top:52%;width:24%;height:46%">
+      <span class="label">The Scrolls</span>
     </div>
   </div>
 </div>
@@ -204,9 +230,45 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <!-- ═══════ SCENE: BOOKS ═══════ -->
 <div class="scene" id="scene-books">
   <img class="scene-img" src="img/Shop/005-Books.png" alt="books">
-  <div class="hotspots">
-    <div class="hotspot" data-item="skinme" style="left:1%;top:5%;width:12%;height:42%">
-      <span class="label">Skin Me</span>
+  <div class="hotspots"></div>
+  <div class="books-panel">
+    <h3>Books</h3>
+    <div class="books-row">
+      <div class="book-card" onclick="openBookModal('skinme')">
+        <img src="img/Books/skin-me.jpg" alt="Skin Me">
+        <div class="bc-name">Skin Me</div>
+      </div>
+      <div class="book-card" onclick="openBookModal('carryme')">
+        <div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Carry Me</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Carry Me</div>
+      </div>
+      <div class="book-card" onclick="openBookModal('muetter')">
+        <div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Book 3</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Book 3</div>
+      </div>
+      <div class="book-card" onclick="openBookModal('layme')">
+        <div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Lay Me</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Lay Me</div>
+      </div>
+      <div class="book-card" onclick="openBookModal('spinme')">
+        <div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Spin Me</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Spin Me</div>
+      </div>
+    </div>
+    <h3 style="margin-top:16px">Media</h3>
+    <div class="books-row">
+      <div class="book-card" onclick="openMediaModal('album')">
+        <div class="bc-placeholder"><div class="bc-icon">♫</div><div class="bc-title">Soundtrack</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Album</div>
+      </div>
+      <div class="book-card" onclick="openMediaModal('clips')">
+        <div class="bc-placeholder"><div class="bc-icon">▶</div><div class="bc-title">Music Videos</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Clips</div>
+      </div>
+      <div class="book-card" onclick="openMediaModal('audiobooks')">
+        <div class="bc-placeholder"><div class="bc-icon">♪</div><div class="bc-title">Audiobooks</div><div class="bc-status">In Development</div></div>
+        <div class="bc-name">Audiobooks</div>
+      </div>
     </div>
   </div>
 </div>
@@ -215,11 +277,9 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-corridor">
   <img class="scene-img" src="img/Shop/006-Cinema-door-wc.png" alt="corridor">
   <div class="hotspots">
-    <!-- KINO door -->
     <div class="hotspot" data-goto="cinema" style="left:35%;top:10%;width:30%;height:80%">
-      <span class="label">Kino</span>
+      <span class="label">Cinema</span>
     </div>
-    <!-- WC door -->
     <div class="hotspot" data-goto="wc" style="left:20%;top:30%;width:14%;height:50%">
       <span class="label">WC</span>
     </div>
@@ -230,6 +290,14 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-cinema">
   <img class="scene-img" src="img/Shop/007-Cinema.png" alt="cinema">
   <div class="hotspots"></div>
+  <div class="room-content">
+    <h2>Cinema</h2>
+    <div class="room-sub">Films from the basement</div>
+    <div class="author-card">
+      <p>The projector is warming up. The first film is being prepared.</p>
+      <p style="color:#3a3025;font-style:italic">Coming soon...</p>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ SCENE: WC ═══════ -->
@@ -246,173 +314,289 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-secret">
   <img class="scene-img" src="img/Shop/009-Secret-room.png" alt="secret">
   <div class="hotspots"></div>
+  <div class="room-content">
+    <h2>The Secret Room</h2>
+    <div class="room-sub">You found the hidden door. Few do.</div>
+    <div class="author-card">
+      <p>Behind every nameless shop stands someone with a name.</p>
+      <p><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.</p>
+      <p>The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.</p>
+      <div class="author-name">Mary-Ann Black</div>
+    </div>
+    <div class="guestbook">
+      <textarea id="guestbookInput" placeholder="Leave a mark in the guestbook..."></textarea>
+      <button onclick="addGuestEntry()">Sign</button>
+      <div class="guestbook-entries" id="guestbookEntries"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ SCENE: CASH ═══════ -->
 <div class="scene" id="scene-cash">
   <img class="scene-img" src="img/Shop/010-Cash-register.png" alt="cash">
   <div class="hotspots"></div>
+  <div class="room-content">
+    <h2>The Drawer</h2>
+    <div class="room-sub">The shopkeeper accepts any coin. But not money.</div>
+    <div class="author-card">
+      <p>For earthly transactions, visit the book you wish to purchase. Each book page has its own prices.</p>
+      <p>Standard bundle — ebook + soundtrack + art. Premium — add exclusive clips + audiobook. Or subscribe and read one episode per week.</p>
+      <button class="chat-nav-btn" onclick="goTo('books')" style="margin-top:12px">Go to the Books →</button>
+    </div>
+  </div>
 </div>
 
-<!-- BACK BUTTON -->
-<a class="back-btn" id="backBtn">← Back</a>
-<a href="home.html" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:55;font-family:Cinzel,serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#3a3025;text-decoration:none;transition:color 0.3s" onmouseover="this.style.color='#c8a060'" onmouseout="this.style.color='#3a3025'">NAMENLOS</a>
+<!-- ═══ TOP BAR ═══ -->
+<div class="top-bar">
+  <a class="back-btn" id="backBtn">← Back</a>
+  <a class="logo-link" href="home.html">NAMENLOS</a>
+</div>
+<button class="nav-toggle" id="navToggle" onclick="toggleNav()">☰ Map</button>
+
+<!-- ═══ NAV PANEL ═══ -->
+<div class="nav-overlay" id="navOverlay" onclick="toggleNav()"></div>
+<div class="nav-panel" id="navPanel">
+  <button class="nav-close" onclick="toggleNav()">×</button>
+  <h3>Rooms</h3>
+  <a class="nav-item" onclick="navGo('hall')">Main Hall</a>
+  <a class="nav-item" onclick="navGo('shopkeeper')">The Shopkeeper</a>
+  <a class="nav-item" onclick="navGo('display')">Artifacts Cabinet</a>
+  <a class="nav-item" onclick="navGo('books')">The Books</a>
+  <a class="nav-item" onclick="navGo('corridor')">The Red Door</a>
+  <a class="nav-item" onclick="navGo('cinema')">Cinema</a>
+  <h3>Elsewhere</h3>
+  <a class="nav-item" href="browse.html">Browse Collection</a>
+  <a class="nav-item" href="home.html">Home</a>
+</div>
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal" id="modal">
+  <div class="modal-bg" onclick="closeModal()"></div>
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <img class="modal-img" id="modalImg" src="" alt="">
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <!-- OVERLAYS -->
 <div class="vignette"></div>
 <div class="dust" id="dust"></div>
 <div class="info">
-  <span class="title">NAMENLOS</span>
-  <span>move your cursor to look around</span>
+  <span class="title" id="sceneTitle">NAMENLOS</span>
+  <span>explore the shop</span>
 </div>
 
 <script>
+// ═══ DATA ═══
+const ARTIFACTS = {
+  mirror:    {name:'The Mirror',    img:'img/artifacts/artifakts_0007_Layer-1.png', lore:'It shows not your face, but the face you\'ll wear in ten years. The glass is always cold.', book:null},
+  hourglass: {name:'The Hourglass', img:'img/artifacts/artifakts_0006_Layer-2.png', lore:'The sand is red. The sand flows upward. Time inside moves backward. No one has dared to flip it.', book:'muetter'},
+  tarot:     {name:'The Tarot Box', img:'img/artifacts/artifakts_0005_Layer-3.png', lore:'Every card has a name. Every name has a price. The Strength card chose you before you chose it.', book:'layme'},
+  wig:       {name:'The Wig',       img:'img/artifacts/artifakts_0004_Layer-4.png', lore:'Auburn curls like fire frozen mid-fall. The wig has been watching. It watches everyone who enters.', book:'carryme'},
+  glove:     {name:'The Glove',     img:'img/artifacts/artifakts_0003_Layer-5.png', lore:'Red kid leather, left hand only. She never dropped anything again. But she couldn\'t let go either.', book:null},
+  whip:      {name:'The Whip',      img:'img/artifacts/artifakts_0002_Layer-6.png', lore:'Black leather. Braided tight. The handle is bone — smooth from centuries of hands that held it.', book:'skinme'},
+  compass:   {name:'The Compass',   img:'img/artifacts/artifakts_0001_Layer-7.png', lore:'It doesn\'t point north. It points to where you need to be. The needle trembles when you lie.', book:null},
+  scrolls:   {name:'The Scrolls',   img:'img/artifacts/artifakts_0000_Layer-8.png', lore:'Ancient texts in a language no one alive can read. But they hum at night. The ink is still wet.', book:null}
+};
+
+const BOOKS = {
+  skinme:  {title:'Skin Me',              genre:'Paranormal Dark Romance 18+', status:'available', img:'img/Books/skin-me.jpg', desc:'Berlin. A nameless shop. A cursed whip. Rita should never have touched it. But some things choose you.', artifact:'whip', prices:{std:25,prem:49,sub:7.99}},
+  carryme: {title:'Carry Me',             genre:'YA ab 16', status:'dev', img:null, desc:'The red wig on the shelf is watching you. It has been watching everyone.', artifact:'wig'},
+  muetter: {title:'Warum Mütter töten?',  genre:'Mystical Thriller', status:'dev', img:null, desc:'The hourglass holds red sand. The sand flows upward. Time inside moves backward.', artifact:'hourglass'},
+  layme:   {title:'Lay Me',              genre:'Dark Romance 18+', status:'dev', img:null, desc:'Inside the box: a tarot deck. Every card has a name. Every name has a price.', artifact:'tarot'},
+  spinme:  {title:'Spin Me',             genre:'Dark Romance 18+', status:'dev', img:null, desc:'The pointe shoes hang from a nail. They dance at midnight. No one is wearing them.', artifact:null}
+};
+
+const SCENE_TITLES = {
+  alley:'The Alley', hall:'Main Hall', shopkeeper:'The Shopkeeper',
+  display:'The Cabinet', books:'The Books', corridor:'The Red Door',
+  cinema:'Cinema', wc:'WC', secret:'The Secret Room', cash:'The Drawer'
+};
+
 // ═══ STATE ═══
 let currentScene = 'alley';
-const history = [];
-
-// Scene → parent mapping for back button
-const parentMap = {
-  alley: null,
-  hall: 'alley',
-  shopkeeper: 'hall',
-  display: 'hall',
-  books: 'hall',
-  corridor: 'hall',
-  cinema: 'corridor',
-  wc: 'corridor',
-  secret: 'wc',
-  cash: 'hall'
-};
+const navHistory = [];
+let isTransitioning = false;
 
 // ═══ SCENE TRANSITIONS ═══
 function goTo(sceneId) {
-  if(isTransitioning) return;
-  if (sceneId === currentScene) return;
-  isTransitioning=true;
-    const trans = document.getElementById('transition');
+  if(isTransitioning || sceneId===currentScene) return;
+  isTransitioning = true;
+  const trans = document.getElementById('transition');
   trans.classList.add('active');
-  
   setTimeout(() => {
     document.querySelector('.scene.active')?.classList.remove('active');
-    document.getElementById('scene-' + sceneId)?.classList.add('active');
-    history.push(currentScene);
+    document.getElementById('scene-'+sceneId)?.classList.add('active');
+    navHistory.push(currentScene);
     currentScene = sceneId;
-    updateBack();
-    
-    setTimeout(() => { trans.classList.remove('active'); isTransitioning=false; }, 50);
+    updateUI();
+    setTimeout(() => {trans.classList.remove('active');isTransitioning=false;}, 50);
   }, 400);
 }
 
 function goBack() {
-  const prev = history.pop();
-  if (!prev) return;
-  isTransitioning=true;
-    const trans = document.getElementById('transition');
+  const prev = navHistory.pop();
+  if(!prev) return;
+  isTransitioning = true;
+  const trans = document.getElementById('transition');
   trans.classList.add('active');
-  
   setTimeout(() => {
     document.querySelector('.scene.active')?.classList.remove('active');
-    document.getElementById('scene-' + prev)?.classList.add('active');
+    document.getElementById('scene-'+prev)?.classList.add('active');
     currentScene = prev;
-    updateBack();
-    setTimeout(() => { trans.classList.remove('active'); isTransitioning=false; }, 50);
+    updateUI();
+    setTimeout(() => {trans.classList.remove('active');isTransitioning=false;}, 50);
   }, 400);
 }
 
-function updateBack() {
-  const btn = document.getElementById('backBtn');
-  if (currentScene === 'alley') {
-    btn.classList.remove('visible');
-  } else {
-    btn.classList.add('visible');
-  }
+function updateUI() {
+  document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall');
+  document.getElementById('sceneTitle').textContent = SCENE_TITLES[currentScene] || 'NAMENLOS';
 }
 
-// ═══ EVENT LISTENERS ═══
-// Start scene from URL param
-const params=new URLSearchParams(location.search);
-const startAt=params.get("start");
-if(startAt&&document.getElementById("scene-"+startAt)){document.querySelector(".scene.active")?.classList.remove("active");document.getElementById("scene-"+startAt).classList.add("active");currentScene=startAt;updateBack();}
+// ═══ NAV MENU ═══
+function toggleNav() {
+  document.getElementById('navPanel').classList.toggle('open');
+  document.getElementById('navOverlay').classList.toggle('open');
+}
+function navGo(sceneId) {
+  toggleNav();
+  setTimeout(() => goTo(sceneId), 200);
+}
 
-let isTransitioning=false;
+// ═══ MODAL ═══
+function openArtifactModal(id) {
+  const a = ARTIFACTS[id]; if(!a) return;
+  document.getElementById('modalImg').src = a.img;
+  document.getElementById('modalImg').style.display = 'block';
+  let html = '<h2>'+a.name+'</h2><div class="modal-lore">'+a.lore+'</div>';
+  if(a.book && BOOKS[a.book]) {
+    const b = BOOKS[a.book];
+    html += '<div class="modal-genre">From the book: '+b.title+'</div>';
+    if(b.status==='available') html += '<button class="modal-book-link" onclick="closeModal();openBookModal(\''+a.book+'\')">View Book →</button>';
+    else html += '<div class="dev-badge">Book in Development</div>';
+  } else {
+    html += '<div class="modal-genre">This artifact awaits its story</div>';
+  }
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
 
-// Hotspot navigation
-document.querySelectorAll('[data-goto]').forEach(el => {
-  el.addEventListener('click', () => goTo(el.dataset.goto));
-});
+function openBookModal(id) {
+  const b = BOOKS[id]; if(!b) return;
+  const imgEl = document.getElementById('modalImg');
+  if(b.img) {imgEl.src=b.img; imgEl.style.display='block';} else {imgEl.style.display='none';}
+  let html = '<h2>'+b.title+'</h2><div class="modal-genre">'+b.genre+'</div><div class="modal-lore">'+b.desc+'</div>';
+  if(b.status==='available' && b.prices) {
+    html += '<div class="buy-row"><a class="buy-btn primary" href="#">Standard — $'+b.prices.std+'</a><a class="buy-btn" href="#">Premium — $'+b.prices.prem+'</a><a class="buy-btn" href="#">Subscribe — $'+b.prices.sub+'/mo</a></div>';
+  } else {
+    html += '<div class="dev-badge">In Development</div>';
+  }
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
 
-// Item clicks (display case)
-document.querySelectorAll('[data-item]').forEach(el => {
-  el.addEventListener('click', () => {
-    console.log('Item clicked:', el.dataset.item);
-    // TODO: item overlay / book purchase flow
-  });
-});
+function openMediaModal(type) {
+  document.getElementById('modalImg').style.display='none';
+  const t = {album:'Soundtrack Album',clips:'Music Videos',audiobooks:'Audiobooks'};
+  const d = {album:'20 original tracks composed for the Namenlos universe. Each song belongs to a scene, a character, a turning point.',clips:'Visual stories for every track. Dark, atmospheric, unforgettable.',audiobooks:'Every book, read aloud. Every whisper, every silence — preserved.'};
+  document.getElementById('modalBody').innerHTML = '<h2>'+(t[type]||type)+'</h2><div class="modal-lore">'+(d[type]||'')+'</div><div class="dev-badge">In Development</div>';
+  document.getElementById('modal').classList.add('open');
+}
 
-// Back button
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+// ═══ SHOPKEEPER CHAT ═══
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim(); if(!msg) return;
+  input.value = '';
+  addMsg(msg, 'user');
+  const lower = msg.toLowerCase();
+  let reply='', nav=null;
+
+  if(/skin\s*me|rita|whip/.test(lower)) { reply='"Skin Me." A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it.<br>Standard — $25 · Premium — $49 · Subscribe — $7.99/mo'; nav='books'; }
+  else if(/book|read|shelv|shelf/.test(lower)) { reply='The shelves hold stories. Some finished, some still being written. "Skin Me" is ready — the whip chose its first reader.'; nav='books'; }
+  else if(/artifact|cabinet|display|object/.test(lower)) { reply='The cabinet holds eight objects. Each one cursed, blessed, or both. Touch carefully.'; nav='display'; }
+  else if(/cinem|film|movie|watch|kino/.test(lower)) { reply='Through the red door, past the corridor. The projector is warming up.'; nav='corridor'; }
+  else if(/secret|hidden|mystery|toilet|wc|bath/.test(lower)) { reply='Hidden things? In this shop? ...I wouldn\'t know anything about that. But I hear the WC has interesting walls.'; }
+  else if(/money|buy|price|pay|purchase|cost/.test(lower)) { reply='I accept any coin. But not money. There is a difference.<br>For earthly transactions, visit the book page.'; nav='books'; }
+  else if(/wig|carry/.test(lower)) { reply='Auburn curls like fire. The wig watches everyone. It belongs to "Carry Me" — not yet written.'; }
+  else if(/hourglass|mütter|muetter/.test(lower)) { reply='Red sand that flows upward. It belongs to "Warum Mütter töten?" — not yet written.'; }
+  else if(/tarot|card|lay/.test(lower)) { reply='A carved box with tarot cards. The Strength card chose you. It belongs to "Lay Me" — not yet written.'; }
+  else if(/album|music|soundtrack|song/.test(lower)) { reply='Twenty tracks. Each one a scene, a heartbeat. The album is being composed.'; }
+  else if(/clip|video/.test(lower)) { reply='Dark visuals for every song. They are being filmed in the shadows.'; }
+  else if(/audiobook|audio/.test(lower)) { reply='Every whisper preserved. The recordings will come.'; }
+  else if(/hello|hi|hey|привет/.test(lower)) { reply='Welcome. Or welcome back.'; }
+  else if(/help|what|where|how|show|guide/.test(lower)) { reply='We have <b>books</b> on the shelves to the left. <b>Artifacts</b> in the cabinet to the right. <b>Cinema</b> through the red door.'; }
+  else { reply='Interesting question. I can show you the books, the artifacts, or the cinema.'; }
+
+  if(nav) reply += '<br><button class="chat-nav-btn" onclick="chatGo(\''+nav+'\')">Go there →</button>';
+  setTimeout(() => addMsg(reply, 'bot'), 500);
+}
+
+function addMsg(html, type) {
+  const c = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + type;
+  div.innerHTML = html;
+  c.appendChild(div);
+  c.scrollTop = c.scrollHeight;
+}
+
+function chatGo(s) { goTo(s); }
+
+// ═══ GUESTBOOK ═══
+function addGuestEntry() {
+  const input = document.getElementById('guestbookInput');
+  const msg = input.value.trim(); if(!msg) return;
+  input.value = '';
+  const entries = document.getElementById('guestbookEntries');
+  const div = document.createElement('div');
+  div.className = 'entry'; div.textContent = '— ' + msg;
+  entries.prepend(div);
+  try { const s=JSON.parse(localStorage.getItem('nm_gb')||'[]'); s.unshift(msg); localStorage.setItem('nm_gb',JSON.stringify(s.slice(0,50))); } catch(e){}
+}
+try { JSON.parse(localStorage.getItem('nm_gb')||'[]').forEach(m => { const d=document.createElement('div'); d.className='entry'; d.textContent='— '+m; document.getElementById('guestbookEntries').appendChild(d); }); } catch(e){}
+
+// ═══ INIT ═══
+const params = new URLSearchParams(location.search);
+const startAt = params.get('start');
+if(startAt && document.getElementById('scene-'+startAt)) {
+  document.querySelector('.scene.active')?.classList.remove('active');
+  document.getElementById('scene-'+startAt).classList.add('active');
+  currentScene = startAt;
+}
+updateUI();
+
+document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => goTo(el.dataset.goto)));
+document.querySelectorAll('[data-artifact]').forEach(el => el.addEventListener('click', () => openArtifactModal(el.dataset.artifact)));
 document.getElementById('backBtn').addEventListener('click', goBack);
 
 // ═══ PARALLAX ═══
 let tx=0,ty=0,cx=0,cy=0;
-const shift=12;
-
-document.addEventListener('mousemove',e=>{
-  tx=(e.clientX/innerWidth-0.5)*2;
-  ty=(e.clientY/innerHeight-0.5)*2;
-});
-
+document.addEventListener('mousemove',e=>{tx=(e.clientX/innerWidth-0.5)*2;ty=(e.clientY/innerHeight-0.5)*2;});
 (function anim(){
-  cx+=(tx-cx)*0.05;
-  cy+=(ty-cy)*0.05;
-  const t=`translate(calc(-50% + ${-cx*shift}px), calc(-50% + ${-cy*shift*0.4}px))`;
-  // Apply to active scene's image and hotspots
-  const active = document.querySelector('.scene.active');
-  if(active){
-    const img = active.querySelector('.scene-img');
-    const hs = active.querySelector('.hotspots');
-    if(img) img.style.transform = t;
-    if(hs) hs.style.transform = t;
-  }
+  cx+=(tx-cx)*0.05;cy+=(ty-cy)*0.05;
+  const t='translate(calc(-50% + '+(-cx*12)+'px), calc(-50% + '+(-cy*4.8)+'px))';
+  const a=document.querySelector('.scene.active');
+  if(a){const i=a.querySelector('.scene-img'),h=a.querySelector('.hotspots');if(i)i.style.transform=t;if(h)h.style.transform=t;}
   requestAnimationFrame(anim);
 })();
+if(window.DeviceOrientationEvent) window.addEventListener('deviceorientation',e=>{if(e.gamma!==null){tx=Math.max(-1,Math.min(1,e.gamma/25));ty=Math.max(-1,Math.min(1,(e.beta-45)/25));}});
 
-if(window.DeviceOrientationEvent){
-  window.addEventListener('deviceorientation',e=>{
-    if(e.gamma!==null){
-      tx=Math.max(-1,Math.min(1,e.gamma/25));
-      ty=Math.max(-1,Math.min(1,(e.beta-45)/25));
-    }
-  });
-}
-
-// ═══ DUST ═══
+// Dust
 const d=document.getElementById('dust');
-for(let i=0;i<25;i++){
-  const s=document.createElement('span');
-  s.style.left=Math.random()*100+'%';
-  s.style.animationDuration=(10+Math.random()*15)+'s';
-  s.style.animationDelay=Math.random()*12+'s';
-  const sz=1+Math.random()*2;
-  s.style.width=s.style.height=sz+'px';
-  s.style.opacity=0.2+Math.random()*0.3;
-  d.appendChild(s);
-}
+for(let i=0;i<25;i++){const s=document.createElement('span');s.style.left=Math.random()*100+'%';s.style.animationDuration=(10+Math.random()*15)+'s';s.style.animationDelay=Math.random()*12+'s';const sz=1+Math.random()*2;s.style.width=s.style.height=sz+'px';s.style.opacity=0.2+Math.random()*0.3;d.appendChild(s);}
 
-// ═══ LOADING ═══
-// Preload first 2 images, rest lazy
-const critical = document.querySelectorAll('#scene-alley .scene-img, #scene-hall .scene-img');
-let loaded=0;
-const fill=document.getElementById('loadFill');
-function chk(){
-  fill.style.width=(loaded/critical.length*100)+'%';
-  if(loaded>=critical.length) setTimeout(()=>document.getElementById('loading').classList.add('done'),400);
-}
-critical.forEach(img=>{
-  if(img.complete){loaded++;chk();}
-  else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}
-});
-chk();
+// Loading
+const critical=document.querySelectorAll('#scene-alley .scene-img, #scene-hall .scene-img');
+let loaded=0;const fill=document.getElementById('loadFill');
+function chk(){fill.style.width=(loaded/critical.length*100)+'%';if(loaded>=critical.length)setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
+critical.forEach(img=>{if(img.complete){loaded++;chk();}else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}});chk();
 </script>
 </body>
 </html>

@@ -34,8 +34,6 @@ nav *{pointer-events:auto}
 .hero p{font-style:italic;color:#5a4a35;max-width:400px;margin:0 auto 40px}
 .hero-enter{font-family:'Cinzel',serif;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;padding:14px 40px;border:1px solid #3a2a18;background:rgba(10,8,5,0.6);backdrop-filter:blur(6px);cursor:pointer;transition:all 0.5s cubic-bezier(0.22,1,0.36,1);text-decoration:none;display:inline-block;animation:fadeUp 2s ease 0.8s both}
 .hero-enter:hover{border-color:#c8a060;background:rgba(200,160,96,0.08);transform:translateY(-2px);box-shadow:0 10px 40px rgba(0,0,0,0.4);letter-spacing:7px}
-.hero-scroll{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#2a2218;margin-top:24px;animation:pulse 2.5s ease-in-out 2s infinite both}
-@keyframes pulse{0%,100%{opacity:0}50%{opacity:0.5}}
 
 /* SECTIONS */
 section{padding:100px 30px;max-width:900px;margin:0 auto}
@@ -43,7 +41,7 @@ section{padding:100px 30px;max-width:900px;margin:0 auto}
 .section-sub{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;font-family:'Cinzel',serif;margin-bottom:30px}
 .divider{width:40px;height:1px;background:#2a2218;margin:60px auto}
 
-/* FULL-WIDTH IMAGE SECTIONS */
+/* FULL-WIDTH IMAGE */
 .full-img{width:100%;height:70vh;min-height:400px;background-size:cover;background-position:center;background-attachment:fixed;position:relative}
 .full-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,#0a0a0a 0%,transparent 15%,transparent 85%,#0a0a0a 100%)}
 @media(max-width:768px){.full-img{background-attachment:scroll;height:50vh}}
@@ -62,7 +60,12 @@ section{padding:100px 30px;max-width:900px;margin:0 auto}
 /* BOOK SECTIONS */
 .book-section{display:flex;gap:40px;align-items:flex-start;margin-bottom:80px}
 .book-section.reverse{flex-direction:row-reverse}
-.book-img{width:45%;flex-shrink:0;aspect-ratio:16/10;background-size:cover;background-position:center;border:1px solid #1a1510}
+.book-cover{width:200px;flex-shrink:0}
+.book-cover img{width:100%;display:block;border:1px solid #1a1510}
+.book-cover .placeholder-cover{width:100%;aspect-ratio:2/3;background:#0f0d0a;border:1px solid #1a1510;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px}
+.book-cover .placeholder-cover .ph-icon{font-size:32px;color:#2a2218;margin-bottom:10px}
+.book-cover .placeholder-cover .ph-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;margin-bottom:4px}
+.book-cover .placeholder-cover .ph-status{font-family:'Cormorant Garamond',serif;font-size:12px;color:#2a2218;font-style:italic}
 .book-text{flex:1}
 .book-text h3{font-family:'Cinzel',serif;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:6px}
 .book-text .genre{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;font-family:'Cinzel',serif;margin-bottom:16px}
@@ -72,7 +75,8 @@ section{padding:100px 30px;max-width:900px;margin:0 auto}
 .buy-btn:hover{border-color:#c8a060;color:#c8a060;background:rgba(200,160,96,0.05)}
 .buy-btn.primary{border-color:#6b1c1c;color:#c8a060;background:rgba(107,28,28,0.15)}
 .buy-btn.primary:hover{background:rgba(107,28,28,0.3)}
-@media(max-width:768px){.book-section,.book-section.reverse{flex-direction:column}.book-img{width:100%}}
+.dev-badge{display:inline-block;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#3a3025;padding:8px 16px;border:1px solid rgba(200,160,80,0.1)}
+@media(max-width:768px){.book-section,.book-section.reverse{flex-direction:column}.book-cover{width:160px}}
 
 /* SHOPKEEPER */
 .shopkeeper-section{display:flex;gap:40px;align-items:center}
@@ -82,9 +86,17 @@ section{padding:100px 30px;max-width:900px;margin:0 auto}
 .shopkeeper-quote::before{content:'"';font-family:'Cinzel',serif;font-size:40px;color:#2a2218;line-height:0;vertical-align:-12px;margin-right:4px}
 @media(max-width:768px){.shopkeeper-section{flex-direction:column}.shopkeeper-img{width:100%;aspect-ratio:16/9}}
 
+/* MEDIA SECTION */
+.media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:30px}
+.media-card{border:1px solid #1a1510;padding:40px 24px;text-align:center;transition:all 0.4s}
+.media-card:hover{border-color:#3a2a18;transform:translateY(-3px)}
+.media-card .media-icon{font-size:36px;color:#2a2218;margin-bottom:12px}
+.media-card .media-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-bottom:8px}
+.media-card .media-desc{font-size:14px;color:#5a4a35;font-style:italic;line-height:1.6;margin-bottom:16px}
+@media(max-width:600px){.media-grid{grid-template-columns:1fr}}
+
 /* CINEMA */
 .cinema-banner{text-align:center;padding:60px 30px;background:linear-gradient(to bottom,transparent,rgba(107,28,28,0.08),transparent)}
-.cinema-banner h2{font-family:'Cinzel',serif;font-size:18px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:16px}
 
 /* FOOTER */
 footer{padding:60px 30px;text-align:center;border-top:1px solid #0f0d0a}
@@ -100,12 +112,13 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
 <!-- NAV -->
 <nav>
-  <a class="nav-brand" href="index.html">Namenlos</a>
+  <a class="nav-brand" href="home.html">Namenlos</a>
   <div class="nav-links">
     <a href="#artifacts">Artifacts</a>
     <a href="#books">Books</a>
+    <a href="#media">Media</a>
     <a href="#cinema">Cinema</a>
-    <a href="dev.html" class="nav-mode">Explore Mode ↗</a>
+    <a href="shop.html?start=hall" class="nav-mode">Explore Mode ↗</a>
   </div>
 </nav>
 
@@ -115,8 +128,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
   <div class="hero-content">
     <h1>Namenlos</h1>
     <p>The shop has no address. But it has a word.<br>One nameless shop. Different artifacts. Different stories.</p>
-    <a class="hero-enter" href="#inside" onclick="event.preventDefault();document.getElementById('inside').scrollIntoView({behavior:'smooth'})">Enter the Shop</a>
-    <div class="hero-scroll">↓</div>
+    <a class="hero-enter" href="#inside" onclick="event.preventDefault();document.getElementById('inside').scrollIntoView({behavior:'smooth'})">Browse Collection</a>
   </div>
 </div>
 
@@ -145,7 +157,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
   <div class="items-grid">
 
     <div class="item-card reveal" onclick="location.href='#skin-me'">
-      <img src="img/Shop/004-Display-case.png" alt="The Whip" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0002_Layer-6.png" alt="The Whip">
       <div class="item-badge">Skin Me</div>
       <div class="item-info">
         <div class="item-name">The Whip</div>
@@ -154,7 +166,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/Shop/004-Display-case.png" alt="The Wig" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0004_Layer-4.png" alt="The Wig">
       <div class="item-badge">Carry Me</div>
       <div class="item-info">
         <div class="item-name">The Wig</div>
@@ -163,7 +175,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/Shop/004-Display-case.png" alt="The Hourglass" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0006_Layer-2.png" alt="The Hourglass">
       <div class="item-badge">Book 3</div>
       <div class="item-info">
         <div class="item-name">The Hourglass</div>
@@ -172,7 +184,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/Shop/004-Display-case.png" alt="The Tarot Box" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0005_Layer-3.png" alt="The Tarot Box">
       <div class="item-badge">Lay Me</div>
       <div class="item-info">
         <div class="item-name">The Tarot Box</div>
@@ -181,7 +193,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/Shop/004-Display-case.png" alt="The Glove" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0003_Layer-5.png" alt="The Glove">
       <div class="item-info">
         <div class="item-name">The Glove</div>
         <div class="item-lore">Red kid leather, left hand only. She never dropped anything again. But she couldn't let go.</div>
@@ -189,10 +201,26 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     </div>
 
     <div class="item-card reveal">
-      <img src="img/Shop/004-Display-case.png" alt="The Mirror" onerror="this.style.background='#1a1510';this.style.height='200px'">
+      <img src="img/artifacts/artifakts_0007_Layer-1.png" alt="The Mirror">
       <div class="item-info">
         <div class="item-name">The Mirror</div>
         <div class="item-lore">It shows not your face, but the face you'll wear in ten years.</div>
+      </div>
+    </div>
+
+    <div class="item-card reveal">
+      <img src="img/artifacts/artifakts_0001_Layer-7.png" alt="The Compass">
+      <div class="item-info">
+        <div class="item-name">The Compass</div>
+        <div class="item-lore">It doesn't point north. It points to where you need to be.</div>
+      </div>
+    </div>
+
+    <div class="item-card reveal">
+      <img src="img/artifacts/artifakts_0000_Layer-8.png" alt="The Scrolls">
+      <div class="item-info">
+        <div class="item-name">The Scrolls</div>
+        <div class="item-lore">Ancient texts in a language no one alive can read. But they hum at night.</div>
       </div>
     </div>
 
@@ -209,11 +237,11 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- SKIN ME -->
   <div class="book-section reveal" id="skin-me">
-    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
+    <div class="book-cover"><img src="img/Books/skin-me.jpg" alt="Skin Me"></div>
     <div class="book-text">
       <h3>Skin Me</h3>
       <div class="genre">Paranormal Dark Romance 18+ · Berlin</div>
-      <div class="excerpt">The shop had no sign. No address. No name anyone remembered. Rita found it the way most people find things they shouldn't — by not looking. By turning left when she meant to turn right, by following the alley instead of the avenue...</div>
+      <div class="excerpt">The shop had no sign. No address. No name anyone remembered. Rita found it the way most people find things they shouldn't — by not looking.</div>
       <div class="buy-row">
         <a class="buy-btn primary" href="#">Standard — $25</a>
         <a class="buy-btn" href="#">Premium — $49</a>
@@ -226,14 +254,14 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- CARRY ME -->
   <div class="book-section reverse reveal">
-    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
+    <div class="book-cover">
+      <div class="placeholder-cover"><div class="ph-icon">◈</div><div class="ph-title">Carry Me</div><div class="ph-status">In Development</div></div>
+    </div>
     <div class="book-text">
       <h3>Carry Me</h3>
-      <div class="genre">Coming Soon</div>
+      <div class="genre">YA ab 16 · Coming Soon</div>
       <div class="excerpt">The red wig on the shelf is watching you. It has been watching everyone.</div>
-      <div class="buy-row">
-        <a class="buy-btn" href="#">Join Waitlist</a>
-      </div>
+      <div class="dev-badge">In Development</div>
     </div>
   </div>
 
@@ -241,14 +269,14 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- WARUM MÜTTER TÖTEN? -->
   <div class="book-section reveal">
-    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
+    <div class="book-cover">
+      <div class="placeholder-cover"><div class="ph-icon">◈</div><div class="ph-title">Book 3</div><div class="ph-status">In Development</div></div>
+    </div>
     <div class="book-text">
       <h3>Warum Mütter töten?</h3>
       <div class="genre">Mystical Thriller · Coming Soon</div>
       <div class="excerpt">The hourglass holds red sand. The sand flows upward. Time inside moves backward.</div>
-      <div class="buy-row">
-        <a class="buy-btn" href="#">Join Waitlist</a>
-      </div>
+      <div class="dev-badge">In Development</div>
     </div>
   </div>
 
@@ -256,14 +284,57 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 
   <!-- LAY ME -->
   <div class="book-section reverse reveal">
-    <div class="book-img" style="background-image:url('img/Shop/004-Display-case.png')"></div>
+    <div class="book-cover">
+      <div class="placeholder-cover"><div class="ph-icon">◈</div><div class="ph-title">Lay Me</div><div class="ph-status">In Development</div></div>
+    </div>
     <div class="book-text">
       <h3>Lay Me</h3>
       <div class="genre">Dark Romance 18+ · Coming Soon</div>
       <div class="excerpt">Inside the box: a tarot deck. Every card has a name. Every name has a price.</div>
-      <div class="buy-row">
-        <a class="buy-btn" href="#">Join Waitlist</a>
-      </div>
+      <div class="dev-badge">In Development</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SPIN ME -->
+  <div class="book-section reveal">
+    <div class="book-cover">
+      <div class="placeholder-cover"><div class="ph-icon">◈</div><div class="ph-title">Spin Me</div><div class="ph-status">In Development</div></div>
+    </div>
+    <div class="book-text">
+      <h3>Spin Me</h3>
+      <div class="genre">Dark Romance 18+ · Coming Soon</div>
+      <div class="excerpt">The pointe shoes hang from a nail. They dance at midnight. No one is wearing them.</div>
+      <div class="dev-badge">In Development</div>
+    </div>
+  </div>
+</section>
+
+<!-- MEDIA -->
+<div class="divider"></div>
+<section id="media">
+  <div class="section-title reveal">Media</div>
+  <div class="section-sub reveal">Sound, vision, voice</div>
+
+  <div class="media-grid">
+    <div class="media-card reveal">
+      <div class="media-icon">♫</div>
+      <div class="media-name">Soundtrack</div>
+      <div class="media-desc">20 original tracks. Each song belongs to a scene, a character, a turning point.</div>
+      <div class="dev-badge">In Development</div>
+    </div>
+    <div class="media-card reveal">
+      <div class="media-icon">▶</div>
+      <div class="media-name">Music Videos</div>
+      <div class="media-desc">Visual stories for every track. Dark, atmospheric, unforgettable.</div>
+      <div class="dev-badge">In Development</div>
+    </div>
+    <div class="media-card reveal">
+      <div class="media-icon">♪</div>
+      <div class="media-name">Audiobooks</div>
+      <div class="media-desc">Every book, read aloud. Every whisper, every silence — preserved.</div>
+      <div class="dev-badge">In Development</div>
     </div>
   </div>
 </section>
@@ -275,6 +346,17 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
     <div class="section-title">Cinema Below</div>
     <div class="section-sub">Watch the episodes</div>
     <p style="margin-bottom:24px;font-style:italic">Episode 1 — Coming Soon</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-title reveal">About</div>
+  <div class="section-sub reveal">Mary-Ann Black</div>
+  <div class="reveal">
+    <p>Behind every nameless shop stands someone with a name.</p>
+    <p style="margin-top:12px"><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.</p>
+    <p style="margin-top:12px">The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.</p>
   </div>
 </section>
 
@@ -290,7 +372,7 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 document.addEventListener('mousemove',e=>{
   const x=(e.clientX/innerWidth-0.5)*10,y=(e.clientY/innerHeight-0.5)*6;
   const bg=document.getElementById('heroBg');
-  if(bg)bg.style.transform=`translate(${-x}px,${-y}px)`;
+  if(bg)bg.style.transform='translate('+(-x)+'px,'+(-y)+'px)';
 });
 
 // Scroll reveal
@@ -298,6 +380,12 @@ const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Handle #hash on load — skip hero
+if(location.hash && location.hash !== '#') {
+  const target = document.querySelector(location.hash);
+  if(target) setTimeout(() => target.scrollIntoView(), 100);
+}
 </script>
 </body>
 </html>
