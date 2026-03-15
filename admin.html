@@ -177,6 +177,42 @@ header nav a:hover{color:var(--gold)}
   </div>
 </div>
 
+<!-- INPUT DIALOG -->
+<div class="modal-bg" id="dialogBg" onclick="if(event.target===this)closeDialog()">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h3 id="dialogTitle">Input</h3>
+      <button class="btn" onclick="closeDialog()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px">
+      <p id="dialogDesc" style="color:#888;margin-bottom:12px;font-size:12px"></p>
+      <input type="text" id="dialogInput" class="search" style="width:100%;font-size:14px;padding:10px 12px" autocomplete="off">
+      <p id="dialogErr" style="color:#a44;font-size:11px;margin-top:6px;min-height:16px"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeDialog()">Cancel</button>
+      <button class="btn btn-primary" id="dialogOk" onclick="submitDialog()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DIALOG -->
+<div class="modal-bg" id="confirmBg" onclick="if(event.target===this)closeConfirm()">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-header">
+      <h3 id="confirmTitle">Confirm</h3>
+      <button class="btn" onclick="closeConfirm()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:20px">
+      <p id="confirmMsg" style="color:#999;font-size:14px"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirmOk">Delete</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -270,7 +306,7 @@ function renderFiles() {
   const grid = document.getElementById('fileGrid');
   const search = document.getElementById('searchInput').value.toLowerCase();
   
-  const filtered = files.filter(f => f.name.toLowerCase().includes(search));
+  const filtered = files.filter(f => f.name.toLowerCase().includes(search) && f.name !== '.gitkeep');
   
   grid.innerHTML = filtered.map(f => {
     const isImg = /\.(png|jpg|jpeg|gif|webp|svg)$/i.test(f.name);
@@ -354,11 +390,51 @@ function deselectAll() {
   updateDeleteBtn();
 }
 
+// === DIALOGS ===
+let dialogResolve = null;
+function openDialog(title, desc, placeholder) {
+  return new Promise(resolve => {
+    dialogResolve = resolve;
+    document.getElementById('dialogTitle').textContent = title;
+    document.getElementById('dialogDesc').textContent = desc || '';
+    document.getElementById('dialogInput').placeholder = placeholder || '';
+    document.getElementById('dialogInput').value = '';
+    document.getElementById('dialogErr').textContent = '';
+    document.getElementById('dialogBg').classList.add('open');
+    setTimeout(() => document.getElementById('dialogInput').focus(), 100);
+  });
+}
+function submitDialog() {
+  const val = document.getElementById('dialogInput').value.trim();
+  if (!val) { document.getElementById('dialogErr').textContent = 'Please enter a value'; return; }
+  closeDialog(val);
+}
+function closeDialog(val) {
+  document.getElementById('dialogBg').classList.remove('open');
+  if (dialogResolve) { dialogResolve(val || null); dialogResolve = null; }
+}
+document.getElementById('dialogInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitDialog();
+  if (e.key === 'Escape') closeDialog();
+});
+
+function openConfirm(title, msg) {
+  return new Promise(resolve => {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmMsg').textContent = msg;
+    document.getElementById('confirmBg').classList.add('open');
+    document.getElementById('confirmOk').onclick = () => { document.getElementById('confirmBg').classList.remove('open'); resolve(true); };
+  });
+}
+function closeConfirm() {
+  document.getElementById('confirmBg').classList.remove('open');
+}
+
 // === CREATE FOLDER ===
 async function createFolder() {
-  const name = prompt('Folder name:');
-  if (!name || !name.trim()) return;
-  const folderName = name.trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+  const name = await openDialog('New Folder', 'Enter folder name (letters, numbers, dashes)', 'my-folder');
+  if (!name) return;
+  const folderName = name.replace(/[^a-zA-Z0-9_-]/g, '-');
   const path = currentPath ? `${currentPath}/${folderName}/.gitkeep` : `${folderName}/.gitkeep`;
   
   try {
@@ -382,9 +458,8 @@ async function moveSelected() {
   const count = selected.size;
   if (count === 0) return;
   
-  // Build folder list from known structure
-  const dest = prompt(`Move ${count} file(s) to folder:\n\nExamples: img, img/layers, img/items\n\nCurrent: ${currentPath || 'root'}`);
-  if (!dest && dest !== '') return;
+  const dest = await openDialog('Move Files', `Move ${count} file(s) to folder (e.g. img/items)`, currentPath || 'folder-name');
+  if (!dest) return;
   const destPath = dest.trim();
   
   let moved = 0;
@@ -393,22 +468,16 @@ async function moveSelected() {
     if (!f || f.type !== 'file') continue;
     
     try {
-      // Get file content
       const fileData = await api(`contents/${f.path}?ref=${BRANCH}`);
-      const content = fileData.content;
-      
-      // Create in new location
       const newPath = destPath ? `${destPath}/${f.name}` : f.name;
       await api(`contents/${newPath}`, {
         method: 'PUT',
         body: JSON.stringify({
           message: `Move ${f.name} to ${destPath || 'root'}`,
-          content: content,
+          content: fileData.content,
           branch: BRANCH
         })
       });
-      
-      // Delete from old location
       await api(`contents/${f.path}`, {
         method: 'DELETE',
         body: JSON.stringify({
@@ -417,7 +486,6 @@ async function moveSelected() {
           branch: BRANCH
         })
       });
-      
       moved++;
       toast(`Moved ${f.name} (${moved}/${count})`, 'success');
     } catch (e) {
@@ -498,7 +566,8 @@ function readAsBase64(file) {
 // === DELETE ===
 async function deleteSelected() {
   const count = selected.size;
-  if (!confirm(`Delete ${count} file(s)?`)) return;
+  const ok = await openConfirm('Delete Files', `Delete ${count} file(s)? This cannot be undone.`);
+  if (!ok) return;
   
   for (const sha of selected) {
     const f = files.find(x => x.sha === sha);
@@ -522,7 +591,9 @@ async function deleteSelected() {
 }
 
 async function deleteCurrent() {
-  if (!currentFile || !confirm(`Delete ${currentFile.name}?`)) return;
+  if (!currentFile) return;
+  const ok = await openConfirm('Delete File', `Delete "${currentFile.name}"? This cannot be undone.`);
+  if (!ok) return;
   try {
     await api(`contents/${currentFile.path}`, {
       method: 'DELETE',
