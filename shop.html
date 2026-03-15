@@ -190,6 +190,25 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 #transition{position:fixed;inset:0;background:#000;z-index:80;opacity:0;pointer-events:none;transition:opacity 0.4s}
 #transition.active{opacity:1}
 
+/* ═══ MEDIA HALL (Cinema scene) ═══ */
+.media-hall{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;padding:50px 5% 20px;overflow-y:auto}
+.media-hall h2{font-family:'Cinzel',serif;font-size:18px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:4px;text-align:center}
+.media-hall .mh-sub{font-family:'Cormorant Garamond',serif;font-size:13px;color:#5a4a35;font-style:italic;margin-bottom:24px;text-align:center}
+.media-hall .mh-section{margin-bottom:24px}
+.media-hall .mh-section h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#5a4a35;margin-bottom:10px;font-weight:400;padding-left:4px}
+.media-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.media-tile{flex:0 0 140px;background:rgba(15,12,8,0.8);border:1px solid rgba(200,160,80,0.08);cursor:pointer;transition:all 0.3s;overflow:hidden}
+.media-tile:hover{border-color:rgba(200,160,80,0.25);transform:translateY(-3px)}
+.media-tile .mt-visual{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:32px;color:#2a2218;position:relative;overflow:hidden}
+.media-tile .mt-visual.films{background:linear-gradient(135deg,rgba(180,40,40,0.15),rgba(10,8,5,0.9))}
+.media-tile .mt-visual.soundtrack{background:linear-gradient(135deg,rgba(200,160,80,0.12),rgba(10,8,5,0.9))}
+.media-tile .mt-visual.clips{background:linear-gradient(135deg,rgba(140,100,180,0.12),rgba(10,8,5,0.9))}
+.media-tile .mt-visual.audiobooks{background:linear-gradient(135deg,rgba(160,180,200,0.12),rgba(10,8,5,0.9))}
+.media-tile .mt-body{padding:10px 12px}
+.media-tile .mt-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c8a060;margin-bottom:3px}
+.media-tile .mt-desc{font-family:'Cormorant Garamond',serif;font-size:12px;color:#5a4a35;font-style:italic;line-height:1.4}
+.media-tile .mt-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#3a3025;margin-top:6px;display:inline-block;padding:3px 8px;border:1px solid rgba(200,160,80,0.08)}
+
 /* ═══════════════════════════════════════ */
 /* ═══ MOBILE ═══ */
 /* ═══════════════════════════════════════ */
@@ -257,6 +276,14 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 
   /* Vignette lighter on mobile for better visibility */
   .vignette{background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.5) 100%)}
+
+  /* Media hall */
+  .media-hall{padding:50px 3% 16px}
+  .media-hall h2{font-size:15px}
+  .media-tile{flex:0 0 120px}
+  .media-tile .mt-visual{height:70px;font-size:24px}
+  .media-tile .mt-title{font-size:9px}
+  .media-tile .mt-desc{font-size:11px}
 }
 
 /* Extra small phones */
@@ -424,12 +451,128 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-cinema">
   <img class="scene-img" src="img/Shop/007-Cinema.png" alt="cinema">
   <div class="hotspots"></div>
-  <div class="room-content">
-    <h2>Cinema</h2>
-    <div class="room-sub">Films from the basement</div>
-    <div class="author-card">
-      <p>The projector is warming up. The first film is being prepared.</p>
-      <p style="color:#3a3025;font-style:italic">Coming soon...</p>
+  <div class="media-hall">
+    <h2>The Screening Room</h2>
+    <div class="mh-sub">Films, music, and voices from the Namenlos universe</div>
+
+    <div class="mh-section">
+      <h3>Films</h3>
+      <div class="media-row">
+        <div class="media-tile" onclick="openMediaDetail('film1')">
+          <div class="mt-visual films">▶</div>
+          <div class="mt-body">
+            <div class="mt-title">Skin Me</div>
+            <div class="mt-desc">Episode 1 — The shop without a name</div>
+            <div class="mt-badge">Coming Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('film2')">
+          <div class="mt-visual films">▶</div>
+          <div class="mt-body">
+            <div class="mt-title">Episode 2</div>
+            <div class="mt-desc">The whip chooses</div>
+            <div class="mt-badge">Coming Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('film3')">
+          <div class="mt-visual films">▶</div>
+          <div class="mt-body">
+            <div class="mt-title">Episode 3</div>
+            <div class="mt-desc">Berlin, 3 AM</div>
+            <div class="mt-badge">Coming Soon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mh-section">
+      <h3>Soundtrack · 20 Tracks</h3>
+      <div class="media-row">
+        <div class="media-tile" onclick="openMediaDetail('track1')">
+          <div class="mt-visual soundtrack">♫</div>
+          <div class="mt-body">
+            <div class="mt-title">Track 01</div>
+            <div class="mt-desc">The nameless shop</div>
+            <div class="mt-badge">Preview Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('track2')">
+          <div class="mt-visual soundtrack">♫</div>
+          <div class="mt-body">
+            <div class="mt-title">Track 02</div>
+            <div class="mt-desc">Rita's theme</div>
+            <div class="mt-badge">Preview Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('track3')">
+          <div class="mt-visual soundtrack">♫</div>
+          <div class="mt-body">
+            <div class="mt-title">Track 03</div>
+            <div class="mt-desc">The first touch</div>
+            <div class="mt-badge">Preview Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('album')">
+          <div class="mt-visual soundtrack" style="font-size:14px;letter-spacing:3px;color:#5a4a35">+17</div>
+          <div class="mt-body">
+            <div class="mt-title">Full Album</div>
+            <div class="mt-desc">20 tracks · Included in Premium</div>
+            <div class="mt-badge">In Development</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mh-section">
+      <h3>Music Videos</h3>
+      <div class="media-row">
+        <div class="media-tile" onclick="openMediaDetail('clip1')">
+          <div class="mt-visual clips">▶</div>
+          <div class="mt-body">
+            <div class="mt-title">Clip 01</div>
+            <div class="mt-desc">Visual story for Track 01</div>
+            <div class="mt-badge">Coming Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('clip2')">
+          <div class="mt-visual clips">▶</div>
+          <div class="mt-body">
+            <div class="mt-title">Clip 02</div>
+            <div class="mt-desc">Visual story for Track 02</div>
+            <div class="mt-badge">Coming Soon</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('clips_all')">
+          <div class="mt-visual clips" style="font-size:14px;letter-spacing:3px;color:#5a4a35">5 free<br>+15</div>
+          <div class="mt-body">
+            <div class="mt-title">All Clips</div>
+            <div class="mt-desc">5 on YouTube · 15 exclusive in Premium</div>
+            <div class="mt-badge">In Development</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mh-section">
+      <h3>Audiobooks</h3>
+      <div class="media-row">
+        <div class="media-tile" onclick="openMediaDetail('audiobook_skinme')">
+          <div class="mt-visual audiobooks">♪</div>
+          <div class="mt-body">
+            <div class="mt-title">Skin Me</div>
+            <div class="mt-desc">Full audiobook · ElevenLabs voice</div>
+            <div class="mt-badge">Premium Only</div>
+          </div>
+        </div>
+        <div class="media-tile" onclick="openMediaDetail('audiobook_future')">
+          <div class="mt-visual audiobooks">♪</div>
+          <div class="mt-body">
+            <div class="mt-title">More Coming</div>
+            <div class="mt-desc">Every book, read aloud</div>
+            <div class="mt-badge">In Development</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -497,7 +640,7 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   <a class="nav-item" onclick="navGo('display')">Artifacts</a>
   <a class="nav-item" onclick="navGo('books')">The Books</a>
   <a class="nav-item" onclick="navGo('corridor')">The Red Door</a>
-  <a class="nav-item" onclick="navGo('cinema')">Cinema</a>
+  <a class="nav-item" onclick="navGo('cinema')">Screening Room</a>
   <h3>Elsewhere</h3>
   <a class="nav-item" href="browse.html">Browse Collection</a>
   <a class="nav-item" href="home.html">Home</a>
@@ -545,7 +688,7 @@ const BOOKS = {
 const SCENE_TITLES = {
   alley:'The Alley', hall:'Main Hall', shopkeeper:'The Shopkeeper',
   display:'The Cabinet', books:'The Books', corridor:'The Red Door',
-  cinema:'Cinema', wc:'WC', secret:'The Secret Room', cash:'The Drawer'
+  cinema:'The Screening Room', wc:'WC', secret:'The Secret Room', cash:'The Drawer'
 };
 
 // ═══ STATE ═══
@@ -636,6 +779,31 @@ function openMediaModal(type) {
   const t = {album:'Soundtrack Album',clips:'Music Videos',audiobooks:'Audiobooks'};
   const d = {album:'20 original tracks composed for the Namenlos universe. Each song belongs to a scene, a character, a turning point.',clips:'Visual stories for every track. Dark, atmospheric, unforgettable.',audiobooks:'Every book, read aloud. Every whisper, every silence — preserved.'};
   document.getElementById('modalBody').innerHTML = '<h2>'+(t[type]||type)+'</h2><div class="modal-lore">'+(d[type]||'')+'</div><div class="dev-badge">In Development</div>';
+  document.getElementById('modal').classList.add('open');
+}
+
+function openMediaDetail(id) {
+  document.getElementById('modalImg').style.display='none';
+  const items = {
+    film1:    {title:'Episode 1 — The Shop Without a Name', desc:'Rita turns left when she meant to turn right. The alley narrows. The door has no sign. Inside, the shopkeeper is already waiting.', badge:'Coming Soon'},
+    film2:    {title:'Episode 2 — The Whip Chooses', desc:'She sees it behind the glass — black leather, braided tight. The handle is bone. She shouldn\'t touch it. But some things choose you.', badge:'Coming Soon'},
+    film3:    {title:'Episode 3 — Berlin, 3 AM', desc:'The city sleeps. Rita doesn\'t. The whip hums in her bag. She walks toward Oranienstraße without knowing why.', badge:'Coming Soon'},
+    track1:   {title:'Track 01 — The Nameless Shop', desc:'Ambient dark atmosphere. The sound of a door opening into a space that shouldn\'t exist.', badge:'Preview Soon'},
+    track2:   {title:'Track 02 — Rita\'s Theme', desc:'A pulse. A heartbeat. Something between longing and fear.', badge:'Preview Soon'},
+    track3:   {title:'Track 03 — The First Touch', desc:'The moment skin meets leather. Everything changes.', badge:'Preview Soon'},
+    album:    {title:'Full Soundtrack — 20 Tracks', desc:'20 original tracks composed for the Namenlos universe. Each song belongs to a scene, a character, a turning point. The full album is included in the Premium bundle ($49).', badge:'In Development'},
+    clip1:    {title:'Music Video 01', desc:'Visual story for Track 01. Dark, atmospheric, AI-animated.', badge:'Coming Soon'},
+    clip2:    {title:'Music Video 02', desc:'Visual story for Track 02. A face in the window. A door that shouldn\'t be there.', badge:'Coming Soon'},
+    clips_all:{title:'All Music Videos', desc:'5 clips free on YouTube. 15 exclusive clips available only in the Premium bundle. Dark visuals for every track — atmospheric, unforgettable.', badge:'In Development'},
+    audiobook_skinme: {title:'Audiobook — Skin Me', desc:'The complete novel, read aloud. Every whisper, every silence — preserved. Generated with ElevenLabs. Included in the Premium bundle ($49).', badge:'Premium Only'},
+    audiobook_future: {title:'More Audiobooks Coming', desc:'Every book in the Namenlos universe will be available as an audiobook. Carry Me, Lay Me, Spin Me — all coming.', badge:'In Development'}
+  };
+  const item = items[id] || {title:id, desc:'', badge:'Coming Soon'};
+  let html = '<h2>'+item.title+'</h2><div class="modal-lore">'+item.desc+'</div><div class="dev-badge">'+item.badge+'</div>';
+  if(item.badge==='Premium Only') {
+    html += '<div class="buy-row" style="margin-top:16px"><a class="buy-btn primary" href="#">Premium — $49</a></div>';
+  }
+  document.getElementById('modalBody').innerHTML = html;
   document.getElementById('modal').classList.add('open');
 }
 
