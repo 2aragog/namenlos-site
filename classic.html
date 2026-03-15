@@ -32,8 +32,10 @@ nav *{pointer-events:auto}
 @keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
 .hero h1{font-family:'Cinzel',serif;font-size:clamp(28px,5vw,48px);letter-spacing:8px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:20px}
 .hero p{font-style:italic;color:#5a4a35;max-width:400px;margin:0 auto 40px}
-.hero-scroll{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#3a3025;animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:0.3}50%{opacity:0.8}}
+.hero-enter{font-family:'Cinzel',serif;font-size:13px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;padding:14px 40px;border:1px solid #3a2a18;background:rgba(10,8,5,0.6);backdrop-filter:blur(6px);cursor:pointer;transition:all 0.5s cubic-bezier(0.22,1,0.36,1);text-decoration:none;display:inline-block;animation:fadeUp 2s ease 0.8s both}
+.hero-enter:hover{border-color:#c8a060;background:rgba(200,160,96,0.08);transform:translateY(-2px);box-shadow:0 10px 40px rgba(0,0,0,0.4);letter-spacing:7px}
+.hero-scroll{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#2a2218;margin-top:24px;animation:pulse 2.5s ease-in-out 2s infinite both}
+@keyframes pulse{0%,100%{opacity:0}50%{opacity:0.5}}
 
 /* SECTIONS */
 section{padding:100px 30px;max-width:900px;margin:0 auto}
@@ -113,12 +115,13 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
   <div class="hero-content">
     <h1>Namenlos</h1>
     <p>The shop has no address. But it has a word.<br>One nameless shop. Different artifacts. Different stories.</p>
-    <div class="hero-scroll">Scroll ↓</div>
+    <a class="hero-enter" href="#inside" onclick="event.preventDefault();document.getElementById('inside').scrollIntoView({behavior:'smooth'})">Enter the Shop</a>
+    <div class="hero-scroll">↓</div>
   </div>
 </div>
 
 <!-- SHOP INTERIOR -->
-<div class="full-img" style="background-image:url('img/shop.png')"></div>
+<div class="full-img" id="inside" style="background-image:url('img/shop.png')"></div>
 
 <!-- SHOPKEEPER -->
 <section>
