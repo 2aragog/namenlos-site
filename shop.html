@@ -256,6 +256,7 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 
 <!-- BACK BUTTON -->
 <a class="back-btn" id="backBtn">← Back</a>
+<a href="home.html" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:55;font-family:Cinzel,serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#3a3025;text-decoration:none;transition:color 0.3s" onmouseover="this.style.color='#c8a060'" onmouseout="this.style.color='#3a3025'">NAMENLOS</a>
 
 <!-- OVERLAYS -->
 <div class="vignette"></div>
@@ -286,8 +287,10 @@ const parentMap = {
 
 // ═══ SCENE TRANSITIONS ═══
 function goTo(sceneId) {
+  if(isTransitioning) return;
   if (sceneId === currentScene) return;
-  const trans = document.getElementById('transition');
+  isTransitioning=true;
+    const trans = document.getElementById('transition');
   trans.classList.add('active');
   
   setTimeout(() => {
@@ -297,14 +300,15 @@ function goTo(sceneId) {
     currentScene = sceneId;
     updateBack();
     
-    setTimeout(() => trans.classList.remove('active'), 50);
+    setTimeout(() => { trans.classList.remove('active'); isTransitioning=false; }, 50);
   }, 400);
 }
 
 function goBack() {
   const prev = history.pop();
   if (!prev) return;
-  const trans = document.getElementById('transition');
+  isTransitioning=true;
+    const trans = document.getElementById('transition');
   trans.classList.add('active');
   
   setTimeout(() => {
@@ -312,7 +316,7 @@ function goBack() {
     document.getElementById('scene-' + prev)?.classList.add('active');
     currentScene = prev;
     updateBack();
-    setTimeout(() => trans.classList.remove('active'), 50);
+    setTimeout(() => { trans.classList.remove('active'); isTransitioning=false; }, 50);
   }, 400);
 }
 
@@ -326,6 +330,13 @@ function updateBack() {
 }
 
 // ═══ EVENT LISTENERS ═══
+// Start scene from URL param
+const params=new URLSearchParams(location.search);
+const startAt=params.get("start");
+if(startAt&&document.getElementById("scene-"+startAt)){document.querySelector(".scene.active")?.classList.remove("active");document.getElementById("scene-"+startAt).classList.add("active");currentScene=startAt;updateBack();}
+
+let isTransitioning=false;
+
 // Hotspot navigation
 document.querySelectorAll('[data-goto]').forEach(el => {
   el.addEventListener('click', () => goTo(el.dataset.goto));
