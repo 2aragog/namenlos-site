@@ -163,12 +163,12 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
     <div class="hotspot" data-goto="shopkeeper" style="left:18%;top:15%;width:18%;height:50%">
       <span class="label">The Shopkeeper</span>
     </div>
-    <!-- Shelves left = books -->
-    <div class="hotspot" data-goto="books" style="left:5%;top:5%;width:32%;height:18%">
+    <!-- Bookshelf right side -->
+    <div class="hotspot" data-goto="books" style="left:55%;top:3%;width:30%;height:60%">
       <span class="label">The Books</span>
     </div>
-    <!-- Cabinet right = artifacts -->
-    <div class="hotspot" data-goto="display" style="left:78%;top:10%;width:18%;height:65%">
+    <!-- Glass vitrine far right = artifacts -->
+    <div class="hotspot" data-goto="display" style="left:86%;top:3%;width:12%;height:75%">
       <span class="label">The Cabinet</span>
     </div>
     <!-- Red door -->
@@ -277,11 +277,13 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 <div class="scene" id="scene-corridor">
   <img class="scene-img" src="img/Shop/006-Cinema-door-wc.png" alt="corridor">
   <div class="hotspots">
-    <div class="hotspot" data-goto="cinema" style="left:35%;top:10%;width:30%;height:80%">
-      <span class="label">Cinema</span>
-    </div>
-    <div class="hotspot" data-goto="wc" style="left:20%;top:30%;width:14%;height:50%">
+    <!-- WC door: closed wooden door, center-left -->
+    <div class="hotspot" data-goto="wc" style="left:28%;top:12%;width:18%;height:68%">
       <span class="label">WC</span>
+    </div>
+    <!-- KINO door: open metal door with red glow, right of center -->
+    <div class="hotspot" data-goto="cinema" style="left:50%;top:8%;width:20%;height:78%">
+      <span class="label">Cinema</span>
     </div>
   </div>
 </div>
