@@ -2,206 +2,119 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NAMENLOS — Shop Enter 2.5D</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;font-family:'Cinzel',serif}
 .scene{position:relative;width:100%;height:100%;overflow:hidden}
-.layer{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:transform 0.15s ease-out;will-change:transform}
-.layer img{display:block;height:100vh;width:auto;min-width:100vw;object-fit:cover}
-
-/* Glow effect on candles */
-.glow{filter:brightness(1.1)}
-
-/* Hotspot areas */
-.hotspot{position:absolute;cursor:pointer;z-index:50;border:2px solid transparent;border-radius:8px;transition:all 0.3s}
-.hotspot:hover{border-color:rgba(200,160,96,0.4);box-shadow:0 0 20px rgba(200,160,96,0.15) inset}
-.hotspot .label{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#c8a060;font-size:11px;padding:4px 12px;white-space:nowrap;opacity:0;transition:opacity 0.3s;letter-spacing:2px;pointer-events:none;font-family:'Cinzel',serif}
-.hotspot:hover .label{opacity:1}
-
-/* Vignette */
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:40;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.7) 100%)}
-
-/* Dust particles */
+.layer{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  width:108%;height:108%;
+}
+.layer img{display:block;width:100%;height:100%;object-fit:cover}
+.glow img{filter:brightness(1.15) contrast(1.05)}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:40;
+  background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.7) 100%)}
 .dust{position:fixed;inset:0;pointer-events:none;z-index:35}
 .dust span{position:absolute;width:2px;height:2px;background:rgba(200,170,100,0.3);border-radius:50%;animation:float linear infinite}
 @keyframes float{
   0%{transform:translateY(100vh) translateX(0);opacity:0}
-  10%{opacity:1}
-  90%{opacity:1}
+  10%{opacity:1}90%{opacity:1}
   100%{transform:translateY(-10vh) translateX(40px);opacity:0}
 }
-
-/* Info bar */
-.info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;display:flex;justify-content:space-between;align-items:center;pointer-events:none}
-.info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace}
+.info{position:fixed;bottom:0;left:0;right:0;padding:12px 24px;
+  background:linear-gradient(transparent,rgba(0,0,0,0.9));z-index:60;
+  display:flex;justify-content:space-between;align-items:center;pointer-events:none}
+.info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:monospace}
 .info .title{color:#c8a060;font-size:13px;letter-spacing:5px}
-
-/* Loading */
-#loading{position:fixed;inset:0;background:#000;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
+#loading{position:fixed;inset:0;background:#000;z-index:999;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
-#loading .text{color:#2a2218;font-size:11px;letter-spacing:8px;text-transform:uppercase;font-family:'Cinzel',serif}
+#loading .text{color:#2a2218;font-size:11px;letter-spacing:8px;text-transform:uppercase}
 #loading .bar{width:200px;height:1px;background:#1a1a1a}
 #loading .fill{height:100%;background:#c8a060;width:0;transition:width 0.3s}
 </style>
 </head>
 <body>
-
 <div id="loading">
   <div class="text">Namenlos</div>
   <div class="bar"><div class="fill" id="loadFill"></div></div>
 </div>
 
 <div class="scene" id="scene">
-  <!-- Layers stacked back-to-front, each with a depth multiplier -->
-  <!-- depth: 0 = static, higher = more parallax movement -->
-  
-  <!-- Background (static) -->
+  <!-- BG: static, shopkeeper area darkened -->
   <div class="layer" data-depth="0">
-    <img src="img/shop_enter/002_0014_Background.png" alt="bg">
+    <img src="img/shop_enter/002_0014_Background.png" alt="shop">
   </div>
-  
-  <!-- Far back elements: door, entrance -->
-  <div class="layer" data-depth="0.5">
-    <img src="img/shop_enter/002_0010_Layer-12.png" alt="door">
+  <!-- LAMP: subtle parallax -->
+  <div class="layer glow" data-depth="0.6">
+    <img src="img/shop_enter/002_0001_Layer-2.png" alt="lamp">
   </div>
-  <div class="layer" data-depth="0.6">
-    <img src="img/shop_enter/002_0011_Layer-13.png" alt="door-light">
-  </div>
-  
-  <!-- Mid: shelves, counter area -->
+  <!-- SHOPKEEPER: most parallax -->
   <div class="layer" data-depth="1.0">
-    <img src="img/shop_enter/002_0002_Layer-3.png" alt="counter">
-  </div>
-  <div class="layer" data-depth="1.2">
-    <img src="img/shop_enter/002_0003_Layer-5.png" alt="floor">
-  </div>
-  
-  <!-- Display case / vitrine -->
-  <div class="layer" data-depth="1.5">
-    <img src="img/shop_enter/002_0012_Layer-14.png" alt="vitrine">
-  </div>
-  <div class="layer" data-depth="1.6">
-    <img src="img/shop_enter/002_0013_Layer-15.png" alt="red-item">
-  </div>
-  
-  <!-- Small items on shelves -->
-  <div class="layer" data-depth="1.8">
-    <img src="img/shop_enter/002_0004_Layer-6.png" alt="item1">
-  </div>
-  <div class="layer" data-depth="1.9">
-    <img src="img/shop_enter/002_0005_Layer-7.png" alt="item2">
-  </div>
-  <div class="layer" data-depth="2.0">
-    <img src="img/shop_enter/002_0006_Layer-8.png" alt="item3">
-  </div>
-  <div class="layer" data-depth="2.0">
-    <img src="img/shop_enter/002_0007_Layer-9.png" alt="item4">
-  </div>
-  <div class="layer" data-depth="2.1">
-    <img src="img/shop_enter/002_0008_Layer-10.png" alt="item5">
-  </div>
-  <div class="layer" data-depth="2.1">
-    <img src="img/shop_enter/002_0009_Layer-11.png" alt="item6">
-  </div>
-  
-  <!-- Candle/lamp (foreground glow) -->
-  <div class="layer glow" data-depth="2.5">
-    <img src="img/shop_enter/002_0001_Layer-2.png" alt="candle">
-  </div>
-  
-  <!-- Shopkeeper (front) -->
-  <div class="layer" data-depth="3.0">
     <img src="img/shop_enter/002_0000_Layer-1.png" alt="shopkeeper">
   </div>
 </div>
 
-<!-- Vignette overlay -->
 <div class="vignette"></div>
-
-<!-- Dust particles -->
 <div class="dust" id="dust"></div>
-
-<!-- Info bar -->
 <div class="info">
   <span class="title">NAMENLOS</span>
   <span>move your cursor to look around</span>
 </div>
 
 <script>
-// Parallax on mouse move
-const scene = document.getElementById('scene');
 const layers = document.querySelectorAll('.layer');
-const maxShift = 25; // max px shift at depth=1
+const maxShift = 15;
+let targetX=0,targetY=0,currentX=0,currentY=0;
 
-let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-
-document.addEventListener('mousemove', e => {
-  // Normalize to -1..1 from center
-  targetX = (e.clientX / window.innerWidth - 0.5) * 2;
-  targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+document.addEventListener('mousemove',e=>{
+  targetX=(e.clientX/innerWidth-0.5)*2;
+  targetY=(e.clientY/innerHeight-0.5)*2;
 });
 
-// Smooth animation loop
-function animate() {
-  currentX += (targetX - currentX) * 0.08;
-  currentY += (targetY - currentY) * 0.08;
-  
-  layers.forEach(layer => {
-    const depth = parseFloat(layer.dataset.depth) || 0;
-    const moveX = -currentX * maxShift * depth;
-    const moveY = -currentY * maxShift * depth * 0.5; // less vertical
-    layer.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+(function animate(){
+  currentX+=(targetX-currentX)*0.06;
+  currentY+=(targetY-currentY)*0.06;
+  layers.forEach(l=>{
+    const d=parseFloat(l.dataset.depth)||0;
+    const mx=-currentX*maxShift*d;
+    const my=-currentY*maxShift*d*0.4;
+    l.style.transform=`translate(calc(-50% + ${mx}px), calc(-50% + ${my}px))`;
   });
-  
   requestAnimationFrame(animate);
-}
-animate();
+})();
 
-// Mobile: gyroscope
-if (window.DeviceOrientationEvent) {
-  window.addEventListener('deviceorientation', e => {
-    if (e.gamma !== null) {
-      targetX = Math.max(-1, Math.min(1, e.gamma / 30));
-      targetY = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+if(window.DeviceOrientationEvent){
+  window.addEventListener('deviceorientation',e=>{
+    if(e.gamma!==null){
+      targetX=Math.max(-1,Math.min(1,e.gamma/25));
+      targetY=Math.max(-1,Math.min(1,(e.beta-45)/25));
     }
   });
 }
 
-// Dust particles
-const dustEl = document.getElementById('dust');
-for (let i = 0; i < 30; i++) {
-  const s = document.createElement('span');
-  s.style.left = Math.random() * 100 + '%';
-  s.style.animationDuration = (8 + Math.random() * 12) + 's';
-  s.style.animationDelay = Math.random() * 10 + 's';
-  s.style.width = s.style.height = (1 + Math.random() * 2) + 'px';
+const dustEl=document.getElementById('dust');
+for(let i=0;i<25;i++){
+  const s=document.createElement('span');
+  s.style.left=Math.random()*100+'%';
+  s.style.animationDuration=(10+Math.random()*15)+'s';
+  s.style.animationDelay=Math.random()*12+'s';
+  const sz=1+Math.random()*2;
+  s.style.width=s.style.height=sz+'px';
+  s.style.opacity=0.2+Math.random()*0.3;
   dustEl.appendChild(s);
 }
 
-// Loading: wait for all images
-const imgs = document.querySelectorAll('.layer img');
-let loaded = 0;
-const fill = document.getElementById('loadFill');
-
-imgs.forEach(img => {
-  if (img.complete) { loaded++; fill.style.width = (loaded / imgs.length * 100) + '%'; }
-  else {
-    img.addEventListener('load', () => {
-      loaded++;
-      fill.style.width = (loaded / imgs.length * 100) + '%';
-      if (loaded >= imgs.length) setTimeout(() => document.getElementById('loading').classList.add('done'), 300);
-    });
-    img.addEventListener('error', () => {
-      loaded++;
-      fill.style.width = (loaded / imgs.length * 100) + '%';
-    });
-  }
-});
-if (loaded >= imgs.length) setTimeout(() => document.getElementById('loading').classList.add('done'), 300);
-
-// All layers are RGBA with proper transparency — normal compositing
+const imgs=document.querySelectorAll('.layer img');
+let loaded=0;const fill=document.getElementById('loadFill');const total=imgs.length;
+function chk(){fill.style.width=(loaded/total*100)+'%';if(loaded>=total)setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
+imgs.forEach(img=>{if(img.complete){loaded++;chk();}else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}});
+chk();
 </script>
 </body>
 </html>
