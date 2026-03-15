@@ -14,13 +14,28 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 .scene.active{opacity:1;pointer-events:all;z-index:10}
 .scene-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110%;height:110%;object-fit:cover;will-change:transform}
 
+/* ═══ TAP RIPPLE (mobile) ═══ */
+.tap-ripple{position:fixed;pointer-events:none;z-index:45;width:30px;height:30px;border:1.5px solid rgba(200,160,80,0.6);border-radius:50%;animation:tapRipple 0.6s ease-out forwards}
+@keyframes tapRipple{
+  0%{transform:translate(-50%,-50%) scale(0.5);opacity:1}
+  100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}
+}
+
+/* ═══ GAME CURSOR ═══ */
+body{cursor:default}
+.hotspot{cursor:none}
+#gameCursor{position:fixed;pointer-events:none;z-index:500;width:28px;height:28px;border:1.5px solid rgba(200,160,80,0.5);border-radius:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.3s,transform 0.15s,border-color 0.3s,box-shadow 0.3s;display:flex;align-items:center;justify-content:center}
+#gameCursor.visible{opacity:1}
+#gameCursor.active{border-color:rgba(200,160,80,0.9);box-shadow:0 0 20px rgba(200,160,80,0.3);transform:translate(-50%,-50%) scale(1.3)}
+#gameCursor .rune{color:#c8a060;font-size:11px;font-family:'Cinzel',serif;opacity:0.7}
+
 /* ═══ HOTSPOTS ═══ */
 .hotspots{position:absolute;top:50%;left:50%;width:110%;height:110%;transform:translate(-50%,-50%);will-change:transform;z-index:30}
-.hotspot{position:absolute;cursor:pointer;border:1px solid transparent;border-radius:6px;transition:all 0.5s ease;overflow:visible}
-.hotspot .label{position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:#c8a060;font-size:10px;padding:4px 14px;white-space:nowrap;opacity:0;transition:opacity 0.4s;letter-spacing:3px;text-transform:uppercase;pointer-events:none;border:1px solid rgba(200,160,80,0.2)}
+.hotspot{position:absolute;cursor:none;border:none !important;border-radius:50%;transition:all 0.6s ease;overflow:visible;background:transparent}
+.hotspot .label{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#c8a060;font-size:10px;padding:4px 14px;white-space:nowrap;opacity:0;transition:opacity 0.5s;letter-spacing:3px;text-transform:uppercase;pointer-events:none;border:none}
 .hotspot:hover .label{opacity:1}
 
-/* Breathing glow per color */
+/* Breathing — soft radial glow, NO borders */
 .hotspot[data-glow=amber]{animation:breathAmber 4s ease-in-out infinite}
 .hotspot[data-glow=red]{animation:breathRed 5s ease-in-out infinite}
 .hotspot[data-glow=silver]{animation:breathSilver 4.5s ease-in-out infinite}
@@ -31,30 +46,30 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 .hotspot:nth-child(5){animation-delay:1.8s}
 
 @keyframes breathAmber{
-  0%,100%{border-color:rgba(200,160,80,0.03);box-shadow:0 0 8px rgba(200,160,80,0)}
-  50%{border-color:rgba(200,160,80,0.18);box-shadow:0 0 30px rgba(200,160,80,0.08),inset 0 0 20px rgba(200,160,80,0.03)}
+  0%,100%{background:radial-gradient(ellipse at center,rgba(200,160,80,0) 0%,transparent 70%);box-shadow:none}
+  50%{background:radial-gradient(ellipse at center,rgba(200,160,80,0.04) 0%,transparent 70%);box-shadow:0 0 40px rgba(200,160,80,0.06)}
 }
 @keyframes breathRed{
-  0%,100%{border-color:rgba(180,40,40,0.03);box-shadow:0 0 8px rgba(180,40,40,0)}
-  50%{border-color:rgba(180,40,40,0.2);box-shadow:0 0 35px rgba(180,40,40,0.1),inset 0 0 20px rgba(180,40,40,0.04)}
+  0%,100%{background:radial-gradient(ellipse at center,rgba(180,40,40,0) 0%,transparent 70%);box-shadow:none}
+  50%{background:radial-gradient(ellipse at center,rgba(180,40,40,0.05) 0%,transparent 70%);box-shadow:0 0 50px rgba(180,40,40,0.08)}
 }
 @keyframes breathSilver{
-  0%,100%{border-color:rgba(160,180,200,0.03);box-shadow:0 0 8px rgba(160,180,200,0)}
-  50%{border-color:rgba(160,180,200,0.15);box-shadow:0 0 25px rgba(160,180,200,0.08),inset 0 0 15px rgba(160,180,200,0.03)}
+  0%,100%{background:radial-gradient(ellipse at center,rgba(160,180,200,0) 0%,transparent 70%);box-shadow:none}
+  50%{background:radial-gradient(ellipse at center,rgba(160,180,200,0.04) 0%,transparent 70%);box-shadow:0 0 35px rgba(160,180,200,0.06)}
 }
 @keyframes breathMystic{
-  0%,100%{border-color:rgba(140,100,180,0.03);box-shadow:0 0 8px rgba(140,100,180,0)}
-  50%{border-color:rgba(140,100,180,0.18);box-shadow:0 0 30px rgba(140,100,180,0.1),inset 0 0 20px rgba(140,100,180,0.04)}
+  0%,100%{background:radial-gradient(ellipse at center,rgba(140,100,180,0) 0%,transparent 70%);box-shadow:none}
+  50%{background:radial-gradient(ellipse at center,rgba(140,100,180,0.05) 0%,transparent 70%);box-shadow:0 0 40px rgba(140,100,180,0.07)}
 }
 
-/* Hover intensifies glow */
-.hotspot[data-glow=amber]:hover{background:rgba(200,160,80,0.06);border-color:rgba(200,160,80,0.4);box-shadow:0 0 40px rgba(200,160,80,0.2),inset 0 0 25px rgba(200,160,80,0.06);animation:none}
-.hotspot[data-glow=red]:hover{background:rgba(180,40,40,0.06);border-color:rgba(180,40,40,0.35);box-shadow:0 0 45px rgba(180,40,40,0.2),inset 0 0 25px rgba(180,40,40,0.06);animation:none}
-.hotspot[data-glow=silver]:hover{background:rgba(160,180,200,0.06);border-color:rgba(160,180,200,0.3);box-shadow:0 0 35px rgba(160,180,200,0.15),inset 0 0 20px rgba(160,180,200,0.05);animation:none}
-.hotspot[data-glow=mystic]:hover{background:rgba(140,100,180,0.06);border-color:rgba(140,100,180,0.35);box-shadow:0 0 40px rgba(140,100,180,0.2),inset 0 0 25px rgba(140,100,180,0.06);animation:none}
+/* Hover — spotlight effect */
+.hotspot[data-glow=amber]:hover{background:radial-gradient(ellipse at center,rgba(200,160,80,0.1) 0%,rgba(200,160,80,0.02) 50%,transparent 75%);box-shadow:0 0 60px rgba(200,160,80,0.12);animation:none}
+.hotspot[data-glow=red]:hover{background:radial-gradient(ellipse at center,rgba(180,40,40,0.12) 0%,rgba(180,40,40,0.03) 50%,transparent 75%);box-shadow:0 0 70px rgba(180,40,40,0.15);animation:none}
+.hotspot[data-glow=silver]:hover{background:radial-gradient(ellipse at center,rgba(160,180,200,0.1) 0%,rgba(160,180,200,0.02) 50%,transparent 75%);box-shadow:0 0 50px rgba(160,180,200,0.12);animation:none}
+.hotspot[data-glow=mystic]:hover{background:radial-gradient(ellipse at center,rgba(140,100,180,0.12) 0%,rgba(140,100,180,0.03) 50%,transparent 75%);box-shadow:0 0 60px rgba(140,100,180,0.15);animation:none}
 
-/* Embers */
-.ember{position:absolute;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:29;animation:emberRise linear forwards}
+/* Embers — ABOVE vignette */
+.ember{position:fixed;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:45;animation:emberRise linear forwards}
 .ember.amber{background:#c8a060}
 .ember.red{background:#b44030}
 .ember.silver{background:#a0b4c8}
@@ -62,20 +77,20 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 @keyframes emberRise{
   0%{opacity:0;transform:translateY(0) translateX(0) scale(1)}
   10%{opacity:0.9}
-  50%{opacity:0.6;transform:translateY(-40px) translateX(var(--ex,6px)) scale(0.8)}
-  100%{opacity:0;transform:translateY(-90px) translateX(var(--ex2,12px)) scale(0.3)}
+  50%{opacity:0.6;transform:translateY(-50px) translateX(var(--ex,6px)) scale(0.8)}
+  100%{opacity:0;transform:translateY(-110px) translateX(var(--ex2,12px)) scale(0.3)}
 }
 
-/* Whispers */
-.whisper{position:absolute;pointer-events:none;z-index:29;font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;letter-spacing:2px;opacity:0;animation:whisperFade 6s ease-in-out forwards;white-space:nowrap}
-.whisper.amber{color:rgba(200,160,80,0.5)}
-.whisper.red{color:rgba(180,60,60,0.45)}
-.whisper.silver{color:rgba(160,180,200,0.4)}
-.whisper.mystic{color:rgba(160,120,200,0.45)}
+/* Whispers — ABOVE vignette */
+.whisper{position:fixed;pointer-events:none;z-index:45;font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;letter-spacing:2px;opacity:0;animation:whisperFade 6s ease-in-out forwards;white-space:nowrap;text-shadow:0 0 10px rgba(0,0,0,0.8)}
+.whisper.amber{color:rgba(200,160,80,0.6)}
+.whisper.red{color:rgba(180,60,60,0.55)}
+.whisper.silver{color:rgba(160,180,200,0.5)}
+.whisper.mystic{color:rgba(160,120,200,0.55)}
 @keyframes whisperFade{
   0%{opacity:0;transform:translateY(4px)}
-  15%{opacity:0.7;transform:translateY(0)}
-  40%{opacity:0.5;transform:translateY(-2px)}
+  15%{opacity:0.8;transform:translateY(0)}
+  40%{opacity:0.6;transform:translateY(-2px)}
   60%{opacity:0.3}
   100%{opacity:0;transform:translateY(-8px)}
 }
@@ -218,10 +233,11 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   .hotspots{width:100%;height:100%;transform:translate(-50%,-50%) !important}
 
   /* Hotspot labels always visible on touch */
-  .hotspot .label{opacity:0.7;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px}
-  .hotspot{min-width:44px;min-height:44px}
+  .hotspot .label{opacity:0.6;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px}
+  .hotspot{min-width:44px;min-height:44px;cursor:default}
   .whisper{font-size:11px}
   .ember{opacity:0.7}
+  #gameCursor{display:none}
 
   /* Top bar: compact */
   .top-bar{padding:8px 12px}
@@ -656,6 +672,9 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   </div>
 </div>
 
+<!-- GAME CURSOR -->
+<div id="gameCursor"><span class="rune">◈</span></div>
+
 <!-- OVERLAYS -->
 <div class="vignette"></div>
 <div class="dust" id="dust"></div>
@@ -878,8 +897,30 @@ document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('clic
 document.querySelectorAll('[data-artifact]').forEach(el => el.addEventListener('click', () => openArtifactModal(el.dataset.artifact)));
 document.getElementById('backBtn').addEventListener('click', goBack);
 
-// ═══ PARALLAX ═══
+// ═══ GAME CURSOR ═══
 const isMobile = window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window;
+const gameCursor = document.getElementById('gameCursor');
+let cursorOnHotspot = false;
+if(!isMobile) {
+  document.addEventListener('mousemove', e => {
+    gameCursor.style.left = e.clientX + 'px';
+    gameCursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('.hotspot').forEach(h => {
+    h.addEventListener('mouseenter', () => {
+      gameCursor.classList.add('visible');
+      cursorOnHotspot = true;
+    });
+    h.addEventListener('mouseleave', () => {
+      gameCursor.classList.remove('visible','active');
+      cursorOnHotspot = false;
+    });
+    h.addEventListener('mousedown', () => gameCursor.classList.add('active'));
+    h.addEventListener('mouseup', () => gameCursor.classList.remove('active'));
+  });
+}
+
+// ═══ PARALLAX ═══
 let tx=0,ty=0,cx=0,cy=0;
 if(!isMobile) {
   document.addEventListener('mousemove',e=>{tx=(e.clientX/innerWidth-0.5)*2;ty=(e.clientY/innerHeight-0.5)*2;});
@@ -947,13 +988,22 @@ setInterval(() => {
   });
 }, 800);
 
-// Extra embers on hover
+// Extra embers on hover + tap ripple on mobile
 document.querySelectorAll('.hotspot[data-glow]').forEach(h => {
   h.addEventListener('mouseenter', () => {
     for(let i=0;i<5;i++) setTimeout(() => spawnEmber(h), i*150);
   });
-  h.addEventListener('touchstart', () => {
+  h.addEventListener('touchstart', (e) => {
     for(let i=0;i<4;i++) setTimeout(() => spawnEmber(h), i*120);
+    // Tap ripple
+    if(e.touches && e.touches[0]) {
+      const ripple = document.createElement('div');
+      ripple.className = 'tap-ripple';
+      ripple.style.left = e.touches[0].clientX + 'px';
+      ripple.style.top = e.touches[0].clientY + 'px';
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    }
   }, {passive:true});
 });
 
