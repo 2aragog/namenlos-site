@@ -137,6 +137,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <div class="toolbar">
       <div class="path" id="breadcrumb"></div>
       <input class="search" type="text" placeholder="Search..." id="searchInput" oninput="renderFiles()">
+      <button class="btn" onclick="loadFolder(currentPath)" title="Refresh file list">&#8635; Refresh</button>
       <button class="btn" id="viewBtn" onclick="toggleView()">List</button>
       <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Upload</button>
       <button class="btn" onclick="createFolder()">+ Folder</button>
@@ -242,7 +243,7 @@ document.getElementById('passInput').addEventListener('keydown',e=>{
 });
 if(localStorage.getItem('nm-tk')){TOKEN=localStorage.getItem('nm-tk');showApp();}
 function logout(){localStorage.removeItem('nm-tk');location.reload();}
-function showApp(){document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';loadFolder('');loadEditorFiles();}
+function showApp(){document.getElementById('auth').style.display='none';document.getElementById('app').style.display='flex';loadFolder(sessionStorage.getItem('nm-path')||'');loadEditorFiles();}
 
 // TABS
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
@@ -261,7 +262,7 @@ async function api(ep,opts={}){
 
 // FILE MANAGER
 async function loadFolder(path){
-  currentPath=path;selected.clear();updateSelUI();updateBreadcrumb();
+  currentPath=path;sessionStorage.setItem('nm-path',path);selected.clear();updateSelUI();updateBreadcrumb();
   document.getElementById('statusLeft').textContent='Loading...';
   try{
     const d=await api(`contents/${path}?ref=${BRANCH}`);
