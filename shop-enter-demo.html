@@ -13,7 +13,7 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
   top:50%;left:50%;
   transform:translate(-50%,-50%);
   will-change:transform;
-  width:108%;height:108%;
+  width:112%;height:112%;
 }
 .layer img{display:block;width:100%;height:100%;object-fit:cover}
 .glow img{filter:brightness(1.15) contrast(1.05)}
@@ -46,16 +46,16 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 </div>
 
 <div class="scene" id="scene">
-  <!-- BG: static, shopkeeper area darkened -->
-  <div class="layer" data-depth="0">
+  <!-- BG: slow parallax — the room breathes -->
+  <div class="layer" data-depth="0.3">
     <img src="img/shop_enter/002_0014_Background.png" alt="shop">
   </div>
-  <!-- LAMP: subtle parallax -->
-  <div class="layer glow" data-depth="0.6">
+  <!-- LAMP: medium parallax -->
+  <div class="layer glow" data-depth="0.7">
     <img src="img/shop_enter/002_0001_Layer-2.png" alt="lamp">
   </div>
-  <!-- SHOPKEEPER: most parallax -->
-  <div class="layer" data-depth="1.0">
+  <!-- SHOPKEEPER: closest to viewer -->
+  <div class="layer" data-depth="1.2">
     <img src="img/shop_enter/002_0000_Layer-1.png" alt="shopkeeper">
   </div>
 </div>
@@ -68,8 +68,8 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 </div>
 
 <script>
-const layers = document.querySelectorAll('.layer');
-const maxShift = 15;
+const layers=document.querySelectorAll('.layer');
+const maxShift=20;
 let targetX=0,targetY=0,currentX=0,currentY=0;
 
 document.addEventListener('mousemove',e=>{
