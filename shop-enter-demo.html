@@ -3,12 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>NAMENLOS — Shop</title>
+<title>NAMENLOS</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;font-family:'Cinzel',serif}
+body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinzel',serif}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&display=swap');
 
-.scene{position:relative;width:100%;height:100%;overflow:hidden}
+/* ═══ SCENES ═══ */
+.scene{
+  position:fixed;inset:0;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.8s ease;
+  z-index:1;
+}
+.scene.active{opacity:1;pointer-events:all;z-index:10}
 .scene-img{
   position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
@@ -18,68 +26,62 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 
 /* ═══ HOTSPOTS ═══ */
 .hotspots{
-  position:absolute;inset:0;z-index:30;
-  /* hotspots move with the image */
-  top:50%;left:50%;
+  position:absolute;top:50%;left:50%;
   width:110%;height:110%;
   transform:translate(-50%,-50%);
-  will-change:transform;
+  will-change:transform;z-index:30;
 }
 .hotspot{
-  position:absolute;
-  cursor:pointer;
+  position:absolute;cursor:pointer;
   border:1px solid transparent;
   border-radius:6px;
   transition:all 0.5s ease;
+  animation:shimmer 4s ease-in-out infinite;
 }
-/* Idle: faint golden pulse to hint "something is here" */
-.hotspot::before{
-  content:'';
-  position:absolute;inset:-2px;
-  border-radius:8px;
-  border:1px solid rgba(200,160,80,0);
-  transition:all 0.5s ease;
+.hotspot:nth-child(2){animation-delay:1s}
+.hotspot:nth-child(3){animation-delay:2s}
+.hotspot:nth-child(4){animation-delay:0.5s}
+.hotspot:nth-child(5){animation-delay:1.5s}
+@keyframes shimmer{
+  0%,100%{border-color:rgba(200,160,80,0)}
+  50%{border-color:rgba(200,160,80,0.12)}
 }
-/* Hover: golden glow */
 .hotspot:hover{
   background:rgba(200,160,80,0.08);
   border-color:rgba(200,160,80,0.35);
   box-shadow:0 0 25px rgba(200,160,80,0.15), inset 0 0 20px rgba(200,160,80,0.08);
+  animation:none;
 }
-.hotspot:hover::before{
-  border-color:rgba(200,160,80,0.2);
-  box-shadow:0 0 40px rgba(200,160,80,0.1);
-}
-/* Label */
 .hotspot .label{
-  position:absolute;
-  bottom:-30px;left:50%;
+  position:absolute;bottom:-30px;left:50%;
   transform:translateX(-50%);
-  background:rgba(0,0,0,0.9);
-  color:#c8a060;
-  font-size:10px;
-  padding:4px 14px;
-  white-space:nowrap;
-  opacity:0;
+  background:rgba(0,0,0,0.9);color:#c8a060;
+  font-size:10px;padding:4px 14px;
+  white-space:nowrap;opacity:0;
   transition:opacity 0.4s;
-  letter-spacing:3px;
-  text-transform:uppercase;
+  letter-spacing:3px;text-transform:uppercase;
   pointer-events:none;
   border:1px solid rgba(200,160,80,0.2);
 }
 .hotspot:hover .label{opacity:1}
 
-/* Subtle idle shimmer on hotspots */
-@keyframes shimmer{
-  0%,100%{border-color:rgba(200,160,80,0)}
-  50%{border-color:rgba(200,160,80,0.12)}
+/* ═══ BACK BUTTON ═══ */
+.back-btn{
+  position:fixed;top:20px;left:24px;z-index:50;
+  color:#c8a060;font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;cursor:pointer;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.5s;
+  font-family:'Cinzel',serif;
+  text-decoration:none;
+  padding:8px 16px;
+  border:1px solid rgba(200,160,80,0.2);
+  background:rgba(0,0,0,0.7);
 }
-.hotspot{animation:shimmer 4s ease-in-out infinite}
-.hotspot:nth-child(2){animation-delay:1s}
-.hotspot:nth-child(3){animation-delay:2s}
-.hotspot:nth-child(4){animation-delay:0.5s}
-.hotspot:nth-child(5){animation-delay:1.5s}
+.back-btn:hover{border-color:rgba(200,160,80,0.5);background:rgba(0,0,0,0.9)}
+.back-btn.visible{opacity:1;pointer-events:all}
 
+/* ═══ OVERLAYS ═══ */
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:40;
   background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,0.65) 100%)}
 .dust{position:fixed;inset:0;pointer-events:none;z-index:35}
@@ -94,54 +96,168 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
   display:flex;justify-content:space-between;align-items:center;pointer-events:none}
 .info span{color:#555;font-size:10px;letter-spacing:3px;text-transform:uppercase;font-family:monospace}
 .info .title{color:#c8a060;font-size:13px;letter-spacing:5px}
+
+/* ═══ LOADING ═══ */
 #loading{position:fixed;inset:0;background:#000;z-index:999;
   display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
-#loading .text{color:#2a2218;font-size:11px;letter-spacing:8px;text-transform:uppercase}
+#loading .text{color:#2a2218;font-size:11px;letter-spacing:8px;text-transform:uppercase;font-family:'Cinzel',serif}
 #loading .bar{width:200px;height:1px;background:#1a1a1a}
 #loading .fill{height:100%;background:#c8a060;width:0;transition:width 0.3s}
+
+/* ═══ TRANSITION ═══ */
+#transition{position:fixed;inset:0;background:#000;z-index:80;
+  opacity:0;pointer-events:none;transition:opacity 0.4s}
+#transition.active{opacity:1}
 </style>
 </head>
 <body>
+
 <div id="loading">
   <div class="text">Namenlos</div>
   <div class="bar"><div class="fill" id="loadFill"></div></div>
 </div>
 
-<div class="scene">
-  <img class="scene-img" id="bg" src="img/shop_enter/shop.png" alt="The Nameless Shop">
-  
-  <!-- Hotspots: positioned as % of the image -->
-  <div class="hotspots" id="hotspots">
-    
-    <!-- Lamp on counter -->
-    <div class="hotspot" data-id="lamp" style="left:22%;top:25%;width:10%;height:32%">
-      <span class="label">The Lamp</span>
+<div id="transition"></div>
+
+<!-- ═══════ SCENE: ALLEY ═══════ -->
+<div class="scene active" id="scene-alley">
+  <img class="scene-img" src="img/Shop/001 Alley.png" alt="alley">
+  <div class="hotspots">
+    <div class="hotspot" data-goto="hall" style="right:12%;top:18%;width:22%;height:62%">
+      <span class="label">Enter the Shop</span>
     </div>
-    
-    <!-- Counter / display case -->
-    <div class="hotspot" data-id="counter" style="left:12%;top:57%;width:38%;height:22%">
-      <span class="label">The Counter</span>
-    </div>
-    
-    <!-- Red door -->
-    <div class="hotspot" data-id="door" style="left:42%;top:30%;width:14%;height:52%">
-      <span class="label">The Red Door</span>
-    </div>
-    
-    <!-- Shelves (left wall) -->
-    <div class="hotspot" data-id="shelves" style="left:8%;top:8%;width:34%;height:22%">
-      <span class="label">The Shelves</span>
-    </div>
-    
-    <!-- Vitrine / glass cabinet (right) -->
-    <div class="hotspot" data-id="vitrine" style="left:78%;top:12%;width:18%;height:65%">
-      <span class="label">The Cabinet</span>
-    </div>
-    
   </div>
 </div>
 
+<!-- ═══════ SCENE: MAIN HALL ═══════ -->
+<div class="scene" id="scene-hall">
+  <img class="scene-img" src="img/Shop/002 Main hall.jpg" alt="shop">
+  <div class="hotspots">
+    <!-- Shopkeeper -->
+    <div class="hotspot" data-goto="shopkeeper" style="left:18%;top:15%;width:18%;height:50%">
+      <span class="label">The Shopkeeper</span>
+    </div>
+    <!-- Shelves (left wall upper) -->
+    <div class="hotspot" data-goto="books" style="left:5%;top:5%;width:32%;height:18%">
+      <span class="label">The Books</span>
+    </div>
+    <!-- Counter / display -->
+    <div class="hotspot" data-goto="display" style="left:10%;top:58%;width:35%;height:20%">
+      <span class="label">The Display Case</span>
+    </div>
+    <!-- Red door -->
+    <div class="hotspot" data-goto="corridor" style="left:42%;top:28%;width:14%;height:52%">
+      <span class="label">The Red Door</span>
+    </div>
+    <!-- Vitrine right -->
+    <div class="hotspot" data-goto="display" style="left:78%;top:10%;width:18%;height:65%">
+      <span class="label">The Cabinet</span>
+    </div>
+    <!-- Cash register area (counter left) -->
+    <div class="hotspot" data-goto="cash" style="left:7%;top:54%;width:10%;height:15%">
+      <span class="label">The Drawer</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: SHOPKEEPER ═══════ -->
+<div class="scene" id="scene-shopkeeper">
+  <img class="scene-img" src="img/Shop/003 Shopkeeper.png" alt="shopkeeper">
+  <div class="hotspots"></div>
+</div>
+
+<!-- ═══════ SCENE: DISPLAY CASE ═══════ -->
+<div class="scene" id="scene-display">
+  <img class="scene-img" src="img/Shop/004 Display case.png" alt="display">
+  <div class="hotspots">
+    <!-- 8 cells in a 4×2 grid -->
+    <!-- Row 1: mirror, hourglass, tarot box, wig -->
+    <div class="hotspot" data-item="mirror" style="left:2%;top:2%;width:23%;height:46%">
+      <span class="label">Mirror</span>
+    </div>
+    <div class="hotspot" data-item="hourglass" style="left:26%;top:2%;width:23%;height:46%">
+      <span class="label">Hourglass</span>
+    </div>
+    <div class="hotspot" data-item="tarot" style="left:50%;top:2%;width:23%;height:46%">
+      <span class="label">The Box</span>
+    </div>
+    <div class="hotspot" data-item="wig" style="left:74%;top:2%;width:24%;height:46%">
+      <span class="label">The Wig</span>
+    </div>
+    <!-- Row 2: glove, whip, compass, scrolls -->
+    <div class="hotspot" data-item="glove" style="left:2%;top:52%;width:23%;height:46%">
+      <span class="label">The Glove</span>
+    </div>
+    <div class="hotspot" data-item="whip" style="left:26%;top:52%;width:23%;height:46%">
+      <span class="label">The Whip</span>
+    </div>
+    <div class="hotspot" data-item="compass" style="left:50%;top:52%;width:23%;height:46%">
+      <span class="label">Compass</span>
+    </div>
+    <div class="hotspot" data-item="scrolls" style="left:74%;top:52%;width:24%;height:46%">
+      <span class="label">Scrolls</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: BOOKS ═══════ -->
+<div class="scene" id="scene-books">
+  <img class="scene-img" src="img/Shop/005 Books.png" alt="books">
+  <div class="hotspots">
+    <div class="hotspot" data-item="skinme" style="left:1%;top:5%;width:12%;height:42%">
+      <span class="label">Skin Me</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: CORRIDOR ═══════ -->
+<div class="scene" id="scene-corridor">
+  <img class="scene-img" src="img/Shop/006 Cinema door wc.png" alt="corridor">
+  <div class="hotspots">
+    <!-- KINO door -->
+    <div class="hotspot" data-goto="cinema" style="left:35%;top:10%;width:30%;height:80%">
+      <span class="label">Kino</span>
+    </div>
+    <!-- WC door -->
+    <div class="hotspot" data-goto="wc" style="left:20%;top:30%;width:14%;height:50%">
+      <span class="label">WC</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: CINEMA ═══════ -->
+<div class="scene" id="scene-cinema">
+  <img class="scene-img" src="img/Shop/007 Cinema.png" alt="cinema">
+  <div class="hotspots"></div>
+</div>
+
+<!-- ═══════ SCENE: WC ═══════ -->
+<div class="scene" id="scene-wc">
+  <img class="scene-img" src="img/Shop/008 WC.png" alt="wc">
+  <div class="hotspots">
+    <div class="hotspot" data-goto="secret" style="left:35%;top:25%;width:30%;height:55%">
+      <span class="label">???</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: SECRET ROOM ═══════ -->
+<div class="scene" id="scene-secret">
+  <img class="scene-img" src="img/Shop/009 Secret room.png" alt="secret">
+  <div class="hotspots"></div>
+</div>
+
+<!-- ═══════ SCENE: CASH ═══════ -->
+<div class="scene" id="scene-cash">
+  <img class="scene-img" src="img/Shop/010 Cash register.png" alt="cash">
+  <div class="hotspots"></div>
+</div>
+
+<!-- BACK BUTTON -->
+<a class="back-btn" id="backBtn">← Back</a>
+
+<!-- OVERLAYS -->
 <div class="vignette"></div>
 <div class="dust" id="dust"></div>
 <div class="info">
@@ -150,9 +266,83 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;cursor:crosshair;f
 </div>
 
 <script>
-// Parallax — image AND hotspots move together
-const bg=document.getElementById('bg');
-const hs=document.getElementById('hotspots');
+// ═══ STATE ═══
+let currentScene = 'alley';
+const history = [];
+
+// Scene → parent mapping for back button
+const parentMap = {
+  alley: null,
+  hall: 'alley',
+  shopkeeper: 'hall',
+  display: 'hall',
+  books: 'hall',
+  corridor: 'hall',
+  cinema: 'corridor',
+  wc: 'corridor',
+  secret: 'wc',
+  cash: 'hall'
+};
+
+// ═══ SCENE TRANSITIONS ═══
+function goTo(sceneId) {
+  if (sceneId === currentScene) return;
+  const trans = document.getElementById('transition');
+  trans.classList.add('active');
+  
+  setTimeout(() => {
+    document.querySelector('.scene.active')?.classList.remove('active');
+    document.getElementById('scene-' + sceneId)?.classList.add('active');
+    history.push(currentScene);
+    currentScene = sceneId;
+    updateBack();
+    
+    setTimeout(() => trans.classList.remove('active'), 50);
+  }, 400);
+}
+
+function goBack() {
+  const prev = history.pop();
+  if (!prev) return;
+  const trans = document.getElementById('transition');
+  trans.classList.add('active');
+  
+  setTimeout(() => {
+    document.querySelector('.scene.active')?.classList.remove('active');
+    document.getElementById('scene-' + prev)?.classList.add('active');
+    currentScene = prev;
+    updateBack();
+    setTimeout(() => trans.classList.remove('active'), 50);
+  }, 400);
+}
+
+function updateBack() {
+  const btn = document.getElementById('backBtn');
+  if (currentScene === 'alley') {
+    btn.classList.remove('visible');
+  } else {
+    btn.classList.add('visible');
+  }
+}
+
+// ═══ EVENT LISTENERS ═══
+// Hotspot navigation
+document.querySelectorAll('[data-goto]').forEach(el => {
+  el.addEventListener('click', () => goTo(el.dataset.goto));
+});
+
+// Item clicks (display case)
+document.querySelectorAll('[data-item]').forEach(el => {
+  el.addEventListener('click', () => {
+    console.log('Item clicked:', el.dataset.item);
+    // TODO: item overlay / book purchase flow
+  });
+});
+
+// Back button
+document.getElementById('backBtn').addEventListener('click', goBack);
+
+// ═══ PARALLAX ═══
 let tx=0,ty=0,cx=0,cy=0;
 const shift=12;
 
@@ -165,8 +355,14 @@ document.addEventListener('mousemove',e=>{
   cx+=(tx-cx)*0.05;
   cy+=(ty-cy)*0.05;
   const t=`translate(calc(-50% + ${-cx*shift}px), calc(-50% + ${-cy*shift*0.4}px))`;
-  bg.style.transform=t;
-  hs.style.transform=t;
+  // Apply to active scene's image and hotspots
+  const active = document.querySelector('.scene.active');
+  if(active){
+    const img = active.querySelector('.scene-img');
+    const hs = active.querySelector('.hotspots');
+    if(img) img.style.transform = t;
+    if(hs) hs.style.transform = t;
+  }
   requestAnimationFrame(anim);
 })();
 
@@ -179,16 +375,7 @@ if(window.DeviceOrientationEvent){
   });
 }
 
-// Hotspot clicks
-document.querySelectorAll('.hotspot').forEach(h=>{
-  h.addEventListener('click',()=>{
-    const id=h.dataset.id;
-    console.log('Clicked:',id);
-    // Placeholder — later these navigate to scenes
-  });
-});
-
-// Dust
+// ═══ DUST ═══
 const d=document.getElementById('dust');
 for(let i=0;i<25;i++){
   const s=document.createElement('span');
@@ -201,11 +388,20 @@ for(let i=0;i<25;i++){
   d.appendChild(s);
 }
 
-// Loading
-const img=document.getElementById('bg');
+// ═══ LOADING ═══
+// Preload first 2 images, rest lazy
+const critical = document.querySelectorAll('#scene-alley .scene-img, #scene-hall .scene-img');
+let loaded=0;
 const fill=document.getElementById('loadFill');
-function done(){fill.style.width='100%';setTimeout(()=>document.getElementById('loading').classList.add('done'),400);}
-if(img.complete)done();else{img.onload=done;img.onerror=done;}
+function chk(){
+  fill.style.width=(loaded/critical.length*100)+'%';
+  if(loaded>=critical.length) setTimeout(()=>document.getElementById('loading').classList.add('done'),400);
+}
+critical.forEach(img=>{
+  if(img.complete){loaded++;chk();}
+  else{img.onload=()=>{loaded++;chk();};img.onerror=()=>{loaded++;chk();};}
+});
+chk();
 </script>
 </body>
 </html>
