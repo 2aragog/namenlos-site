@@ -106,6 +106,29 @@ footer p{font-size:13px;color:#2a2218;font-style:italic}
 /* SCROLL REVEAL */
 .reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.22,1,0.36,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ═══ MOBILE ═══ */
+@media(max-width:768px){
+  nav{padding:10px 16px;flex-wrap:wrap;gap:8px}
+  .nav-brand{font-size:10px;letter-spacing:4px}
+  .nav-links{gap:10px;flex-wrap:wrap}
+  .nav-links a{font-size:8px;letter-spacing:2px}
+  .nav-mode{font-size:8px;padding:3px 8px}
+  section{padding:60px 20px}
+  .section-title{font-size:18px;letter-spacing:3px}
+  .hero h1{font-size:24px;letter-spacing:5px}
+  .hero p{font-size:14px}
+  .hero-enter{font-size:11px;letter-spacing:3px;padding:12px 28px}
+  .items-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+  .item-card img{height:150px}
+  .item-card .item-name{font-size:11px}
+  .item-card .item-lore{font-size:12px}
+  .book-text h3{font-size:16px;letter-spacing:3px}
+  .buy-btn{font-size:10px;padding:8px 14px}
+  .media-grid{gap:16px}
+  .media-card{padding:24px 16px}
+  footer{padding:40px 20px}
+}
 </style>
 </head>
 <body>
