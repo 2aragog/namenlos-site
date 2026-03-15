@@ -12,21 +12,13 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;color:#c8a060;font-family:'Cormorant Garamond',Georgia,serif;cursor:default;-webkit-font-smoothing:antialiased}
 
-/* ══════ MODE CHOOSER ══════ */
-#mode-chooser{position:fixed;inset:0;z-index:9000;background:#0a0a0a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;transition:opacity .8s}
-#mode-chooser.hidden{opacity:0;pointer-events:none}
-#mode-chooser h1{font-family:'Cinzel',serif;font-size:14px;letter-spacing:8px;text-transform:uppercase;color:#3a3025}
-#mode-chooser p{font-style:italic;color:#5a4a35;font-size:15px;max-width:400px;text-align:center;line-height:1.7}
-.mode-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
-.mode-card{width:260px;border:1px solid #1a1510;padding:28px 24px;cursor:pointer;transition:all .4s;text-align:center;position:relative;overflow:hidden}
-.mode-card:hover{border-color:#c8a060;background:rgba(200,160,96,.03)}
-.mode-card h2{font-family:'Cinzel',serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#c8a060;margin-bottom:10px}
-.mode-card span{font-size:13px;color:#5a4a35;font-style:italic;line-height:1.6;display:block}
-.mode-card .badge{position:absolute;top:8px;right:8px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;color:#6b1c1c;text-transform:uppercase;border:1px solid #2a1515;padding:2px 6px}
-
-/* ══════ MODE TOGGLE ══════ */
-#mode-toggle{position:fixed;top:16px;right:16px;z-index:200;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#3a3025;cursor:pointer;padding:6px 12px;border:1px solid #1a1510;transition:all .3s;background:rgba(10,10,10,.7);backdrop-filter:blur(4px);display:none}
-#mode-toggle:hover{color:#c8a060;border-color:#c8a060}
+/* ══════ TOP NAV ══════ */
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(10,10,10,0.9),transparent);pointer-events:none}
+.top-nav *{pointer-events:auto}
+.top-nav a{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#3a3025;text-decoration:none;padding:5px 10px;border:1px solid transparent;transition:all 0.3s}
+.top-nav a:hover{color:#c8a060;border-color:#2a2218}
+.top-nav .brand-link{letter-spacing:5px;border:none;padding:0}
+.top-nav .brand-link:hover{color:#5a4a35}
 
 /* ══════ SCENES ══════ */
 .scene{position:fixed;inset:0;opacity:0;visibility:hidden;transition:opacity 1s;z-index:1}
@@ -117,23 +109,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0a;color:#c8a06
 </head>
 <body>
 
-<div id="mode-chooser">
-  <h1>Namenlos</h1>
-  <p>The shop has no address. But it has a word.<br>Choose how you want to see it.</p>
-  <div class="mode-cards">
-    <div class="mode-card" onclick="startMode('classic')">
-      <h2>Classic</h2>
-      <span>Traditional navigation.<br>Clean and fast.</span>
-    </div>
-    <div class="mode-card" onclick="startMode('parallax')">
-      <h2>2.5D</h2>
-      <span>Depth and atmosphere.<br>Move your mouse to look around.</span>
-      <div class="badge">immersive</div>
-    </div>
+<div class="top-nav">
+  <a class="brand-link" href="index.html">Namenlos</a>
+  <div style="display:flex;gap:10px">
+    <a href="classic.html">Classic</a>
   </div>
 </div>
 
-<div id="mode-toggle" onclick="toggleMode()">Classic</div>
 <div id="coins"><div class="coin-dot"></div><span id="coin-n">0</span></div>
 
 <!-- CODE -->
@@ -248,7 +230,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   updC();
   const p=new URLSearchParams(location.search);
   if(p.get('r')==='1'||S.known){S.known=true;localStorage.setItem('nm-known','1')}
-  if(S.mode){document.getElementById('mode-chooser').classList.add('hidden');applyMode(S.mode);goTo(S.known?'alley':'code-screen',true);document.getElementById('mode-toggle').style.display='block'}
+  if(S.mode){applyMode(S.mode);goTo(S.known?'alley':'code-screen',true)}
+  else{S.mode='parallax';applyMode('parallax');goTo(S.known?'alley':'code-screen',true)}
 
   document.getElementById('code-input').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim().toLowerCase();if(['nimm mich','547','nimm','vergiss'].includes(v)){S.known=true;localStorage.setItem('nm-known','1');if(v==='vergiss')addC(5);goTo('alley')}else{document.getElementById('code-error').style.opacity='1';e.target.value='';setTimeout(()=>document.getElementById('code-error').style.opacity='0',2000)}}});
 
@@ -272,17 +255,12 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('chat-input').onkeydown=e=>{if(e.key==='Enter')sendChat()};
 });
 
-function startMode(m){S.mode=m;localStorage.setItem('nm-mode',m);document.getElementById('mode-chooser').classList.add('hidden');applyMode(m);goTo(S.known?'alley':'code-screen',true);document.getElementById('mode-toggle').style.display='block'}
-
 function applyMode(m){
-  document.getElementById('mode-toggle').textContent=m==='parallax'?'⬡ 2.5D':'◻ Classic';
   document.querySelectorAll('.layer').forEach(l=>{
     if(m==='classic'){l.style.inset='0';l.style.transform='none'}
     else{l.style.inset='-30px';l.style.transform='scale(1.02)'}
   });
 }
-
-function toggleMode(){S.mode=S.mode==='parallax'?'classic':'parallax';localStorage.setItem('nm-mode',S.mode);applyMode(S.mode)}
 
 function goTo(id,inst){
   const cur=document.querySelector('.scene.active'),nxt=document.getElementById(id);
