@@ -4,8 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script>
-// Redirect mobile users to mobile version
-if(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (window.innerWidth <= 768 && 'ontouchstart' in window)) {
+// Redirect touch devices (mobile + tablet) to mobile version
+// iPadOS 13+ reports as "Macintosh" — detect via touch + maxTouchPoints
+var isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 1;
+var isMobileUA = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+if(isMobileUA || isTouchDevice) {
   var url = 'shop-m.html' + window.location.search;
   window.location.replace(url);
 }
