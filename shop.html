@@ -619,7 +619,7 @@ body{cursor:default}
   <img class="scene-img" src="img/Shop/008-WC.png" alt="wc">
   <img class="scene-highlight" id="hl-secret" src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:35%;top:25%;width:30%;height:55%">
+    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:18%;top:10%;width:16%;height:75%">
       <span class="label">???</span>
     </div>
   </div>
@@ -985,10 +985,12 @@ if(isMobile) {
     const hint = document.getElementById('swipeHint');
     if(hint) hint.style.display = 'none';
     // Request gyro permission on first touch (iOS 13+)
-    if(!gyroEnabled && typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission().then(r => {
-        if(r === 'granted') { gyroEnabled = true; startGyro(); }
-      }).catch(()=>{});
+    if(!gyroEnabled && window.DeviceOrientationEvent) {
+      if(typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission().then(r => {
+          if(r === 'granted') { gyroEnabled = true; startGyro(); }
+        }).catch(e => { console.log('Gyro denied:', e); });
+      }
     }
   }, {passive:true});
 
@@ -1038,7 +1040,7 @@ if(isMobile) {
   }
 
   // Auto-start gyro for Android (no permission needed)
-  if(typeof DeviceOrientationEvent.requestPermission !== 'function') {
+  if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
     gyroEnabled = true;
     startGyro();
   }

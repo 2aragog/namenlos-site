@@ -11,62 +11,68 @@
 body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinzel',serif}
 
 /* ═══ BACKGROUND ═══ */
-.bg{
-  position:fixed;inset:0;
-  background:url('img/Shop/001-Alley.png') center/cover no-repeat;
+.bg{position:fixed;inset:0}
+.bg-img{
+  position:absolute;top:50%;left:50%;
+  width:108%;height:108%;
+  object-fit:cover;
+  transform:translate(-50%,-50%);
   filter:brightness(0.55);
-  transform:scale(1.08);
   will-change:transform;
   transition:transform 0.15s ease-out;
 }
+.bg-highlight{
+  position:absolute;top:50%;left:50%;
+  width:108%;height:108%;
+  object-fit:cover;
+  transform:translate(-50%,-50%);
+  filter:brightness(1.8) saturate(1.3);
+  opacity:0;transition:opacity 0.4s;
+  pointer-events:none;
+}
+.bg-highlight.active{opacity:1}
 
 /* ═══ VIGNETTE ═══ */
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:5;
-  background:radial-gradient(ellipse at 70% 50%,transparent 30%,rgba(0,0,0,0.75) 100%)}
+  background:radial-gradient(ellipse at 55% 50%,transparent 30%,rgba(0,0,0,0.75) 100%)}
 
-/* ═══ LEFT: GAME MENU ═══ */
+/* ═══ MENU — CENTERED ═══ */
 .menu{
-  position:fixed;left:0;top:0;bottom:0;
-  width:38%;
+  position:fixed;top:0;bottom:0;
+  left:50%;transform:translateX(-50%);
+  width:420px;max-width:90%;
   z-index:20;
   display:flex;flex-direction:column;
   justify-content:center;
-  padding:0 5vw;
-  background:linear-gradient(to right,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.6) 60%,transparent 100%);
+  padding:0 30px;
 }
 
 .menu-title{
   font-family:'Cinzel',serif;
   font-size:clamp(28px,4vw,52px);
-  letter-spacing:10px;
-  text-transform:uppercase;
-  color:#c8a060;
-  font-weight:400;
+  letter-spacing:10px;text-transform:uppercase;
+  color:#c8a060;font-weight:400;
   margin-bottom:8px;
   opacity:0;animation:fadeIn 1.5s ease 0.3s forwards;
+  text-shadow:0 0 40px rgba(0,0,0,0.8);
 }
 .menu-sub{
   font-family:'Cormorant Garamond',serif;
   font-size:clamp(13px,1.5vw,17px);
-  color:#5a4a35;
-  font-style:italic;
+  color:#5a4a35;font-style:italic;
   margin-bottom:50px;
   opacity:0;animation:fadeIn 1.5s ease 0.6s forwards;
+  text-shadow:0 0 20px rgba(0,0,0,0.8);
 }
 
-.menu-items{
-  display:flex;flex-direction:column;
-  gap:0;
-}
+.menu-items{display:flex;flex-direction:column;gap:0}
 .menu-item{
   position:relative;
   padding:16px 0;
   border-bottom:1px solid rgba(200,160,80,0.06);
-  cursor:pointer;
-  text-decoration:none;
+  cursor:pointer;text-decoration:none;
   display:flex;align-items:center;gap:16px;
-  opacity:0;
-  transition:all 0.4s ease;
+  opacity:0;transition:all 0.4s ease;
 }
 .menu-item:nth-child(1){animation:slideIn 0.8s ease 0.8s forwards}
 .menu-item:nth-child(2){animation:slideIn 0.8s ease 1.0s forwards}
@@ -74,106 +80,48 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 .menu-item:nth-child(4){animation:slideIn 0.8s ease 1.4s forwards}
 .menu-item:nth-child(5){animation:slideIn 0.8s ease 1.6s forwards}
 
-.menu-item .icon{
-  font-size:18px;
-  width:28px;
-  text-align:center;
-  color:#3a2a18;
-  transition:color 0.4s;
-}
+.menu-item .icon{font-size:18px;width:28px;text-align:center;color:#3a2a18;transition:color 0.4s}
 .menu-item .text{
-  font-family:'Cinzel',serif;
-  font-size:clamp(11px,1.2vw,14px);
-  letter-spacing:4px;
-  text-transform:uppercase;
-  color:#6a5a45;
-  transition:all 0.4s;
+  font-family:'Cinzel',serif;font-size:clamp(11px,1.2vw,14px);
+  letter-spacing:4px;text-transform:uppercase;color:#6a5a45;transition:all 0.4s;
+  text-shadow:0 0 15px rgba(0,0,0,0.8);
 }
-.menu-item .desc{
-  font-family:'Cormorant Garamond',serif;
-  font-size:12px;
-  color:#3a3025;
-  font-style:italic;
-  letter-spacing:1px;
-  margin-top:2px;
-  transition:color 0.4s;
-}
-
-/* Hover: golden glow line */
-.menu-item::before{
-  content:'';
-  position:absolute;left:-20px;top:50%;
-  width:3px;height:0;
-  background:#c8a060;
-  transform:translateY(-50%);
-  transition:height 0.4s ease;
-  box-shadow:0 0 12px rgba(200,160,80,0.3);
-}
+.menu-item .desc{font-family:'Cormorant Garamond',serif;font-size:12px;color:#3a3025;font-style:italic;letter-spacing:1px;margin-top:2px;transition:color 0.4s}
+.menu-item::before{content:'';position:absolute;left:-20px;top:50%;width:3px;height:0;background:#c8a060;transform:translateY(-50%);transition:height 0.4s ease;box-shadow:0 0 12px rgba(200,160,80,0.3)}
 .menu-item:hover::before{height:60%}
 .menu-item:hover .text{color:#c8a060;letter-spacing:6px}
 .menu-item:hover .desc{color:#6a5a45}
 .menu-item:hover .icon{color:#c8a060}
-
-/* Active indicator */
-.menu-item .arrow{
-  margin-left:auto;
-  color:#2a2218;
-  font-size:14px;
-  transition:all 0.4s;
-  opacity:0;
-}
+.menu-item .arrow{margin-left:auto;color:#2a2218;font-size:14px;transition:all 0.4s;opacity:0}
 .menu-item:hover .arrow{opacity:1;color:#c8a060;transform:translateX(4px)}
 
-/* ═══ RIGHT: DOOR HOTSPOT ═══ */
+/* ═══ DOOR HOTSPOT ═══ */
 .door-zone{
   position:fixed;
   right:5%;top:10%;
   width:30%;height:80%;
-  z-index:15;
-  cursor:pointer;
+  z-index:15;cursor:pointer;
   border-radius:8px;
   transition:all 0.5s ease;
 }
-.door-zone:hover{
-  background:rgba(200,160,80,0.04);
-  box-shadow:0 0 60px rgba(200,160,80,0.08) inset;
-}
 .door-label{
-  position:absolute;
-  bottom:10%;left:50%;
+  position:absolute;bottom:10%;left:50%;
   transform:translateX(-50%);
-  font-family:'Cinzel',serif;
-  font-size:11px;
-  letter-spacing:5px;
-  text-transform:uppercase;
-  color:#c8a060;
-  opacity:0;
-  transition:opacity 0.5s;
-  white-space:nowrap;
-  text-shadow:0 0 20px rgba(0,0,0,0.8);
+  font-family:'Cinzel',serif;font-size:11px;
+  letter-spacing:5px;text-transform:uppercase;
+  color:#c8a060;opacity:0;transition:opacity 0.5s;
+  white-space:nowrap;text-shadow:0 0 20px rgba(0,0,0,0.8);
 }
 .door-zone:hover .door-label{opacity:1}
 
 /* ═══ DUST ═══ */
 .dust{position:fixed;inset:0;pointer-events:none;z-index:10}
 .dust span{position:absolute;width:2px;height:2px;background:rgba(200,170,100,0.25);border-radius:50%;animation:float linear infinite}
-@keyframes float{
-  0%{transform:translateY(100vh) translateX(0);opacity:0}
-  10%{opacity:1}90%{opacity:1}
-  100%{transform:translateY(-10vh) translateX(30px);opacity:0}
-}
+@keyframes float{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) translateX(30px);opacity:0}}
 
 /* ═══ BOTTOM ═══ */
-.bottom{
-  position:fixed;bottom:16px;left:0;right:0;
-  display:flex;justify-content:center;
-  z-index:20;pointer-events:none;
-}
-.bottom span{
-  font-family:'Cinzel',serif;
-  font-size:9px;letter-spacing:4px;
-  text-transform:uppercase;color:#2a2218;
-}
+.bottom{position:fixed;bottom:16px;left:0;right:0;display:flex;justify-content:center;z-index:20;pointer-events:none}
+.bottom span{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#2a2218}
 
 /* ═══ ANIMATIONS ═══ */
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
@@ -181,25 +129,45 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 
 /* ═══ MOBILE ═══ */
 @media(max-width:768px){
-  .menu{width:100%;padding:0 6vw;background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.75) 60%,transparent 100%);justify-content:flex-end;padding-bottom:60px}
+  .bg-img{
+    width:auto;height:100%;min-width:160%;
+    transform:translate(-50%,-50%) translateX(var(--panX,0px));
+    transition:none;
+  }
+  .bg-highlight{
+    width:auto;height:100%;min-width:160%;
+    transform:translate(-50%,-50%) translateX(var(--panX,0px));
+  }
+  .menu{
+    position:fixed;left:0;right:0;top:auto;bottom:0;
+    width:100%;max-width:100%;
+    transform:none;
+    padding:0 6vw 60px;
+    justify-content:flex-end;
+    background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.75) 60%,transparent 100%);
+  }
   .door-zone{display:none}
-  .menu-title{font-size:22px;letter-spacing:5px}
-  .menu-sub{margin-bottom:24px;font-size:13px}
+  .menu-title{font-size:22px;letter-spacing:5px;text-align:center}
+  .menu-sub{margin-bottom:24px;font-size:13px;text-align:center}
   .menu-item{padding:14px 0}
   .menu-item .text{font-size:12px;letter-spacing:3px}
   .menu-item .desc{font-size:11px}
   .menu-item .icon{font-size:14px}
   .bottom span{font-size:8px;letter-spacing:3px}
+  .vignette{background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,0.6) 100%)}
 }
 </style>
 </head>
 <body>
 
 <!-- Background -->
-<div class="bg" id="bg"></div>
+<div class="bg" id="bg">
+  <img class="bg-img" id="bgImg" src="img/Shop/001-Alley.png" alt="alley">
+  <img class="bg-highlight" id="bgHighlight" src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
+</div>
 <div class="vignette"></div>
 
-<!-- Left: Game Menu -->
+<!-- Menu -->
 <div class="menu">
   <div class="menu-title">Namenlos</div>
   <div class="menu-sub">The shop has no address. But it has a word.</div>
@@ -252,8 +220,8 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
   </div>
 </div>
 
-<!-- Right: Click door to enter shop -->
-<a class="door-zone" href="shop.html?start=hall">
+<!-- Door hotspot (desktop) -->
+<a class="door-zone" id="doorZone" href="shop.html?start=hall">
   <div class="door-label">Enter ↗</div>
 </a>
 
@@ -266,16 +234,83 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 </div>
 
 <script>
-// Parallax background
-const bg=document.getElementById('bg');
-document.addEventListener('mousemove',e=>{
-  const x=(e.clientX/innerWidth-0.5)*8;
-  const y=(e.clientY/innerHeight-0.5)*5;
-  bg.style.transform=`scale(1.08) translate(${-x}px,${-y}px)`;
-});
+const isMobile = window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window;
+const bgImg = document.getElementById('bgImg');
+const bgHighlight = document.getElementById('bgHighlight');
 
-// Dust
-const d=document.getElementById('dust');
+// ═══ DOOR HIGHLIGHT ═══
+const doorZone = document.getElementById('doorZone');
+if(doorZone) {
+  doorZone.addEventListener('mouseenter', () => bgHighlight.classList.add('active'));
+  doorZone.addEventListener('mouseleave', () => bgHighlight.classList.remove('active'));
+}
+
+// ═══ DESKTOP PARALLAX ═══
+if(!isMobile) {
+  document.addEventListener('mousemove', e => {
+    const x = (e.clientX/innerWidth - 0.5) * 8;
+    const y = (e.clientY/innerHeight - 0.5) * 5;
+    const t = `translate(calc(-50% + ${-x}px), calc(-50% + ${-y}px))`;
+    bgImg.style.transform = t;
+    bgHighlight.style.transform = t;
+  });
+}
+
+// ═══ MOBILE PAN + GYROSCOPE ═══
+if(isMobile) {
+  let panX = 0, startX = 0, startPanX = 0, isPanning = false;
+  let gyroEnabled = false, gyroPanX = 0, gyroSmooth = 0;
+  const maxPan = 100;
+
+  document.addEventListener('touchstart', e => {
+    if(e.touches.length === 1) {
+      startX = e.touches[0].clientX;
+      startPanX = panX;
+      isPanning = true;
+    }
+    if(!gyroEnabled && typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission().then(r => {
+        if(r === 'granted') { gyroEnabled = true; startGyro(); }
+      }).catch(()=>{});
+    }
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e => {
+    if(!isPanning || e.touches.length !== 1) return;
+    panX = Math.max(-maxPan, Math.min(maxPan, startPanX + e.touches[0].clientX - startX));
+    applyPan();
+  }, {passive:true});
+
+  document.addEventListener('touchend', () => { isPanning = false; });
+
+  function applyPan() {
+    bgImg.style.setProperty('--panX', panX + 'px');
+    bgHighlight.style.setProperty('--panX', panX + 'px');
+  }
+
+  function startGyro() {
+    window.addEventListener('deviceorientation', e => {
+      if(e.gamma === null) return;
+      gyroPanX = (Math.max(-15, Math.min(15, e.gamma)) / 15) * maxPan;
+    });
+    (function gyroAnim() {
+      if(!isPanning) {
+        gyroSmooth += (gyroPanX - gyroSmooth) * 0.08;
+        panX = Math.max(-maxPan, Math.min(maxPan, gyroSmooth));
+        applyPan();
+      } else { gyroSmooth = panX; }
+      requestAnimationFrame(gyroAnim);
+    })();
+  }
+
+  if(typeof DeviceOrientationEvent.requestPermission !== 'function') {
+    gyroEnabled = true;
+    startGyro();
+  }
+}
+
+// ═══ DUST ═══
+const d = document.getElementById('dust');
 for(let i=0;i<20;i++){
   const s=document.createElement('span');
   s.style.left=Math.random()*100+'%';
