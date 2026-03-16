@@ -11,18 +11,18 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font-family:'Cinzel',serif;-webkit-tap-highlight-color:transparent}
 
-/* ═══ SCENES ═══ */
+/* âââ SCENES âââ */
 .scene{position:fixed;inset:0;opacity:0;pointer-events:none;transition:opacity 0.6s;z-index:1}
 .scene.active{opacity:1;pointer-events:all;z-index:10}
 
-/* ═══ PAN WRAPPER: image + hotspots move together ═══ */
+/* âââ PAN WRAPPER: image + hotspots move together âââ */
 .pan-wrap{
   position:absolute;
   top:0;left:50%;
   height:100%;
   transform:translateX(-50%) translateX(var(--panX,0px));
   will-change:transform;
-  /* NO explicit width — image in flow sets it */
+  /* NO explicit width â image in flow sets it */
 }
 .pan-wrap img{
   display:block;
@@ -37,7 +37,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   z-index:2;
 }
 
-/* ═══ HOTSPOTS ═══ */
+/* âââ HOTSPOTS âââ */
 .hotspot{
   position:absolute;
   cursor:pointer;
@@ -53,7 +53,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .hotspot.tapped .label{opacity:0.8}
 .hotspot.hint-active .label{opacity:0.8}
 
-/* ═══ PULSING DOTS ═══ */
+/* âââ PULSING DOTS âââ */
 .hotspot::after{
   content:'';position:absolute;
   top:var(--dot-y,50%);left:var(--dot-x,50%);
@@ -75,23 +75,23 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .hotspot.tapped::after{animation:none;opacity:1;width:32px;height:32px;box-shadow:0 0 40px rgba(200,160,80,1)}
 .hotspot.hint-active::after{animation:none;opacity:1;width:28px;height:28px;box-shadow:0 0 30px rgba(200,160,80,0.9)}
 
-/* ═══ TOP BAR ═══ */
+/* âââ TOP BAR âââ */
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;pointer-events:none}
 .back-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7a6a55;background:rgba(0,0,0,0.7);border:1px solid rgba(200,160,80,0.12);padding:6px 10px;cursor:pointer;text-decoration:none;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .back-btn.visible{opacity:1;pointer-events:all}
 .logo-link{font-family:'Cinzel',serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:#7a6a55;text-decoration:none;pointer-events:all}
 .nav-toggle{position:fixed;top:8px;right:10px;z-index:55;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7a6a55;background:rgba(0,0,0,0.8);border:1px solid rgba(200,160,80,0.12);padding:6px 10px;cursor:pointer}
 
-/* ═══ INFO BAR ═══ */
+/* âââ INFO BAR âââ */
 .info{position:fixed;bottom:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:8px 16px;background:linear-gradient(to top,rgba(0,0,0,0.8),transparent);pointer-events:none}
 .info .title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#c8a060}
 .info span{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#4a3a28}
 
-/* ═══ HINT BUTTON ═══ */
+/* âââ HINT BUTTON âââ */
 .hint-btn{position:fixed;bottom:16px;right:16px;z-index:55;width:44px;height:44px;border-radius:50%;background:rgba(10,8,5,0.85);border:1px solid rgba(200,160,80,0.2);color:#c8a060;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .hint-btn:active{background:rgba(200,160,80,0.15);border-color:#c8a060}
 
-/* ═══ MODAL ═══ */
+/* âââ MODAL âââ */
 .modal{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.4s}
 .modal.open{opacity:1;pointer-events:all}
 .modal-bg{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px)}
@@ -108,13 +108,13 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .buy-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;border:1px solid rgba(200,160,80,0.2);color:#c8a060;background:rgba(200,160,80,0.04);text-decoration:none;cursor:pointer}
 .buy-btn.primary{border-color:#6b1c1c;background:rgba(107,28,28,0.15)}
 
-/* ═══ NOTE MODAL ═══ */
+/* âââ NOTE MODAL âââ */
 .note-title{font-family:'Cinzel',serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-bottom:8px}
 .note-divider{width:40px;height:1px;background:rgba(200,160,80,0.2);margin:12px 0}
 .note-text{font-family:'Cormorant Garamond',serif;font-size:16px;color:#8a7a65;line-height:1.8;font-style:italic;margin-bottom:12px}
 .note-source{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a5a45;text-align:right}
 
-/* ═══ CHAT PANEL ═══ */
+/* âââ CHAT PANEL âââ */
 .chat-panel{position:absolute;bottom:0;left:0;right:0;height:50%;z-index:31;display:flex;flex-direction:column;background:rgba(10,8,5,0.95);border-top:1px solid rgba(200,160,80,0.08)}
 .chat-header{padding:10px 14px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;border-bottom:1px solid rgba(200,160,80,0.06)}
 .chat-messages{flex:1;overflow-y:auto;padding:12px}
@@ -126,7 +126,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .chat-input-row button{background:transparent;border:none;border-left:1px solid rgba(200,160,80,0.06);color:#7a6a55;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:10px 16px;cursor:pointer}
 .chat-nav-btn{display:inline-block;font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(200,160,80,0.15);color:#7a6a55;cursor:pointer;margin:4px 4px 0 0;background:transparent}
 
-/* ═══ BOOKS PANEL ═══ */
+/* âââ BOOKS PANEL âââ */
 .books-panel{position:absolute;bottom:0;left:0;right:0;z-index:31;padding:16px 3% 14px;background:linear-gradient(to top,rgba(10,8,5,0.95),rgba(10,8,5,0.85),transparent)}
 .books-panel h3{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-bottom:8px}
 .books-row{display:flex;gap:10px;overflow-x:auto}
@@ -138,7 +138,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .book-card .bc-status{font-family:'Cormorant Garamond',serif;font-size:8px;color:#3a2a18;font-style:italic;margin-top:2px}
 .book-card .bc-name{font-family:'Cinzel',serif;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#7a6a55;text-align:center;margin-top:4px}
 
-/* ═══ MEDIA HALL ═══ */
+/* âââ MEDIA HALL âââ */
 .media-hall{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;padding:50px 3% 16px;overflow-y:auto}
 .media-hall h2{font-family:'Cinzel',serif;font-size:15px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:4px;text-align:center}
 .media-hall .mh-sub{font-family:'Cormorant Garamond',serif;font-size:13px;color:#7a6a55;font-style:italic;margin-bottom:24px;text-align:center}
@@ -156,14 +156,14 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .media-tile .mt-desc{font-family:'Cormorant Garamond',serif;font-size:11px;color:#7a6a55;font-style:italic;line-height:1.4}
 .media-tile .mt-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a6a55;margin-top:6px;display:inline-block;padding:3px 8px;border:1px solid rgba(200,160,80,0.08)}
 
-/* ═══ ROOM CONTENT (overlay panels) ═══ */
+/* âââ ROOM CONTENT (overlay panels) âââ */
 .room-content{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;align-items:center;text-align:center;padding:70px 20px 20px;overflow-y:auto}
 .room-content h2{font-family:'Cinzel',serif;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:8px}
 .room-content .room-sub{font-family:'Cormorant Garamond',serif;font-size:14px;color:#8a7a65;font-style:italic;margin-bottom:24px}
 .author-card{background:rgba(15,12,8,0.85);border:1px solid rgba(200,160,80,0.12);padding:16px;max-width:500px;text-align:left}
 .author-card p{font-family:'Cormorant Garamond',serif;font-size:14px;color:#8a7a65;line-height:1.8;margin-bottom:14px}
 
-/* ═══ CODE SCREEN ═══ */
+/* âââ CODE SCREEN âââ */
 .code-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:31;padding:20px}
 .code-screen .ct{font-family:'Cinzel',serif;font-size:clamp(16px,3vw,22px);color:#c8a060;letter-spacing:5px;margin-bottom:16px}
 .code-screen .cs{font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,16px);color:#4a3a28;font-style:italic;max-width:340px;line-height:1.8;text-align:center;margin-bottom:12px}
@@ -176,7 +176,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .code-hint{font-family:'Cormorant Garamond',serif;font-size:12px;color:#2a2218;font-style:italic;margin-top:30px}
 .code-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#3a2a18;cursor:pointer;margin-top:24px}
 
-/* ═══ NAV PANEL ═══ */
+/* âââ NAV PANEL âââ */
 .nav-overlay{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,0.6);opacity:0;pointer-events:none;transition:opacity 0.3s}
 .nav-overlay.open{opacity:1;pointer-events:all}
 .nav-panel{position:fixed;top:0;bottom:0;right:-100%;width:100%;z-index:95;background:rgba(10,8,5,0.98);transition:right 0.3s;padding:60px 30px 30px;overflow-y:auto}
@@ -185,17 +185,17 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 .nav-panel h3{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#6a5a45;margin-bottom:12px;margin-top:24px}
 .nav-item{display:block;padding:12px 0;font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;border-bottom:1px solid rgba(200,160,80,0.06);cursor:pointer;text-decoration:none}
 
-/* ═══ GUESTBOOK MODAL ═══ */
+/* âââ GUESTBOOK MODAL âââ */
 .gb-textarea{width:100%;height:70px;background:rgba(10,8,5,0.6);border:1px solid rgba(200,160,80,0.15);color:#8a7a65;font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;padding:12px;resize:none;outline:none;margin-top:12px}
 .gb-btn{display:block;margin-top:8px;background:none;border:1px solid rgba(200,160,80,0.2);color:#7a6a55;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:8px 20px;cursor:pointer}
 .gb-entries{margin-top:14px;max-height:180px;overflow-y:auto}
 .gb-entry{font-family:'Cormorant Garamond',serif;font-size:14px;color:#6a5a45;font-style:italic;padding:6px 0;border-bottom:1px solid rgba(200,160,80,0.06)}
 
-/* ═══ SWIPE HINT ═══ */
+/* âââ SWIPE HINT âââ */
 .swipe-hint{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);z-index:55;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;opacity:0;animation:hintFade 4s ease 2s forwards;pointer-events:none}
 @keyframes hintFade{0%{opacity:0}20%{opacity:0.6}80%{opacity:0.6}100%{opacity:0}}
 
-/* ═══ VIGNETTE + TRANSITION ═══ */
+/* âââ VIGNETTE + TRANSITION âââ */
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:40;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.5) 100%)}
 #transition{position:fixed;inset:0;background:#000;z-index:80;opacity:0;pointer-events:none;transition:opacity 0.4s}
 #transition.active{opacity:1}
@@ -206,22 +206,24 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
 
 <div id="transition"></div>
 
-<!-- ═══ ALLEY ═══ -->
+<!-- âââ ALLEY âââ -->
 <div class="scene active" id="scene-alley">
   <div class="pan-wrap" id="pw-alley">
     <img src="img/Shop/mobile/001-Alley.jpg" alt="alley">
     <div class="hotspots">
       <div class="hotspot" data-goto="hall" style="left:69.2%;top:26.1%;width:12.5%;height:60.4%"><span class="label">Enter the Shop</span></div>
     </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══ MAIN HALL ═══ -->
+<!-- âââ MAIN HALL âââ -->
 <div class="scene" id="scene-hall">
   <div class="pan-wrap" id="pw-hall">
     <img src="img/Shop/mobile/002-Main-hall.jpg" alt="shop">
     <div class="hotspots">
-      <div class="hotspot" data-goto="shopkeeper" style="left:33%;top:21%;width:9%;height:36%"><span class="label">The Shopkeeper</span></div>
+      <div class="hotspot" data-goto="shopkeeper" style="left:24.8%;top:32.7%;width:9%;height:36%"><span class="label">The Shopkeeper</span></div>
+    </div>
       <div class="hotspot" data-goto="books" style="left:54%;top:23%;width:9%;height:34%"><span class="label">The Books</span></div>
       <div class="hotspot" data-goto="display" style="left:78%;top:25%;width:10%;height:45%"><span class="label">Artifacts</span></div>
       <div class="hotspot" data-goto="corridor" style="left:48.7%;top:52%;width:6%;height:27.6%"><span class="label">The Red Door</span></div>
@@ -229,7 +231,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   </div>
 </div>
 
-<!-- ═══ SHOPKEEPER ═══ -->
+<!-- âââ SHOPKEEPER âââ -->
 <div class="scene" id="scene-shopkeeper">
   <div class="pan-wrap">
     <img src="img/Shop/mobile/003-Shopkeeper.jpg" alt="shopkeeper">
@@ -247,12 +249,13 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   </div>
 </div>
 
-<!-- ═══ DISPLAY (ARTIFACTS) ═══ -->
+<!-- âââ DISPLAY (ARTIFACTS) âââ -->
 <div class="scene" id="scene-display">
   <div class="pan-wrap">
     <img src="img/Shop/mobile/004-Display-case.jpg" alt="display">
     <div class="hotspots">
-      <div class="hotspot" data-artifact="mirror" style="left:2.0%;top:2%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="mirror" style="left:2%;top:2%;width:23%;height:46%"></div>
+    </div>
       <div class="hotspot" data-artifact="hourglass" style="left:26.0%;top:2%;width:23%;height:46%"></div>
       <div class="hotspot" data-artifact="tarot" style="left:50.0%;top:2%;width:23%;height:46%"></div>
       <div class="hotspot" data-artifact="wig" style="left:74.0%;top:2%;width:24%;height:46%"></div>
@@ -264,7 +267,7 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   </div>
 </div>
 
-<!-- ═══ BOOKS ═══ -->
+<!-- âââ BOOKS âââ -->
 <div class="scene" id="scene-books">
   <div class="pan-wrap">
     <img src="img/Shop/mobile/005-Books.jpg" alt="books">
@@ -274,26 +277,27 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
     <h3>The Shelf</h3>
     <div class="books-row">
       <div class="book-card" data-book="skinme"><img src="img/Books/skin-me.jpg" alt="Skin Me"><div class="bc-name">Skin Me</div></div>
-      <div class="book-card" data-book="carryme"><div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Carry Me</div><div class="bc-status">Coming</div></div></div>
-      <div class="book-card" data-book="muetter"><div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Warum Mütter töten?</div><div class="bc-status">Coming</div></div></div>
-      <div class="book-card" data-book="layme"><div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Lay Me</div><div class="bc-status">Coming</div></div></div>
-      <div class="book-card" data-book="spinme"><div class="bc-placeholder"><div class="bc-icon">◈</div><div class="bc-title">Spin Me</div><div class="bc-status">Coming</div></div></div>
+      <div class="book-card" data-book="carryme"><div class="bc-placeholder"><div class="bc-icon">â</div><div class="bc-title">Carry Me</div><div class="bc-status">Coming</div></div></div>
+      <div class="book-card" data-book="muetter"><div class="bc-placeholder"><div class="bc-icon">â</div><div class="bc-title">Warum MÃ¼tter tÃ¶ten?</div><div class="bc-status">Coming</div></div></div>
+      <div class="book-card" data-book="layme"><div class="bc-placeholder"><div class="bc-icon">â</div><div class="bc-title">Lay Me</div><div class="bc-status">Coming</div></div></div>
+      <div class="book-card" data-book="spinme"><div class="bc-placeholder"><div class="bc-icon">â</div><div class="bc-title">Spin Me</div><div class="bc-status">Coming</div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ═══ CORRIDOR ═══ -->
+<!-- âââ CORRIDOR âââ -->
 <div class="scene" id="scene-corridor">
   <div class="pan-wrap" id="pw-corridor">
     <img src="img/Shop/mobile/006-Cinema-door-wc.jpg" alt="corridor">
     <div class="hotspots">
       <div class="hotspot" data-goto="wc" style="left:38%;top:38%;width:8%;height:42%"><span class="label">WC</span></div>
+    </div>
       <div class="hotspot" data-goto="cinema" style="left:53%;top:26%;width:10%;height:63%"><span class="label">Cinema</span></div>
     </div>
   </div>
 </div>
 
-<!-- ═══ CINEMA ═══ -->
+<!-- âââ CINEMA âââ -->
 <div class="scene" id="scene-cinema">
   <div class="pan-wrap">
     <img src="img/Shop/mobile/007-Cinema.jpg" alt="cinema">
@@ -303,52 +307,54 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
     <h2>Screening Room</h2>
     <div class="mh-sub">The projector remembers every frame.</div>
     <div class="mh-section"><h3>Films</h3><div class="media-row">
-      <div class="media-tile" onclick="openMediaDetail('film1')"><div class="mt-visual films">▶</div><div class="mt-body"><div class="mt-title">Episode 1</div><div class="mt-desc">The Shop Without a Name</div></div></div>
-      <div class="media-tile" onclick="openMediaDetail('film2')"><div class="mt-visual films">▶</div><div class="mt-body"><div class="mt-title">Episode 2</div><div class="mt-desc">The Whip Chooses</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('film1')"><div class="mt-visual films">â¶</div><div class="mt-body"><div class="mt-title">Episode 1</div><div class="mt-desc">The Shop Without a Name</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('film2')"><div class="mt-visual films">â¶</div><div class="mt-body"><div class="mt-title">Episode 2</div><div class="mt-desc">The Whip Chooses</div></div></div>
     </div></div>
     <div class="mh-section"><h3>Soundtrack</h3><div class="media-row">
-      <div class="media-tile" onclick="openMediaDetail('track1')"><div class="mt-visual soundtrack">♫</div><div class="mt-body"><div class="mt-title">Track 01</div><div class="mt-desc">The Nameless Shop</div></div></div>
-      <div class="media-tile" onclick="openMediaDetail('track2')"><div class="mt-visual soundtrack">♫</div><div class="mt-body"><div class="mt-title">Track 02</div><div class="mt-desc">Rita's Theme</div></div></div>
-      <div class="media-tile" onclick="openMediaDetail('album')"><div class="mt-visual soundtrack">◈</div><div class="mt-body"><div class="mt-title">Full Album</div><div class="mt-desc">20 Tracks</div><div class="mt-badge">In Dev</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('track1')"><div class="mt-visual soundtrack">â«</div><div class="mt-body"><div class="mt-title">Track 01</div><div class="mt-desc">The Nameless Shop</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('track2')"><div class="mt-visual soundtrack">â«</div><div class="mt-body"><div class="mt-title">Track 02</div><div class="mt-desc">Rita's Theme</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('album')"><div class="mt-visual soundtrack">â</div><div class="mt-body"><div class="mt-title">Full Album</div><div class="mt-desc">20 Tracks</div><div class="mt-badge">In Dev</div></div></div>
     </div></div>
     <div class="mh-section"><h3>Clips & Audiobooks</h3><div class="media-row">
-      <div class="media-tile" onclick="openMediaDetail('clips_all')"><div class="mt-visual clips">▷</div><div class="mt-body"><div class="mt-title">Music Videos</div><div class="mt-desc">5 free + 15 exclusive</div></div></div>
-      <div class="media-tile" onclick="openMediaDetail('audiobook_skinme')"><div class="mt-visual audiobooks">◉</div><div class="mt-body"><div class="mt-title">Audiobook</div><div class="mt-desc">Skin Me</div><div class="mt-badge">Premium</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('clips_all')"><div class="mt-visual clips">â·</div><div class="mt-body"><div class="mt-title">Music Videos</div><div class="mt-desc">5 free + 15 exclusive</div></div></div>
+      <div class="media-tile" onclick="openMediaDetail('audiobook_skinme')"><div class="mt-visual audiobooks">â</div><div class="mt-body"><div class="mt-title">Audiobook</div><div class="mt-desc">Skin Me</div><div class="mt-badge">Premium</div></div></div>
     </div></div>
   </div>
 </div>
 
-<!-- ═══ WC ═══ -->
+<!-- âââ WC âââ -->
 <div class="scene" id="scene-wc">
   <div class="pan-wrap" id="pw-wc">
     <img src="img/Shop/mobile/008-WC.jpg" alt="wc">
     <div class="hotspots">
       <div class="hotspot" data-goto="secretgate" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%"><span class="label">???</span></div>
     </div>
+    </div>
   </div>
 </div>
 
-<!-- ═══ SECRET GATE (riddle) ═══ -->
+<!-- âââ SECRET GATE (riddle) âââ -->
 <div class="scene" id="scene-secretgate">
   <div class="pan-wrap"><img src="img/Shop/mobile/008-WC.jpg" alt="wc" style="filter:brightness(0.3) blur(3px)"><div class="hotspots"></div></div>
   <div class="code-screen">
     <div class="ct">The door is locked.</div>
-    <div class="cs">A word is scratched into the wood. Below it — a question:</div>
+    <div class="cs">A word is scratched into the wood. Below it â a question:</div>
     <div class="riddle">"The shopkeeper remembers everything.<br>He asks only one thing of those who leave:<br><span style="color:#8a7a65">___________</span>"</div>
     <input type="text" id="codeInput" class="code-input" placeholder="..." maxlength="20" autocomplete="off">
     <button class="code-btn" onclick="checkCode()">Enter</button>
     <div class="code-error" id="codeError"></div>
     <div class="code-hint">The answer is in the language of the city.</div>
-    <div class="code-back" onclick="goTo('wc')">← Walk away</div>
+    <div class="code-back" onclick="goTo('wc')">â Walk away</div>
   </div>
 </div>
 
-<!-- ═══ SECRET ROOM ═══ -->
+<!-- âââ SECRET ROOM âââ -->
 <div class="scene" id="scene-secret">
   <div class="pan-wrap" id="pw-secret">
     <img src="img/Shop/mobile/009-Secret-room.jpg" alt="secret">
     <div class="hotspots">
       <div class="hotspot" data-note="journal" style="left:45.8%;top:65.7%;width:13.3%;height:10.4%"><span class="label">The Journal</span></div>
+    </div>
       <div class="hotspot" data-note="map" style="left:45.0%;top:13.4%;width:22.5%;height:37.3%"><span class="label">Map of Berlin</span></div>
       <div class="hotspot" data-note="whip" style="left:37.1%;top:12.7%;width:5.4%;height:16.4%"><span class="label">Pinned Note</span></div>
       <div class="hotspot" data-note="wig" style="left:35.0%;top:54.5%;width:4.2%;height:9.7%"><span class="label">Yellowed Note</span></div>
@@ -364,29 +370,29 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   <div class="secret-hint">Tap the notes on the wall</div>
 </div>
 
-<!-- ═══ CASH ═══ -->
+<!-- âââ CASH âââ -->
 <div class="scene" id="scene-cash">
   <div class="pan-wrap"><img src="img/Shop/mobile/010-Cash-register.jpg" alt="cash"><div class="hotspots"></div></div>
   <div class="room-content">
     <h2>The Drawer</h2>
     <div class="room-sub">The shopkeeper accepts any coin. But not money.</div>
-    <div class="author-card"><p>For earthly transactions, visit the book you wish to purchase.</p><button class="chat-nav-btn" onclick="goTo('books')" style="margin-top:12px">Go to the Books →</button></div>
+    <div class="author-card"><p>For earthly transactions, visit the book you wish to purchase.</p><button class="chat-nav-btn" onclick="goTo('books')" style="margin-top:12px">Go to the Books â</button></div>
   </div>
 </div>
 
-<!-- ═══ UI ═══ -->
+<!-- âââ UI âââ -->
 <div class="top-bar">
-  <a class="back-btn" id="backBtn">← Back</a>
+  <a class="back-btn" id="backBtn">â Back</a>
 </div>
-<button class="nav-toggle" id="navToggle" onclick="toggleNav()">☰ Map</button>
+<button class="nav-toggle" id="navToggle" onclick="toggleNav()">â° Map</button>
 <div class="info"><div class="title" id="sceneTitle">The Alley</div><span>Explore the Shop</span></div>
-<button class="hint-btn" onclick="mobileHint()">◈</button>
-<div class="swipe-hint">← swipe to look around →</div>
+<button class="hint-btn" onclick="mobileHint()">â</button>
+<div class="swipe-hint">â swipe to look around â</div>
 <div class="vignette"></div>
 
 <div class="nav-overlay" id="navOverlay" onclick="toggleNav()"></div>
 <div class="nav-panel" id="navPanel">
-  <button class="nav-close" onclick="toggleNav()">×</button>
+  <button class="nav-close" onclick="toggleNav()">Ã</button>
   <h3>Rooms</h3>
   <a class="nav-item" onclick="navGo('hall')">Main Hall</a>
   <a class="nav-item" onclick="navGo('shopkeeper')">The Shopkeeper</a>
@@ -404,18 +410,18 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   <a class="nav-item" href="legal/widerrufsrecht.html" style="font-size:10px;color:#4a3a28">Widerrufsrecht</a>
 </div>
 
-<!-- ═══ MODAL ═══ -->
+<!-- âââ MODAL âââ -->
 <div class="modal" id="modal">
   <div class="modal-bg" onclick="closeModal()"></div>
   <div class="modal-content">
-    <button class="modal-close" onclick="closeModal()">×</button>
+    <button class="modal-close" onclick="closeModal()">Ã</button>
     <img class="modal-img" id="modalImg" src="" alt="">
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
 <script>
-// ═══ DATA ═══
+// âââ DATA âââ
 const ARTIFACTS = {
   mirror:{name:'The Mirror',img:'img/artifacts/artifakts_0007_Layer-1.png',lore:'It shows not your face, but the face you\'ll wear in ten years.',book:null},
   hourglass:{name:'The Hourglass',img:'img/artifacts/artifakts_0006_Layer-2.png',lore:'The sand is red. The sand flows upward. Time inside moves backward.',book:'muetter'},
@@ -429,30 +435,30 @@ const ARTIFACTS = {
 const BOOKS = {
   skinme:{title:'Skin Me',genre:'Paranormal Dark Romance 18+',status:'available',img:'img/Books/skin-me.jpg',desc:'Berlin. A nameless shop. A cursed whip. Rita should never have touched it.',artifact:'whip',prices:{std:25,prem:49,sub:7.99}},
   carryme:{title:'Carry Me',genre:'YA ab 16',status:'dev',img:null,desc:'The red wig on the shelf is watching you.',artifact:'wig'},
-  muetter:{title:'Warum Mütter töten?',genre:'Mystical Thriller',status:'dev',img:null,desc:'The hourglass holds red sand.',artifact:'hourglass'},
+  muetter:{title:'Warum MÃ¼tter tÃ¶ten?',genre:'Mystical Thriller',status:'dev',img:null,desc:'The hourglass holds red sand.',artifact:'hourglass'},
   layme:{title:'Lay Me',genre:'Dark Romance 18+',status:'dev',img:null,desc:'Inside the box: a tarot deck.',artifact:'tarot'},
   spinme:{title:'Spin Me',genre:'Dark Romance 18+',status:'dev',img:null,desc:'The pointe shoes dance at midnight.',artifact:null}
 };
 const NOTES = {
-  whip:{title:'The Whip — Subject: Rita K.',text:'She found the shop on Oranienstraße. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."',source:'File 0041 — Berlin, 2024'},
-  wig:{title:'The Wig — Subject: Unknown',text:'The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days.',source:'File 0012 — Vienna, 1923'},
-  hourglass:{title:'The Hourglass — Warning',text:'DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age — they un-aged. They are now seven years old.',source:'File 0007 — Location unknown'},
-  tarot:{title:'The Tarot Box — The Strength Card',text:'The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle.',source:'File 0033 — Marseille, 1971'},
-  mirror:{title:'The Mirror — Observation',text:'It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian.',source:'File 0002 — Prague, 1614'},
-  keeper:{title:'The Shopkeeper — Note to Self',text:'He has no name. He claims he never had one. The shop existed before the street. The street existed before the city.',source:'Unsigned — date unknown'},
-  compass:{title:'The Compass — Subject: Elias M.',text:'The compass does not point north. It points to where you need to be. Elias followed it for forty days across three countries into a cave. Inside: a letter from his dead mother.',source:'File 0019 — Carpathians, 1958'},
-  entity:{title:'The Entity Behind the Shop',text:'Some files reference "the Maker." Not the shopkeeper — something older. The artifacts are not cursed. They are tests. Those who pass are remembered. Those who fail are forgotten.',source:'Fragment — no file number'},
-  map:{title:'Map of Berlin — Kreuzberg',text:'Red threads connect seven points across the city. Oranienstraße. Görlitzer Park. The canal. The old post office. A cellar bar with no sign. A courtyard that doesn\'t appear on Google Maps. And the shop itself.<br><br>The map is old. The threads are new.',source:'Pinned to the wall — updated weekly'},
-  author:{title:'A Sealed Letter — Opened Once',text:'Behind every nameless shop stands someone with a name.<br><br><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact carries a curse, a memory, or a promise. Sometimes all three.<br><br>The Namenlos universe is not a series — it is a world.',source:'Found tucked behind the map — unsigned',cta:true}
+  whip:{title:'The Whip â Subject: Rita K.',text:'She found the shop on OranienstraÃe. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."',source:'File 0041 â Berlin, 2024'},
+  wig:{title:'The Wig â Subject: Unknown',text:'The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days.',source:'File 0012 â Vienna, 1923'},
+  hourglass:{title:'The Hourglass â Warning',text:'DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age â they un-aged. They are now seven years old.',source:'File 0007 â Location unknown'},
+  tarot:{title:'The Tarot Box â The Strength Card',text:'The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle.',source:'File 0033 â Marseille, 1971'},
+  mirror:{title:'The Mirror â Observation',text:'It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian.',source:'File 0002 â Prague, 1614'},
+  keeper:{title:'The Shopkeeper â Note to Self',text:'He has no name. He claims he never had one. The shop existed before the street. The street existed before the city.',source:'Unsigned â date unknown'},
+  compass:{title:'The Compass â Subject: Elias M.',text:'The compass does not point north. It points to where you need to be. Elias followed it for forty days across three countries into a cave. Inside: a letter from his dead mother.',source:'File 0019 â Carpathians, 1958'},
+  entity:{title:'The Entity Behind the Shop',text:'Some files reference "the Maker." Not the shopkeeper â something older. The artifacts are not cursed. They are tests. Those who pass are remembered. Those who fail are forgotten.',source:'Fragment â no file number'},
+  map:{title:'Map of Berlin â Kreuzberg',text:'Red threads connect seven points across the city. OranienstraÃe. GÃ¶rlitzer Park. The canal. The old post office. A cellar bar with no sign. A courtyard that doesn\'t appear on Google Maps. And the shop itself.<br><br>The map is old. The threads are new.',source:'Pinned to the wall â updated weekly'},
+  author:{title:'A Sealed Letter â Opened Once',text:'Behind every nameless shop stands someone with a name.<br><br><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact carries a curse, a memory, or a promise. Sometimes all three.<br><br>The Namenlos universe is not a series â it is a world.',source:'Found tucked behind the map â unsigned',cta:true}
 };
 const TITLES = {alley:'The Alley',hall:'Main Hall',shopkeeper:'The Shopkeeper',display:'The Cabinet',books:'The Books',corridor:'The Red Door',cinema:'Screening Room',wc:'WC',secretgate:'The Hidden Door',secret:'The Secret Room',cash:'The Drawer'};
 
-// ═══ STATE ═══
+// âââ STATE âââ
 let cur = 'alley';
 const hist = [];
 let busy = false;
 
-// ═══ NAVIGATION ═══
+// âââ NAVIGATION âââ
 function goTo(id) {
   if(busy || id===cur) return;
   busy = true;
@@ -494,7 +500,7 @@ function toggleNav() {
 }
 function navGo(id) { toggleNav(); setTimeout(() => goTo(id), 300); }
 
-// ═══ MODALS ═══
+// âââ MODALS âââ
 function openArtifactModal(id) {
   const a = ARTIFACTS[id]; if(!a) return;
   document.getElementById('modalImg').src = a.img;
@@ -503,7 +509,7 @@ function openArtifactModal(id) {
   if(a.book && BOOKS[a.book]) {
     const b = BOOKS[a.book];
     h += '<div class="modal-genre">From: '+b.title+'</div>';
-    if(b.status==='available') h += '<button class="modal-book-link" onclick="closeModal();goTo(\'books\')">View Book →</button>';
+    if(b.status==='available') h += '<button class="modal-book-link" onclick="closeModal();goTo(\'books\')">View Book â</button>';
     else h += '<div class="dev-badge">In Development</div>';
   }
   document.getElementById('modalBody').innerHTML = h;
@@ -522,13 +528,13 @@ function openBookModal(id) {
 function openMediaDetail(id) {
   document.getElementById('modalImg').style.display='none';
   const items = {
-    film1:{title:'Episode 1 — The Shop Without a Name',desc:'Rita turns left when she meant to turn right. The door has no sign.',badge:'Coming Soon'},
-    film2:{title:'Episode 2 — The Whip Chooses',desc:'She sees it behind the glass — black leather, braided tight.',badge:'Coming Soon'},
-    track1:{title:'Track 01 — The Nameless Shop',desc:'Ambient dark atmosphere. The sound of a door opening.',badge:'Preview Soon'},
-    track2:{title:'Track 02 — Rita\'s Theme',desc:'A pulse. A heartbeat. Between longing and fear.',badge:'Preview Soon'},
-    album:{title:'Full Soundtrack — 20 Tracks',desc:'20 original tracks. Each belongs to a scene. Included in Premium ($49).',badge:'In Dev'},
+    film1:{title:'Episode 1 â The Shop Without a Name',desc:'Rita turns left when she meant to turn right. The door has no sign.',badge:'Coming Soon'},
+    film2:{title:'Episode 2 â The Whip Chooses',desc:'She sees it behind the glass â black leather, braided tight.',badge:'Coming Soon'},
+    track1:{title:'Track 01 â The Nameless Shop',desc:'Ambient dark atmosphere. The sound of a door opening.',badge:'Preview Soon'},
+    track2:{title:'Track 02 â Rita\'s Theme',desc:'A pulse. A heartbeat. Between longing and fear.',badge:'Preview Soon'},
+    album:{title:'Full Soundtrack â 20 Tracks',desc:'20 original tracks. Each belongs to a scene. Included in Premium ($49).',badge:'In Dev'},
     clips_all:{title:'All Music Videos',desc:'5 free on YouTube. 15 exclusive in Premium bundle.',badge:'In Dev'},
-    audiobook_skinme:{title:'Audiobook — Skin Me',desc:'The complete novel, read aloud. Premium bundle ($49).',badge:'Premium'}
+    audiobook_skinme:{title:'Audiobook â Skin Me',desc:'The complete novel, read aloud. Premium bundle ($49).',badge:'Premium'}
   };
   const it = items[id]||{title:id,desc:'',badge:'Coming Soon'};
   document.getElementById('modalBody').innerHTML = '<h2>'+it.title+'</h2><div class="modal-lore">'+it.desc+'</div><div class="dev-badge">'+it.badge+'</div>';
@@ -539,7 +545,7 @@ function openNote(id) {
   const n = NOTES[id]; if(!n) return;
   document.getElementById('modalImg').style.display='none';
   let h = '<div class="note-title">'+n.title+'</div><div class="note-divider"></div><div class="note-text">'+n.text+'</div><div class="note-source">'+n.source+'</div>';
-  if(n.cta) h += '<div style="margin-top:16px"><button class="modal-book-link" onclick="closeModal();goTo(\'books\')">Go to the Books →</button></div>';
+  if(n.cta) h += '<div style="margin-top:16px"><button class="modal-book-link" onclick="closeModal();goTo(\'books\')">Go to the Books â</button></div>';
   document.getElementById('modalBody').innerHTML = h;
   document.getElementById('modal').classList.add('open');
 }
@@ -549,7 +555,7 @@ function openJournal() {
   try{entries=JSON.parse(localStorage.getItem('nm_gb')||'[]');}catch(e){}
   let h = '<div class="note-title">The Visitor\'s Journal</div><div class="note-divider"></div><div class="note-text">Those who find this room are invited to leave their name.</div>';
   h += '<textarea class="gb-textarea" id="gbInput" placeholder="Write your name..."></textarea><button class="gb-btn" onclick="addGB()">Sign</button><div class="gb-entries" id="gbEntries">';
-  entries.forEach(m => { h += '<div class="gb-entry">— '+m.replace(/</g,'&lt;')+'</div>'; });
+  entries.forEach(m => { h += '<div class="gb-entry">â '+m.replace(/</g,'&lt;')+'</div>'; });
   h += '</div>';
   document.getElementById('modalBody').innerHTML = h;
   document.getElementById('modal').classList.add('open');
@@ -558,12 +564,12 @@ function addGB() {
   const i=document.getElementById('gbInput'); if(!i) return;
   const msg=i.value.trim(); if(!msg) return; i.value='';
   const e=document.getElementById('gbEntries');
-  if(e){const d=document.createElement('div');d.className='gb-entry';d.textContent='— '+msg;e.prepend(d);}
+  if(e){const d=document.createElement('div');d.className='gb-entry';d.textContent='â '+msg;e.prepend(d);}
   try{const s=JSON.parse(localStorage.getItem('nm_gb')||'[]');s.unshift(msg);localStorage.setItem('nm_gb',JSON.stringify(s.slice(0,50)));}catch(e){}
 }
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 
-// ═══ CODE ═══
+// âââ CODE âââ
 function checkCode() {
   const v = document.getElementById('codeInput').value.trim().toLowerCase();
   if(v==='vergiss'||v==='forget'){goTo('secret');}
@@ -571,23 +577,23 @@ function checkCode() {
 }
 document.getElementById('codeInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});
 
-// ═══ CHAT ═══
+// âââ CHAT âââ
 function sendChat() {
   const input=document.getElementById('chatInput');const msg=input.value.trim();if(!msg)return;input.value='';
   addMsg(msg,'user');const l=msg.toLowerCase();let r='',nav=null;
-  if(/skin\s*me|rita|whip/.test(l)){r='The whip chose its first reader. Standard $25 · Premium $49';nav='books';}
+  if(/skin\s*me|rita|whip/.test(l)){r='The whip chose its first reader. Standard $25 Â· Premium $49';nav='books';}
   else if(/book|read|shelv/.test(l)){r='The shelves hold stories. "Skin Me" is ready.';nav='books';}
   else if(/artifact|cabinet|display/.test(l)){r='The cabinet holds eight objects. Touch carefully.';nav='display';}
   else if(/cinem|film|movie|watch|kino/.test(l)){r='Through the red door. The projector is warming up.';nav='corridor';}
   else if(/secret|hidden|toilet|wc/.test(l)){r='Hidden things? I wouldn\'t know. But the WC has interesting walls.';}
   else if(/money|buy|price|pay/.test(l)){r='I accept any coin. But not money.';nav='books';}
   else{r='Interesting question. Ask about the <b>books</b>, <b>artifacts</b>, or the <b>cinema</b>.';}
-  if(nav) r+='<br><button class="chat-nav-btn" onclick="goTo(\''+nav+'\')">Go →</button>';
+  if(nav) r+='<br><button class="chat-nav-btn" onclick="goTo(\''+nav+'\')">Go â</button>';
   setTimeout(()=>addMsg(r,'bot'),500);
 }
 function addMsg(html,type){const c=document.getElementById('chatMessages');const d=document.createElement('div');d.className='chat-msg '+type;d.innerHTML=html;c.appendChild(d);c.scrollTop=c.scrollHeight;}
 
-// ═══ INIT ═══
+// âââ INIT âââ
 const params = new URLSearchParams(location.search);
 const startAt = params.get('start');
 if(startAt && document.getElementById('scene-'+startAt)) {
@@ -609,7 +615,7 @@ document.querySelectorAll('.hotspot').forEach(h => {
   h.addEventListener('click',()=>{h.classList.add('tapped');setTimeout(()=>h.classList.remove('tapped'),600);});
 });
 
-// ═══ TOUCH PAN ═══
+// âââ TOUCH PAN âââ
 let panX=0,startX=0,startPanX=0,hasMoved=false;
 function getMaxPan() {
   // How far image overflows viewport on each side
