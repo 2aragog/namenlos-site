@@ -35,38 +35,25 @@ body{cursor:default}
 .hotspot .label{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#c8a060;font-size:10px;padding:4px 14px;white-space:nowrap;opacity:0;transition:opacity 0.5s;letter-spacing:3px;text-transform:uppercase;pointer-events:none;border:none}
 .hotspot:hover .label{opacity:1}
 
-/* Breathing — soft radial glow, NO borders */
-.hotspot[data-glow=amber]{animation:breathAmber 4s ease-in-out infinite}
-.hotspot[data-glow=red]{animation:breathRed 5s ease-in-out infinite}
-.hotspot[data-glow=silver]{animation:breathSilver 4.5s ease-in-out infinite}
-.hotspot[data-glow=mystic]{animation:breathMystic 5.5s ease-in-out infinite}
-.hotspot:nth-child(2){animation-delay:1.2s}
-.hotspot:nth-child(3){animation-delay:2.4s}
-.hotspot:nth-child(4){animation-delay:0.6s}
-.hotspot:nth-child(5){animation-delay:1.8s}
+/* Breathing — INVISIBLE, no rectangles. Effects come from embers/whispers/cursor only */
+.hotspot[data-glow=amber],.hotspot[data-glow=red],.hotspot[data-glow=silver],.hotspot[data-glow=mystic]{
+  animation:none;border:none !important;box-shadow:none !important;background:transparent !important;border-radius:0;
+}
+.hotspot:nth-child(2),.hotspot:nth-child(3),.hotspot:nth-child(4),.hotspot:nth-child(5){animation:none}
 
-@keyframes breathAmber{
-  0%,100%{background:radial-gradient(ellipse at center,rgba(200,160,80,0) 0%,transparent 70%);box-shadow:none}
-  50%{background:radial-gradient(ellipse at center,rgba(200,160,80,0.04) 0%,transparent 70%);box-shadow:0 0 40px rgba(200,160,80,0.06)}
-}
-@keyframes breathRed{
-  0%,100%{background:radial-gradient(ellipse at center,rgba(180,40,40,0) 0%,transparent 70%);box-shadow:none}
-  50%{background:radial-gradient(ellipse at center,rgba(180,40,40,0.05) 0%,transparent 70%);box-shadow:0 0 50px rgba(180,40,40,0.08)}
-}
-@keyframes breathSilver{
-  0%,100%{background:radial-gradient(ellipse at center,rgba(160,180,200,0) 0%,transparent 70%);box-shadow:none}
-  50%{background:radial-gradient(ellipse at center,rgba(160,180,200,0.04) 0%,transparent 70%);box-shadow:0 0 35px rgba(160,180,200,0.06)}
-}
-@keyframes breathMystic{
-  0%,100%{background:radial-gradient(ellipse at center,rgba(140,100,180,0) 0%,transparent 70%);box-shadow:none}
-  50%{background:radial-gradient(ellipse at center,rgba(140,100,180,0.05) 0%,transparent 70%);box-shadow:0 0 40px rgba(140,100,180,0.07)}
+/* Hover — ONLY label + cursor, no visible rectangle */
+.hotspot[data-glow=amber]:hover,.hotspot[data-glow=red]:hover,.hotspot[data-glow=silver]:hover,.hotspot[data-glow=mystic]:hover{
+  background:transparent !important;border:none !important;box-shadow:none !important;animation:none;
 }
 
-/* Hover — spotlight effect */
-.hotspot[data-glow=amber]:hover{background:radial-gradient(ellipse at center,rgba(200,160,80,0.1) 0%,rgba(200,160,80,0.02) 50%,transparent 75%);box-shadow:0 0 60px rgba(200,160,80,0.12);animation:none}
-.hotspot[data-glow=red]:hover{background:radial-gradient(ellipse at center,rgba(180,40,40,0.12) 0%,rgba(180,40,40,0.03) 50%,transparent 75%);box-shadow:0 0 70px rgba(180,40,40,0.15);animation:none}
-.hotspot[data-glow=silver]:hover{background:radial-gradient(ellipse at center,rgba(160,180,200,0.1) 0%,rgba(160,180,200,0.02) 50%,transparent 75%);box-shadow:0 0 50px rgba(160,180,200,0.12);animation:none}
-.hotspot[data-glow=mystic]:hover{background:radial-gradient(ellipse at center,rgba(140,100,180,0.12) 0%,rgba(140,100,180,0.03) 50%,transparent 75%);box-shadow:0 0 60px rgba(140,100,180,0.15);animation:none}
+/* Highlight layers — for PNG overlays (Photoshop exports) */
+.hotspot .highlight-layer{
+  position:absolute;inset:0;pointer-events:none;
+  opacity:0;transition:opacity 0.5s ease;
+  mix-blend-mode:screen;
+}
+.hotspot .highlight-layer img{width:100%;height:100%;object-fit:contain}
+.hotspot:hover .highlight-layer{opacity:1}
 
 /* Embers — ABOVE vignette */
 .ember{position:fixed;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:45;animation:emberRise linear forwards}
