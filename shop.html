@@ -314,11 +314,8 @@ body{cursor:default}
     transition:none;
   }
   .hotspots{
-    position:fixed !important;
-    left:0 !important;
-    top:0 !important;
-    width:0 !important;
-    height:0 !important;
+    position:fixed;
+    left:0;top:0;width:0;height:0;
     transform:none !important;
     pointer-events:auto;
     z-index:30;
@@ -478,8 +475,8 @@ body{cursor:default}
   .scene-highlight{display:none !important}
   #gameCursor{display:none}
   .hotspots{
-    position:fixed !important;left:0 !important;top:0 !important;
-    width:0 !important;height:0 !important;transform:none !important;
+    position:fixed;left:0;top:0;
+    width:0;height:0;transform:none !important;
     pointer-events:auto;z-index:30;overflow:visible;
   }
   .hotspot::after{
@@ -1437,8 +1434,10 @@ if(isMobile) {
     if(!active) return;
     const img = active.querySelector('.scene-img');
     if(img) img.style.setProperty('--panX', panX + 'px');
-    // Sync hotspots to follow image position
-    if(typeof syncHotspots === 'function') syncHotspots();
+    // Wait for CSS to apply, then sync hotspots
+    requestAnimationFrame(() => {
+      if(typeof syncHotspots === 'function') syncHotspots();
+    });
   }
 
   // Gyroscope pan
