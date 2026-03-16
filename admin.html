@@ -109,16 +109,46 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
 .statusbar{padding:4px 16px;border-top:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;font-size:10px;color:var(--text2);flex-shrink:0}
 .drag-ghost{position:fixed;pointer-events:none;z-index:999;padding:4px 10px;background:var(--gold);color:var(--bg);font-size:11px;font-family:inherit;opacity:0.9;white-space:nowrap;display:none}
 @media(max-width:768px){.file-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}.toolbar{gap:4px}.search{width:100%}}
-/* ═══ HOTSPOT EDITOR ═══ */
-.hs-dot{position:absolute;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,rgba(200,160,80,1) 0%,rgba(200,160,80,0.4) 60%,transparent 70%);transform:translate(-50%,-50%);cursor:grab;z-index:10;box-shadow:0 0 12px rgba(200,160,80,0.6);pointer-events:auto}
-.hs-dot:hover{box-shadow:0 0 24px rgba(200,160,80,1);width:28px;height:28px}
-.hs-dot.dragging{cursor:grabbing;box-shadow:0 0 32px rgba(200,160,80,1);width:30px;height:30px}
-.hs-dot .hs-name{position:absolute;top:26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:var(--gold);font-size:9px;padding:2px 8px;white-space:nowrap;letter-spacing:1px;pointer-events:none}
-.hs-tbl{width:100%;max-width:900px;border-collapse:collapse;font-size:11px}
-.hs-tbl th{text-align:left;color:var(--gold);padding:4px 8px;border-bottom:1px solid var(--border);font-weight:500}
-.hs-tbl td{padding:4px 8px;color:var(--text);border-bottom:1px solid var(--border)}
-.hs-tbl input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:inherit;font-size:11px;padding:2px 6px;width:60px;text-align:center;outline:none}
-.hs-tbl input:focus{border-color:var(--gold)}
+/* ═══ VISUAL EDITOR ═══ */
+.ve-wrap{display:flex;height:100%;overflow:hidden}
+.ve-sidebar{width:280px;min-width:280px;border-right:1px solid var(--border);overflow-y:auto;background:var(--bg2);display:flex;flex-direction:column}
+.ve-section{padding:10px 12px}
+.ve-section-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.ve-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.ve-tbtn{flex:1;padding:6px;font-size:10px;font-family:inherit;background:var(--bg);color:var(--text2);border:none;cursor:pointer;letter-spacing:1px}
+.ve-tbtn.active{background:var(--gold);color:var(--bg);font-weight:600}
+.ve-scene-list{display:flex;flex-direction:column;gap:2px}
+.ve-scene-item{padding:6px 8px;font-size:11px;color:var(--text2);cursor:pointer;border:1px solid transparent;display:flex;align-items:center;gap:8px;transition:all 0.15s}
+.ve-scene-item:hover{color:var(--text);background:rgba(200,160,80,0.04)}
+.ve-scene-item.active{color:var(--gold);border-color:rgba(200,160,80,0.2);background:rgba(200,160,80,0.06)}
+.ve-scene-item .count{font-size:9px;color:var(--text2);margin-left:auto}
+.ve-hs-list{display:flex;flex-direction:column;gap:1px;max-height:180px;overflow-y:auto}
+.ve-hs-item{padding:5px 8px;font-size:11px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:6px;border:1px solid transparent;transition:all 0.15s}
+.ve-hs-item:hover{color:var(--text);background:rgba(200,160,80,0.04)}
+.ve-hs-item.active{color:var(--gold);border-color:rgba(200,160,80,0.15);background:rgba(200,160,80,0.06)}
+.ve-hs-item .dot-preview{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ve-props{font-size:11px}
+.ve-prop-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.ve-prop-row label{width:60px;color:var(--text2);font-size:10px;flex-shrink:0}
+.ve-prop-row input,.ve-prop-row select{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:11px;padding:3px 6px;outline:none;min-width:0}
+.ve-prop-row input:focus,.ve-prop-row select:focus{border-color:var(--gold)}
+.ve-canvas-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#050505}
+.ve-device-bar{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.ve-dbtn{background:none;border:1px solid var(--border);color:var(--text2);font-size:16px;width:32px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ve-dbtn.active,.ve-dbtn:hover{border-color:var(--gold);color:var(--gold)}
+.ve-canvas{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:20px}
+.ve-frame{position:relative;display:inline-block;background:#000;border:1px solid var(--border)}
+.ve-frame.phone{border:3px solid #333;border-radius:16px;padding:0;overflow:hidden}
+.ve-frame.tablet{border:3px solid #333;border-radius:8px;padding:0;overflow:hidden}
+.ve-frame img{display:block;height:auto;user-select:none}
+.ve-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+.ve-dot{position:absolute;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle,rgba(200,160,80,1) 0%,rgba(200,160,80,0.4) 60%,transparent 70%);transform:translate(-50%,-50%);cursor:grab;z-index:20;box-shadow:0 0 12px rgba(200,160,80,0.6);pointer-events:auto;transition:box-shadow 0.15s}
+.ve-dot:hover,.ve-dot.active{box-shadow:0 0 24px rgba(200,160,80,1);width:26px;height:26px}
+.ve-dot.dragging{cursor:grabbing;box-shadow:0 0 32px rgba(200,160,80,1);width:28px;height:28px}
+.ve-dot .ve-dot-label{position:absolute;top:24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:var(--gold);font-size:8px;padding:2px 6px;white-space:nowrap;letter-spacing:1px;pointer-events:none;font-family:'IBM Plex Mono',monospace}
+.ve-area{position:absolute;border:1px dashed rgba(200,160,80,0.3);background:rgba(200,160,80,0.04);pointer-events:none;z-index:10;transition:all 0.15s}
+.ve-area.active{border-color:rgba(200,160,80,0.6);background:rgba(200,160,80,0.1)}
+.ve-coords{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.9);color:var(--gold);font-size:10px;padding:4px 8px;pointer-events:none;display:none;z-index:30;font-family:'IBM Plex Mono',monospace}
 </style>
 </head>
 <body>
@@ -142,7 +172,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <button class="tab" data-tab="editor">Editor</button>
     <button class="tab" data-tab="deploy">Deploy</button>
     <button class="tab" data-tab="secret">Secret Room</button>
-    <button class="tab" data-tab="hotspots">Hotspots</button>
+    <button class="tab" data-tab="hotspots">Visual Editor</button>
   </div>
   <div class="panel active" id="panel-files">
     <div class="toolbar">
@@ -209,31 +239,64 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       <div class="sr-card"><h3>History</h3><div id="srHistory">Loading...</div></div>
     </div>
   </div>
-  <!-- ═══ HOTSPOTS EDITOR ═══ -->
+  <!-- ═══ VISUAL EDITOR ═══ -->
   <div class="panel" id="panel-hotspots">
-    <div style="padding:16px;overflow-y:auto;flex:1">
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
-        <span style="color:var(--gold);font-size:14px">Hotspot Editor</span>
-        <select id="hsScene" onchange="hsLoadScene()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px">
-          <option value="hall">Main Hall</option>
-          <option value="corridor">Corridor</option>
-          <option value="display">Display Case</option>
-          <option value="wc">WC</option>
-          <option value="secret">Secret Room</option>
-          <option value="alley">Alley</option>
-        </select>
-        <span style="color:var(--text2);font-size:10px">Drag dots to reposition &middot; Click image to see %</span>
-        <button class="btn btn-primary" onclick="hsSave()">Save to GitHub</button>
-        <span id="hsStatus" style="font-size:11px;color:var(--text2)"></span>
+    <div class="ve-wrap">
+      <!-- LEFT: Controls -->
+      <div class="ve-sidebar">
+        <div class="ve-section">
+          <div class="ve-section-title">Version</div>
+          <div class="ve-toggle">
+            <button class="ve-tbtn active" data-ver="mobile" onclick="veSetVersion('mobile')">Mobile</button>
+            <button class="ve-tbtn" data-ver="desktop" onclick="veSetVersion('desktop')">Desktop</button>
+          </div>
+        </div>
+        <div class="ve-section">
+          <div class="ve-section-title">Scene</div>
+          <div id="veSceneList" class="ve-scene-list"></div>
+        </div>
+        <div class="ve-section">
+          <div class="ve-section-title">Hotspots <span id="veHsCount" style="color:var(--text2)"></span></div>
+          <div id="veHsList" class="ve-hs-list"></div>
+        </div>
+        <div class="ve-section">
+          <div class="ve-section-title">Properties</div>
+          <div id="veProps" class="ve-props"><span style="color:var(--text2)">Select a hotspot</span></div>
+        </div>
+        <div class="ve-section" style="border-top:1px solid var(--border);padding-top:12px">
+          <button class="btn btn-primary" onclick="veSave()" style="width:100%;padding:8px">Save All Changes</button>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <button class="btn" onclick="veReload()" style="flex:1">Reload</button>
+            <button class="btn" onclick="vePreviewLive()" style="flex:1">Live Preview</button>
+          </div>
+          <div id="veStatus" style="font-size:10px;color:var(--text2);margin-top:6px;text-align:center"></div>
+        </div>
       </div>
-      <div id="hsEditor" style="position:relative;display:inline-block;max-width:100%;border:1px solid var(--border);background:#000;cursor:crosshair">
-        <img id="hsImg" style="display:block;max-width:min(100%,900px);height:auto" draggable="false">
-        <div id="hsDots" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none"></div>
-        <div id="hsCoords" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);color:var(--gold);font-size:11px;padding:4px 8px;pointer-events:none;display:none"></div>
+      <!-- RIGHT: Canvas -->
+      <div class="ve-canvas-wrap">
+        <div class="ve-device-bar">
+          <button class="ve-dbtn" onclick="veDevice('phone')" title="Phone 375×812">&#128241;</button>
+          <button class="ve-dbtn active" onclick="veDevice('free')" title="Free size">&#9634;</button>
+          <button class="ve-dbtn" onclick="veDevice('tablet')" title="Tablet 768×1024">&#128187;</button>
+          <span style="flex:1"></span>
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            <input type="checkbox" id="veShowAreas" onchange="veRender()" checked> Show areas
+          </label>
+          <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px">
+            <input type="checkbox" id="veShowLabels" onchange="veRender()" checked> Labels
+          </label>
+        </div>
+        <div class="ve-canvas" id="veCanvas">
+          <div class="ve-frame" id="veFrame">
+            <img id="veImg" draggable="false">
+            <div id="veOverlay" class="ve-overlay"></div>
+            <div id="veCoords" class="ve-coords"></div>
+          </div>
+        </div>
       </div>
-      <div id="hsTable" style="margin-top:16px"></div>
     </div>
   </div>
+</div>
 <div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header"><h3 id="modalTitle">Preview</h3><button class="btn" onclick="closeModal()">X</button></div>
@@ -285,7 +348,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();if(t.dataset.tab==='hotspots'&&!hsData){hsLoadFile().then(()=>hsLoadScene());}
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}
 }));
 
 // API
@@ -641,219 +704,376 @@ document.addEventListener('keydown',e=>{
   if(e.key==='a'&&(e.ctrlKey||e.metaKey)&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();selectAll();}
 });
 
-// ═══ HOTSPOT EDITOR ═══
-const HS_SCENES={
-  hall:{img:'img/Shop/mobile/002-Main-hall.jpg',label:'Main Hall'},
-  corridor:{img:'img/Shop/mobile/006-Cinema-door-wc.jpg',label:'Corridor'},
-  display:{img:'img/Shop/mobile/004-Display-case.jpg',label:'Display Case'},
-  wc:{img:'img/Shop/mobile/008-WC.jpg',label:'WC'},
-  secret:{img:'img/Shop/mobile/009-Secret-room.jpg',label:'Secret Room'},
-  alley:{img:'img/Shop/mobile/001-Alley.jpg',label:'Alley'}
+// ═══ VISUAL EDITOR ═══
+const VE_SCENES = {
+  alley:     { label:'Alley',        mob:'img/Shop/mobile/001-Alley.jpg',     desk:'img/Shop/001-Alley.png' },
+  hall:      { label:'Main Hall',    mob:'img/Shop/mobile/002-Main-hall.jpg', desk:'img/Shop/002-Main-hall.jpg' },
+  shopkeeper:{ label:'Shopkeeper',   mob:'img/Shop/mobile/003-Shopkeeper.jpg',desk:'img/Shop/003-Shopkeeper.png' },
+  display:   { label:'Display Case', mob:'img/Shop/mobile/004-Display-case.jpg',desk:'img/Shop/004-Display-case.png' },
+  books:     { label:'Books',        mob:'img/Shop/mobile/005-Books.jpg',     desk:'img/Shop/005-Books.png' },
+  corridor:  { label:'Corridor',     mob:'img/Shop/mobile/006-Cinema-door-wc.jpg',desk:'img/Shop/006-Cinema-door-wc.png' },
+  cinema:    { label:'Cinema',       mob:'img/Shop/mobile/007-Cinema.jpg',    desk:'img/Shop/007-Cinema.png' },
+  wc:        { label:'WC',           mob:'img/Shop/mobile/008-WC.jpg',        desk:'img/Shop/008-WC.png' },
+  secret:    { label:'Secret Room',  mob:'img/Shop/mobile/009-Secret-room.jpg',desk:'img/Shop/009-Secret-room.png' },
 };
-let hsData=null; // {sha, content, hotspots:{scene:[{id,left,top,width,height,label,extra}]}}
-let hsCurrent='hall';
 
-async function hsLoadFile(){
-  const st=document.getElementById('hsStatus');
-  st.textContent='Loading shop-m.html...';st.style.color='var(--text2)';
-  try{
-    const d=await api('contents/shop-m.html?ref='+BRANCH);
-    const raw=atob(d.content);
-    hsData={sha:d.sha,raw,hotspots:{}};
-    // Parse all scenes
-    for(const sceneId of Object.keys(HS_SCENES)){
-      hsData.hotspots[sceneId]=hsParseScene(raw,sceneId);
+const VE_FILES = {
+  mobile:  { path:'shop-m.html', sha:null, raw:null, hotspots:{} },
+  desktop: { path:'shop.html',   sha:null, raw:null, hotspots:{} }
+};
+
+let veVersion = 'mobile';
+let veScene = 'hall';
+let veSelected = -1; // index of selected hotspot
+let veDevice_ = 'free';
+let veLoaded = false;
+let veDirty = { mobile:false, desktop:false };
+
+// ─── LOAD FILES ───
+async function veLoadFiles(){
+  veStatus('Loading...');
+  try {
+    for(const ver of ['mobile','desktop']){
+      const d = await api(`contents/${VE_FILES[ver].path}?ref=${BRANCH}`);
+      VE_FILES[ver].sha = d.sha;
+      VE_FILES[ver].raw = decodeURIComponent(escape(atob(d.content)));
+      // Parse hotspots for every scene
+      for(const sid of Object.keys(VE_SCENES)){
+        VE_FILES[ver].hotspots[sid] = veParseHotspots(VE_FILES[ver].raw, sid, ver);
+      }
     }
-    st.textContent='Loaded';st.style.color='#4a4';
-  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';}
+    veLoaded = true;
+    veDirty = {mobile:false, desktop:false};
+    veStatus('Loaded','#4a4');
+    veRenderSceneList();
+    veLoadScene();
+  } catch(e){ veStatus('Error: '+e.message,'#a44'); }
 }
 
-function hsParseScene(html,sceneId){
-  // Find scene block
-  const sceneRegex=new RegExp(`id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">([\\s\\S]*?)</div>`);
-  const m=html.match(sceneRegex);
-  if(!m)return [];
-  const block=m[1];
-  const dots=[];
-  const re=/<div class="hotspot"([^>]*)>(?:<span class="label">([^<]*)<\/span>)?/g;
+async function veReload(){ veLoaded=false; await veLoadFiles(); }
+
+function veStatus(msg,color){
+  const el=document.getElementById('veStatus');
+  el.textContent=msg; el.style.color=color||'var(--text2)';
+}
+
+// ─── PARSE ───
+function veParseHotspots(html, sceneId, ver){
+  // Match the hotspots div inside the correct scene
+  const re = new RegExp(`id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">([\\s\\S]*?)<\\/div>`);
+  const m = html.match(re);
+  if(!m) return [];
+  const block = m[1];
+  const dots = [];
+  const hre = /<div class="hotspot"([^>]*)>(?:<span class="label">([^<]*)<\/span>)?/g;
   let match;
-  while((match=re.exec(block))!==null){
-    const attrs=match[1];
-    const label=match[2]||'';
-    // Parse data-goto or data-artifact or data-note
-    const idm=attrs.match(/data-(?:goto|artifact|note)="([^"]+)"/);
-    const id=idm?idm[1]:'?';
-    // Parse style
-    const stm=attrs.match(/style="([^"]+)"/);
-    const style=stm?stm[1]:'';
-    const left=parseFloat((style.match(/left:([\d.]+)%/)||[0,0])[1]);
-    const top=parseFloat((style.match(/top:([\d.]+)%/)||[0,0])[1]);
-    const width=parseFloat((style.match(/width:([\d.]+)%/)||[0,9])[1]);
-    const height=parseFloat((style.match(/height:([\d.]+)%/)||[0,30])[1]);
-    // Keep extra style props (--dot-x, --dot-y, etc.)
-    const extra=style.replace(/left:[\d.]+%/,'').replace(/top:[\d.]+%/,'').replace(/width:[\d.]+%/,'').replace(/height:[\d.]+%/,'').replace(/^[;\s]+|[;\s]+$/g,'').replace(/;{2,}/g,';').replace(/^;|;$/g,'');
-    dots.push({id,left,top,width,height,label,extra});
+  while((match=hre.exec(block))!==null){
+    const attrs = match[1];
+    const label = match[2]||'';
+    // data attr
+    const dm = attrs.match(/data-(goto|artifact|note)="([^"]+)"/);
+    const dataType = dm?dm[1]:'goto';
+    const dataId = dm?dm[2]:'?';
+    // glow
+    const gm = attrs.match(/data-glow="([^"]+)"/);
+    const glow = gm?gm[1]:'';
+    // whisper
+    const wm = attrs.match(/data-whisper="([^"]+)"/);
+    const whisper = wm?wm[1]:'';
+    // highlight
+    const hlm = attrs.match(/data-highlight="([^"]+)"/);
+    const highlight = hlm?hlm[1]:'';
+    // style
+    const sm = attrs.match(/style="([^"]+)"/);
+    const style = sm?sm[1]:'';
+    const left = parseFloat((style.match(/left:([\d.]+)%/)||[0,0])[1]);
+    const top = parseFloat((style.match(/top:([\d.]+)%/)||[0,0])[1]);
+    const width = parseFloat((style.match(/width:([\d.]+)%/)||[0,9])[1]);
+    const height = parseFloat((style.match(/height:([\d.]+)%/)||[0,30])[1]);
+    // Extra style props
+    const extra = style.replace(/left:[\d.]+%/,'').replace(/top:[\d.]+%/,'').replace(/width:[\d.]+%/,'').replace(/height:[\d.]+%/,'').replace(/^[;\s]+|[;\s]+$/g,'').replace(/;{2,}/g,';').replace(/^;|;$/g,'');
+    dots.push({ dataType, dataId, glow, whisper, highlight, label, left, top, width, height, extra });
   }
   return dots;
 }
 
-function hsLoadScene(){
-  hsCurrent=document.getElementById('hsScene').value;
-  const scene=HS_SCENES[hsCurrent];
-  if(!scene)return;
-  const img=document.getElementById('hsImg');
-  document.getElementById('hsDots').innerHTML='';
-  document.getElementById('hsTable').innerHTML='';
-  img.src='https://raw.githubusercontent.com/'+REPO+'/'+BRANCH+'/'+scene.img+'?t='+Date.now();
-  img.onload=()=>{if(hsData)hsRender();};
+// ─── VERSION / SCENE SWITCHING ───
+function veSetVersion(ver){
+  veVersion = ver;
+  document.querySelectorAll('.ve-tbtn').forEach(b=>b.classList.toggle('active',b.dataset.ver===ver));
+  veSelected = -1;
+  veRenderSceneList();
+  veLoadScene();
 }
 
-function hsRender(){
-  const container=document.getElementById('hsDots');
-  container.innerHTML='';
-  const dots=hsData?.hotspots[hsCurrent]||[];
-  const img=document.getElementById('hsImg');
-  const w=img.clientWidth,h=img.clientHeight;
-  if(!w||!h)return;
+function veRenderSceneList(){
+  const el = document.getElementById('veSceneList');
+  const f = VE_FILES[veVersion];
+  el.innerHTML = Object.entries(VE_SCENES).map(([id,s])=>{
+    const n = (f.hotspots[id]||[]).length;
+    const active = id===veScene?'active':'';
+    return `<div class="ve-scene-item ${active}" onclick="veSelectScene('${id}')">
+      <span>${s.label}</span>
+      <span class="count">${n?n+' pts':''}</span>
+    </div>`;
+  }).join('');
+}
+
+function veSelectScene(id){ veScene=id; veSelected=-1; veRenderSceneList(); veLoadScene(); }
+
+function veLoadScene(){
+  const scene = VE_SCENES[veScene];
+  if(!scene) return;
+  const imgPath = veVersion==='mobile' ? scene.mob : scene.desk;
+  const img = document.getElementById('veImg');
+  img.src = 'https://raw.githubusercontent.com/'+REPO+'/'+BRANCH+'/'+imgPath+'?t='+Date.now();
+  img.onload = ()=>{ veApplyDevice(); veRender(); };
+  veRenderHsList();
+  veRenderProps();
+}
+
+// ─── DEVICE PREVIEW ───
+function veDevice(mode){
+  veDevice_ = mode;
+  document.querySelectorAll('.ve-dbtn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  veApplyDevice();
+  veRender();
+}
+
+function veApplyDevice(){
+  const frame = document.getElementById('veFrame');
+  const img = document.getElementById('veImg');
+  frame.className = 've-frame';
+  img.style.width = '';
+  img.style.maxWidth = '';
+  if(veDevice_==='phone'){
+    frame.classList.add('phone');
+    img.style.width = '375px';
+  } else if(veDevice_==='tablet'){
+    frame.classList.add('tablet');
+    img.style.width = '768px';
+  } else {
+    img.style.maxWidth = 'min(100%, 900px)';
+  }
+}
+
+// ─── RENDER OVERLAY ───
+function veRender(){
+  const overlay = document.getElementById('veOverlay');
+  overlay.innerHTML = '';
+  const f = VE_FILES[veVersion];
+  const dots = f?.hotspots[veScene]||[];
+  const img = document.getElementById('veImg');
+  const w = img.clientWidth, h = img.clientHeight;
+  if(!w||!h) return;
+
+  const showAreas = document.getElementById('veShowAreas')?.checked;
+  const showLabels = document.getElementById('veShowLabels')?.checked;
 
   dots.forEach((d,i)=>{
-    const el=document.createElement('div');
-    el.className='hs-dot';
-    // dot center = left + width/2, top + height/2
-    const cx=d.left+d.width/2;
-    const cy=d.top+d.height/2;
-    el.style.left=(cx/100*w)+'px';
-    el.style.top=(cy/100*h)+'px';
-    el.innerHTML=`<span class="hs-name">${d.label||d.id}</span>`;
-    el.dataset.idx=i;
-    // Drag
-    el.addEventListener('mousedown',e=>hsDragStart(e,i));
-    el.addEventListener('touchstart',e=>hsDragStart(e,i),{passive:false});
-    container.appendChild(el);
+    // Area rectangle
+    if(showAreas){
+      const area = document.createElement('div');
+      area.className = 've-area'+(i===veSelected?' active':'');
+      area.style.left = (d.left/100*w)+'px';
+      area.style.top = (d.top/100*h)+'px';
+      area.style.width = (d.width/100*w)+'px';
+      area.style.height = (d.height/100*h)+'px';
+      overlay.appendChild(area);
+    }
+    // Dot (center of area)
+    const dot = document.createElement('div');
+    dot.className = 've-dot'+(i===veSelected?' active':'');
+    const cx = d.left + d.width/2;
+    const cy = d.top + d.height/2;
+    dot.style.left = (cx/100*w)+'px';
+    dot.style.top = (cy/100*h)+'px';
+    dot.style.pointerEvents = 'auto';
+    if(showLabels){
+      dot.innerHTML = `<span class="ve-dot-label">${d.label||d.dataId}</span>`;
+    }
+    dot.addEventListener('mousedown', e=>veDragStart(e,i));
+    dot.addEventListener('click', e=>{ e.stopPropagation(); veSelectHotspot(i); });
+    overlay.appendChild(dot);
   });
 
-  // Render table
-  hsRenderTable(dots);
+  // Update sidebar
+  veRenderHsList();
+  document.getElementById('veHsCount').textContent = `(${dots.length})`;
 }
 
-function hsRenderTable(dots){
-  const tb=document.getElementById('hsTable');
-  if(!dots.length){tb.innerHTML='<span style="color:var(--text2);font-size:11px">No hotspots in this scene</span>';return;}
-  let html='<table class="hs-tbl"><tr><th>Name</th><th>left %</th><th>top %</th><th>width %</th><th>height %</th><th>dot center</th></tr>';
-  dots.forEach((d,i)=>{
-    const cx=(d.left+d.width/2).toFixed(1);
-    const cy=(d.top+d.height/2).toFixed(1);
-    html+=`<tr>
-      <td style="color:var(--gold)">${d.label||d.id}</td>
-      <td><input value="${d.left}" onchange="hsEditVal(${i},'left',this.value)"></td>
-      <td><input value="${d.top}" onchange="hsEditVal(${i},'top',this.value)"></td>
-      <td><input value="${d.width}" onchange="hsEditVal(${i},'width',this.value)"></td>
-      <td><input value="${d.height}" onchange="hsEditVal(${i},'height',this.value)"></td>
-      <td style="color:var(--text2)">${cx}, ${cy}</td>
-    </tr>`;
-  });
-  html+='</table>';
-  tb.innerHTML=html;
+// ─── HOTSPOT LIST ───
+function veRenderHsList(){
+  const el = document.getElementById('veHsList');
+  const dots = VE_FILES[veVersion]?.hotspots[veScene]||[];
+  if(!dots.length){ el.innerHTML='<span style="color:var(--text2);font-size:10px">No hotspots</span>'; return; }
+  el.innerHTML = dots.map((d,i)=>{
+    const colors = {amber:'#c8a060',red:'#a33',silver:'#aaa',mystic:'#7a6a9a','':'#666'};
+    const c = colors[d.glow]||'#666';
+    return `<div class="ve-hs-item ${i===veSelected?'active':''}" onclick="veSelectHotspot(${i})">
+      <span class="dot-preview" style="background:${c}"></span>
+      <span>${d.label||d.dataId}</span>
+      <span style="font-size:9px;color:var(--text2);margin-left:auto">${d.left.toFixed(0)}%, ${d.top.toFixed(0)}%</span>
+    </div>`;
+  }).join('');
 }
 
-function hsEditVal(idx,prop,val){
-  const v=parseFloat(val);
-  if(isNaN(v))return;
-  hsData.hotspots[hsCurrent][idx][prop]=v;
-  hsRender();
+// ─── SELECT / PROPERTIES ───
+function veSelectHotspot(idx){
+  veSelected = idx;
+  veRender();
+  veRenderProps();
 }
 
-let hsDragging=null;
-function hsDragStart(e,idx){
+function veRenderProps(){
+  const el = document.getElementById('veProps');
+  if(veSelected<0){
+    el.innerHTML='<span style="color:var(--text2)">Select a hotspot</span>'; return;
+  }
+  const d = VE_FILES[veVersion].hotspots[veScene][veSelected];
+  if(!d){ el.innerHTML=''; return; }
+  const isDesktop = veVersion==='desktop';
+  el.innerHTML = `
+    <div class="ve-prop-row"><label>ID</label><input value="${d.dataId}" onchange="veProp('dataId',this.value)"></div>
+    <div class="ve-prop-row"><label>Label</label><input value="${d.label}" onchange="veProp('label',this.value)"></div>
+    ${isDesktop?`<div class="ve-prop-row"><label>Whisper</label><input value="${d.whisper}" onchange="veProp('whisper',this.value)"></div>`:''}
+    ${isDesktop?`<div class="ve-prop-row"><label>Glow</label>
+      <select onchange="veProp('glow',this.value)">
+        <option value="amber" ${d.glow==='amber'?'selected':''}>Amber</option>
+        <option value="red" ${d.glow==='red'?'selected':''}>Red</option>
+        <option value="silver" ${d.glow==='silver'?'selected':''}>Silver</option>
+        <option value="mystic" ${d.glow==='mystic'?'selected':''}>Mystic</option>
+      </select></div>`:''}
+    <div class="ve-prop-row"><label>Left %</label><input type="number" step="0.1" value="${d.left}" onchange="veProp('left',+this.value)"></div>
+    <div class="ve-prop-row"><label>Top %</label><input type="number" step="0.1" value="${d.top}" onchange="veProp('top',+this.value)"></div>
+    <div class="ve-prop-row"><label>Width %</label><input type="number" step="0.1" value="${d.width}" onchange="veProp('width',+this.value)"></div>
+    <div class="ve-prop-row"><label>Height %</label><input type="number" step="0.1" value="${d.height}" onchange="veProp('height',+this.value)"></div>
+    <div style="margin-top:4px;font-size:9px;color:var(--text2)">Dot center: ${(d.left+d.width/2).toFixed(1)}%, ${(d.top+d.height/2).toFixed(1)}%</div>
+  `;
+}
+
+function veProp(key,val){
+  const d = VE_FILES[veVersion].hotspots[veScene][veSelected];
+  if(!d) return;
+  d[key] = val;
+  veDirty[veVersion] = true;
+  veRender();
+  veRenderProps();
+}
+
+// ─── DRAG ───
+function veDragStart(e, idx){
   e.preventDefault();
-  const el=document.querySelectorAll('.hs-dot')[idx];
+  veSelectHotspot(idx);
+  const allDots = document.querySelectorAll('.ve-dot');
+  const el = allDots[idx];
+  if(!el) return;
   el.classList.add('dragging');
-  hsDragging={idx,el};
-  const move=e.type==='mousedown'?'mousemove':'touchmove';
-  const end=e.type==='mousedown'?'mouseup':'touchend';
-  const onMove=ev=>{
+
+  const onMove = ev => {
     ev.preventDefault();
-    const cx=ev.touches?ev.touches[0].clientX:ev.clientX;
-    const cy=ev.touches?ev.touches[0].clientY:ev.clientY;
-    const img=document.getElementById('hsImg');
-    const rect=img.getBoundingClientRect();
-    const px=Math.max(0,Math.min(1,(cx-rect.left)/rect.width))*100;
-    const py=Math.max(0,Math.min(1,(cy-rect.top)/rect.height))*100;
-    // Update dot position (center = px, py → left = px - width/2)
-    const d=hsData.hotspots[hsCurrent][idx];
-    d.left=Math.max(0,Math.round((px-d.width/2)*10)/10);
-    d.top=Math.max(0,Math.round((py-d.height/2)*10)/10);
-    el.style.left=(px/100*rect.width)+'px';
-    el.style.top=(py/100*rect.height)+'px';
-    // Show coords
-    const co=document.getElementById('hsCoords');
-    co.style.display='block';
-    co.textContent=`${d.left}%, ${d.top}%  (center: ${px.toFixed(1)}%, ${py.toFixed(1)}%)`;
+    const cx = ev.touches?ev.touches[0].clientX:ev.clientX;
+    const cy = ev.touches?ev.touches[0].clientY:ev.clientY;
+    const img = document.getElementById('veImg');
+    const rect = img.getBoundingClientRect();
+    const px = Math.max(0,Math.min(1,(cx-rect.left)/rect.width))*100;
+    const py = Math.max(0,Math.min(1,(cy-rect.top)/rect.height))*100;
+    const d = VE_FILES[veVersion].hotspots[veScene][idx];
+    d.left = Math.max(0, Math.round((px - d.width/2)*10)/10);
+    d.top = Math.max(0, Math.round((py - d.height/2)*10)/10);
+    el.style.left = (px/100*rect.width)+'px';
+    el.style.top = (py/100*rect.height)+'px';
+    veDirty[veVersion] = true;
+    // Coords tooltip
+    const co = document.getElementById('veCoords');
+    co.style.display = 'block';
+    co.textContent = `left:${d.left}%  top:${d.top}%  center:${px.toFixed(1)}%,${py.toFixed(1)}%`;
   };
-  const onEnd=()=>{
+  const onEnd = () => {
     el.classList.remove('dragging');
-    hsDragging=null;
-    document.getElementById('hsCoords').style.display='none';
-    document.removeEventListener(move,onMove);
-    document.removeEventListener(end,onEnd);
-    hsRender(); // update table
+    document.getElementById('veCoords').style.display='none';
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onEnd);
+    veRender();
+    veRenderProps();
   };
-  document.addEventListener(move,onMove,{passive:false});
-  document.addEventListener(end,onEnd);
+  document.addEventListener('mousemove',onMove,{passive:false});
+  document.addEventListener('mouseup',onEnd);
 }
 
-// Click image to show coordinates
-document.getElementById('hsImg')?.addEventListener?.('click',e=>{
-  const img=e.target;
-  const rect=img.getBoundingClientRect();
-  const px=((e.clientX-rect.left)/rect.width*100).toFixed(1);
-  const py=((e.clientY-rect.top)/rect.height*100).toFixed(1);
-  const co=document.getElementById('hsCoords');
-  co.style.display='block';co.textContent=`Click: ${px}%, ${py}%`;
-  setTimeout(()=>co.style.display='none',2000);
+// Click canvas to show coords
+document.getElementById('veCanvas')?.addEventListener('click',e=>{
+  const img = document.getElementById('veImg');
+  const rect = img.getBoundingClientRect();
+  if(e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) return;
+  const px = ((e.clientX-rect.left)/rect.width*100).toFixed(1);
+  const py = ((e.clientY-rect.top)/rect.height*100).toFixed(1);
+  const co = document.getElementById('veCoords');
+  co.style.display='block'; co.textContent=`Click: ${px}%, ${py}%`;
+  setTimeout(()=>co.style.display='none',2500);
 });
 
-async function hsSave(){
-  if(!hsData){toast('Load file first','error');return;}
-  const st=document.getElementById('hsStatus');
-  st.textContent='Saving...';st.style.color='var(--gold)';
-  try{
-    let html=hsData.raw;
-    // For each scene, rebuild hotspot HTML
-    for(const sceneId of Object.keys(hsData.hotspots)){
-      const dots=hsData.hotspots[sceneId];
-      if(!dots.length)continue;
-      // Find the hotspots block for this scene
-      const re=new RegExp(`(id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">)([\\s\\S]*?)(</div>)`);
-      const m=html.match(re);
-      if(!m)continue;
-      // Rebuild hotspot divs
-      let newBlock='\n';
-      dots.forEach(d=>{
-        const dataAttr=sceneId==='display'?`data-artifact="${d.id}"`
-          :sceneId==='secret'?`data-note="${d.id}"`
-          :`data-goto="${d.id}"`;
-        const style=`left:${d.left}%;top:${d.top}%;width:${d.width}%;height:${d.height}%${d.extra?';'+d.extra:''}`;
-        const lbl=d.label?`<span class="label">${d.label}</span>`:'';
-        newBlock+=`      <div class="hotspot" ${dataAttr} style="${style}">${lbl}</div>\n`;
-      });
-      newBlock+='    ';
-      html=html.replace(re,'$1'+newBlock+'$3');
+// ─── SAVE ───
+async function veSave(){
+  if(!veLoaded){ toast('Load files first','error'); return; }
+  veStatus('Saving...','var(--gold)');
+  let saved = 0;
+  try {
+    for(const ver of ['mobile','desktop']){
+      if(!veDirty[ver]) continue;
+      let html = VE_FILES[ver].raw;
+      for(const sceneId of Object.keys(VE_FILES[ver].hotspots)){
+        const dots = VE_FILES[ver].hotspots[sceneId];
+        if(!dots.length) continue;
+        const re = new RegExp(`(id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">)([\\s\\S]*?)(</div>)`);
+        const m = html.match(re);
+        if(!m) continue;
+        let block = '\n';
+        dots.forEach(d=>{
+          const da = `data-${d.dataType}="${d.dataId}"`;
+          let attrs = da;
+          if(ver==='desktop'){
+            if(d.glow) attrs += ` data-glow="${d.glow}"`;
+            if(d.whisper) attrs += ` data-whisper="${d.whisper}"`;
+            if(d.highlight) attrs += ` data-highlight="${d.highlight}"`;
+          }
+          const style = `left:${d.left}%;top:${d.top}%;width:${d.width}%;height:${d.height}%${d.extra?';'+d.extra:''}`;
+          attrs += ` style="${style}"`;
+          const lbl = d.label ? `<span class="label">${d.label}</span>` : '';
+          block += `      <div class="hotspot" ${attrs}>${lbl}</div>\n`;
+        });
+        block += '    ';
+        html = html.replace(re, '$1'+block+'$3');
+      }
+      const content = btoa(unescape(encodeURIComponent(html)));
+      const r = await api(`contents/${VE_FILES[ver].path}`,{method:'PUT',body:JSON.stringify({
+        message:`Visual editor: update ${ver} hotspots`, content, sha:VE_FILES[ver].sha, branch:BRANCH
+      })});
+      VE_FILES[ver].sha = r.content.sha;
+      VE_FILES[ver].raw = html;
+      veDirty[ver] = false;
+      saved++;
     }
-    // Commit
-    const content=btoa(unescape(encodeURIComponent(html)));
-    const r=await api('contents/shop-m.html',{method:'PUT',body:JSON.stringify({
-      message:'Hotspot positions updated via admin',content,sha:hsData.sha,branch:BRANCH
-    })});
-    hsData.sha=r.content.sha;
-    hsData.raw=html;
-    st.textContent='Saved!';st.style.color='#4a4';
-    toast('Hotspots saved to GitHub','success');
-  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';toast('Save failed: '+e.message,'error');}
+    veStatus(saved?`Saved ${saved} file(s)!`:'No changes','#4a4');
+    toast(saved?`Saved ${saved} file(s) to GitHub`:'Nothing to save', saved?'success':'');
+  } catch(e){
+    veStatus('Error: '+e.message,'#a44');
+    toast('Save failed: '+e.message,'error');
+  }
 }
 
+// ─── LIVE PREVIEW ───
+function vePreviewLive(){
+  const url = veVersion==='mobile' ? 'https://namenlos.black/shop-m.html' : 'https://namenlos.black/shop.html';
+  window.open(url,'_blank');
+}
+
+// ─── INIT ───
+window.addEventListener('resize',()=>{ if(veLoaded) veRender(); });
+
 // Resize: re-render dots
-window.addEventListener('resize',()=>{if(hsData)hsRender();});
+window.addEventListener('resize',()=>{if(veLoaded)veRender();});
 </script>
 </body>
 </html>
