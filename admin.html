@@ -175,6 +175,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <button class="tab" data-tab="secret">Secret Room</button>
     <button class="tab" data-tab="hotspots">Visual Editor</button>
     <button class="tab" data-tab="media">Media</button>
+    <button class="tab" data-tab="books">Books</button>
   </div>
   <div class="panel active" id="panel-files">
     <div class="toolbar">
@@ -377,6 +378,64 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       </div>
     </div>
   </div>
+  <!-- ═══ BOOKS MANAGER ═══ -->
+  <div class="panel" id="panel-books">
+    <div style="padding:16px;overflow-y:auto;flex:1;max-width:900px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <span style="color:var(--gold);font-size:14px">Books Manager</span>
+        <select id="bookSelect" onchange="bookLoadEdit()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px"></select>
+        <button class="btn btn-primary" onclick="bookSave()">Save to GitHub</button>
+        <span id="bookStatus" style="font-size:10px;color:var(--text2)"></span>
+      </div>
+      <div id="bookEditor" style="display:none">
+        <div style="display:grid;grid-template-columns:120px 1fr;gap:16px;margin-bottom:20px">
+          <div>
+            <img id="bkCover" style="width:120px;height:170px;object-fit:cover;border:1px solid var(--border);background:var(--bg)" src="">
+            <input type="file" id="bkCoverFile" accept=".jpg,.jpeg,.png,.webp" style="font-size:9px;color:var(--text2);margin-top:4px;width:120px">
+            <button class="btn" onclick="bookUploadCover()" style="width:120px;margin-top:2px;font-size:9px">Upload Cover</button>
+          </div>
+          <div>
+            <div class="prop-row"><label>Title</label><input id="bkTitle"></div>
+            <div class="prop-row"><label>Genre</label><input id="bkGenre"></div>
+            <div class="prop-row"><label>Status</label>
+              <select id="bkStatus"><option value="available">Available</option><option value="coming_soon">Coming Soon</option><option value="planned">Planned</option><option value="in_dev">In Development</option></select>
+            </div>
+            <div class="prop-row"><label>Desc</label><textarea id="bkDesc" style="min-height:40px"></textarea></div>
+            <div class="prop-row"><label>Words</label><input id="bkWords" placeholder="~79,000"></div>
+            <div class="prop-row"><label>Lang</label><input id="bkLang" placeholder="Russian"></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border);padding:12px;margin-bottom:16px;background:var(--bg2)">
+          <div style="color:var(--gold);font-size:11px;letter-spacing:2px;margin-bottom:10px">FILES</div>
+          <div class="prop-row"><label style="width:80px">PDF</label><input id="bkPdf" placeholder="URL"><button class="btn" onclick="bookUploadFile('bkPdf','ebook')" style="margin-left:4px;font-size:9px">Upload</button></div>
+          <div class="prop-row"><label style="width:80px">EPUB</label><input id="bkEpub" placeholder="URL"><button class="btn" onclick="bookUploadFile('bkEpub','ebook')" style="margin-left:4px;font-size:9px">Upload</button></div>
+          <div class="prop-row"><label style="width:80px">FB2</label><input id="bkFb2" placeholder="URL"><button class="btn" onclick="bookUploadFile('bkFb2','ebook')" style="margin-left:4px;font-size:9px">Upload</button></div>
+          <div class="prop-row"><label style="width:80px">Sample</label><input id="bkSample" placeholder="Free sample PDF URL"><button class="btn" onclick="bookUploadFile('bkSample','ebook')" style="margin-left:4px;font-size:9px">Upload</button></div>
+          <input type="file" id="bkFileInput" accept=".pdf,.epub,.fb2,.mobi,.azw3,.docx,.txt" style="display:none">
+        </div>
+        <div style="border:1px solid var(--border);padding:12px;background:var(--bg2)">
+          <div style="color:var(--gold);font-size:11px;letter-spacing:2px;margin-bottom:10px">BUNDLES & PRICES</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+            <div>
+              <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Standard</div>
+              <div class="prop-row"><label style="width:40px">Price</label><input id="bkStdPrice" placeholder="$25" style="width:60px"></div>
+              <div class="prop-row"><label style="width:40px">Link</label><input id="bkStdUrl" placeholder="Digistore URL"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Premium</div>
+              <div class="prop-row"><label style="width:40px">Price</label><input id="bkPremPrice" placeholder="$49" style="width:60px"></div>
+              <div class="prop-row"><label style="width:40px">Link</label><input id="bkPremUrl" placeholder="Digistore URL"></div>
+            </div>
+            <div>
+              <div style="font-size:10px;color:var(--text2);margin-bottom:4px">Subscription</div>
+              <div class="prop-row"><label style="width:40px">Price</label><input id="bkSubPrice" placeholder="$7.99/mo" style="width:60px"></div>
+              <div class="prop-row"><label style="width:40px">Link</label><input id="bkSubUrl" placeholder="Digistore URL"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
@@ -429,7 +488,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret'){loadSecretRoom();loadNotesEditor();}if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}if(t.dataset.tab==='media')mediaLoad();
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret'){loadSecretRoom();loadNotesEditor();}if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}if(t.dataset.tab==='media')mediaLoad();if(t.dataset.tab==='books')bookLoad();
 }));
 
 // API
@@ -1247,8 +1306,129 @@ function vePreviewLive(){
 // ─── INIT ───
 window.addEventListener('resize',()=>{ if(veLoaded) veRender(); });
 
-// Resize: re-render dots
-window.addEventListener('resize',()=>{if(veLoaded)veRender();});
+// ═══ BOOKS MANAGER ═══
+const BOOKS_PATH='data/books.json';
+let booksData=null, booksSha=null, currentBookId=null;
+
+async function bookLoad(){
+  const st=document.getElementById('bookStatus');
+  st.textContent='Loading...';
+  try{
+    const d=await api(`contents/${BOOKS_PATH}?ref=${BRANCH}`);
+    booksData=JSON.parse(decodeURIComponent(escape(atob(d.content))));
+    booksSha=d.sha;
+    const sel=document.getElementById('bookSelect');
+    sel.innerHTML='<option value="">-- select book --</option>';
+    for(const [id,b] of Object.entries(booksData)){
+      const status={available:'✓',coming_soon:'◎',planned:'○',in_dev:'◐'}[b.status]||'?';
+      sel.innerHTML+=`<option value="${id}">${status} ${b.title}</option>`;
+    }
+    st.textContent='Loaded';st.style.color='#4a4';
+  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';}
+}
+
+function bookLoadEdit(){
+  const id=document.getElementById('bookSelect').value;
+  const wrap=document.getElementById('bookEditor');
+  if(!id||!booksData[id]){wrap.style.display='none';return;}
+  currentBookId=id;
+  wrap.style.display='block';
+  const b=booksData[id];
+  document.getElementById('bkTitle').value=b.title||'';
+  document.getElementById('bkGenre').value=b.genre||'';
+  document.getElementById('bkStatus').value=b.status||'planned';
+  document.getElementById('bkDesc').value=b.description||'';
+  document.getElementById('bkWords').value=b.words||'';
+  document.getElementById('bkLang').value=b.lang||'';
+  document.getElementById('bkCover').src=b.cover?('https://raw.githubusercontent.com/'+REPO+'/'+BRANCH+'/'+b.cover):'';
+  // Files
+  const f=b.files||{};
+  document.getElementById('bkPdf').value=f.ebook_pdf||'';
+  document.getElementById('bkEpub').value=f.ebook_epub||'';
+  document.getElementById('bkFb2').value=f.ebook_fb2||'';
+  document.getElementById('bkSample').value=f.sample_pdf||'';
+  // Bundles
+  const std=b.bundles?.standard||{};
+  const prem=b.bundles?.premium||{};
+  const sub=b.bundles?.subscription||{};
+  document.getElementById('bkStdPrice').value=std.price||'';
+  document.getElementById('bkStdUrl').value=std.digistore_url||'';
+  document.getElementById('bkPremPrice').value=prem.price||'';
+  document.getElementById('bkPremUrl').value=prem.digistore_url||'';
+  document.getElementById('bkSubPrice').value=sub.price||'';
+  document.getElementById('bkSubUrl').value=sub.digistore_url||'';
+}
+
+async function bookSave(){
+  if(!booksData){toast('Load books first','error');return;}
+  // Collect current edits
+  if(currentBookId&&booksData[currentBookId]){
+    const b=booksData[currentBookId];
+    b.title=document.getElementById('bkTitle').value.trim();
+    b.genre=document.getElementById('bkGenre').value.trim();
+    b.status=document.getElementById('bkStatus').value;
+    b.description=document.getElementById('bkDesc').value.trim();
+    b.words=document.getElementById('bkWords').value.trim();
+    b.lang=document.getElementById('bkLang').value.trim();
+    b.files=b.files||{};
+    b.files.ebook_pdf=document.getElementById('bkPdf').value.trim();
+    b.files.ebook_epub=document.getElementById('bkEpub').value.trim();
+    b.files.ebook_fb2=document.getElementById('bkFb2').value.trim();
+    b.files.sample_pdf=document.getElementById('bkSample').value.trim();
+    b.bundles=b.bundles||{};
+    b.bundles.standard={price:document.getElementById('bkStdPrice').value.trim(),digistore_url:document.getElementById('bkStdUrl').value.trim(),includes:b.bundles?.standard?.includes||[]};
+    b.bundles.premium={price:document.getElementById('bkPremPrice').value.trim(),digistore_url:document.getElementById('bkPremUrl').value.trim(),includes:b.bundles?.premium?.includes||[]};
+    b.bundles.subscription={price:document.getElementById('bkSubPrice').value.trim(),digistore_url:document.getElementById('bkSubUrl').value.trim(),includes:b.bundles?.subscription?.includes||[]};
+  }
+  const st=document.getElementById('bookStatus');
+  st.textContent='Saving...';st.style.color='var(--gold)';
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(booksData,null,2))));
+    const body={message:'Update books via admin',content,branch:BRANCH};
+    if(booksSha)body.sha=booksSha;
+    const r=await api(`contents/${BOOKS_PATH}`,{method:'PUT',body:JSON.stringify(body)});
+    booksSha=r.content.sha;
+    st.textContent='Saved!';st.style.color='#4a4';
+    toast('Books saved!','success');
+  }catch(e){st.textContent='Error';st.style.color='#a44';toast('Error: '+e.message,'error');}
+}
+
+let _bkUploadTarget=null;
+async function bookUploadFile(inputId, type){
+  _bkUploadTarget=inputId;
+  document.getElementById('bkFileInput').onchange=async function(){
+    const file=this.files[0];if(!file)return;
+    const st=document.getElementById('bookStatus');
+    st.textContent='Uploading '+file.name+'...';st.style.color='var(--gold)';
+    try{
+      const fd=new FormData();fd.append('file',file);fd.append('key',MEDIA_UPLOAD_KEY);fd.append('type',type);
+      const r=await fetch(MEDIA_UPLOAD_URL,{method:'POST',body:fd});
+      const d=await r.json();
+      if(d.error)throw new Error(d.error);
+      document.getElementById(_bkUploadTarget).value=d.url;
+      st.textContent='Uploaded!';st.style.color='#4a4';
+      toast(type+' uploaded: '+d.name,'success');
+    }catch(e){st.textContent='Error';st.style.color='#a44';toast('Upload error: '+e.message,'error');}
+  };
+  document.getElementById('bkFileInput').click();
+}
+
+async function bookUploadCover(){
+  const file=document.getElementById('bkCoverFile').files[0];
+  if(!file){toast('Select cover image','error');return;}
+  const st=document.getElementById('bookStatus');
+  st.textContent='Uploading cover...';st.style.color='var(--gold)';
+  try{
+    const fd=new FormData();fd.append('file',file);fd.append('key',MEDIA_UPLOAD_KEY);fd.append('type','image');
+    const r=await fetch(MEDIA_UPLOAD_URL,{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.error)throw new Error(d.error);
+    document.getElementById('bkCover').src=d.url;
+    if(currentBookId&&booksData[currentBookId])booksData[currentBookId].cover=d.url;
+    st.textContent='Cover uploaded!';st.style.color='#4a4';
+    toast('Cover uploaded','success');
+  }catch(e){st.textContent='Error';st.style.color='#a44';toast(e.message,'error');}
+}
 
 // ═══ MEDIA MANAGER ═══
 const MEDIA_PATH='data/media.json';

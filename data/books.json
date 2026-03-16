@@ -1,0 +1,64 @@
+{
+  "skinme": {
+    "title": "Skin Me",
+    "author": "Mary-Ann Black",
+    "genre": "Paranormal Dark Romance 18+",
+    "words": "~79,000",
+    "lang": "Russian",
+    "status": "available",
+    "cover": "img/Books/skin-me.jpg",
+    "bundles": {
+      "standard": {"price": "$25", "includes": ["Ebook (PDF + EPUB)", "Soundtrack (20 tracks)", "Character art collection"], "digistore_url": ""},
+      "premium": {"price": "$49", "includes": ["Everything in Standard", "15 exclusive video clips", "Full audiobook (ElevenLabs)"], "digistore_url": ""},
+      "subscription": {"price": "$7.99/mo", "includes": ["1 episode per week", "Serialized reading experience"], "digistore_url": ""}
+    },
+    "files": {
+      "ebook_pdf": "",
+      "ebook_epub": "",
+      "ebook_fb2": "",
+      "sample_pdf": "",
+      "cover_hq": ""
+    },
+    "description": "A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it."
+  },
+  "carryme": {
+    "title": "Carry Me",
+    "author": "Mary-Ann Black",
+    "genre": "Dark YA ab 16",
+    "status": "coming_soon",
+    "cover": "",
+    "bundles": {},
+    "files": {},
+    "description": "The wig has been watching. Auburn curls like fire frozen mid-fall."
+  },
+  "muetter": {
+    "title": "Warum Mütter töten?",
+    "author": "Mary-Ann Black",
+    "genre": "Mystical Thriller",
+    "status": "coming_soon",
+    "cover": "",
+    "bundles": {},
+    "files": {},
+    "description": "The hourglass. The sand flows upward. Time moves backward."
+  },
+  "layme": {
+    "title": "Lay Me",
+    "author": "Mary-Ann Black",
+    "genre": "Dark Romance 18+",
+    "status": "planned",
+    "cover": "",
+    "bundles": {},
+    "files": {},
+    "description": "79 cards. One more than standard. The extra card has no name."
+  },
+  "spinme": {
+    "title": "Spin Me",
+    "author": "Mary-Ann Black",
+    "genre": "Dark Romance 18+",
+    "status": "planned",
+    "cover": "",
+    "bundles": {},
+    "files": {},
+    "description": "The pointe shoes remember every dancer who bled in them."
+  }
+}
