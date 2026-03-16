@@ -252,6 +252,40 @@ body{cursor:default}
 /* Mobile-only elements hidden by default */
 .mobile-hint-btn{display:none}
 
+/* ═══ CODE ENTRY SCREEN ═══ */
+.code-screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#000;z-index:31;
+  padding:20px;
+}
+.code-title{
+  font-family:'Cinzel',serif;font-size:clamp(24px,5vw,42px);
+  letter-spacing:10px;text-transform:uppercase;color:#c8a060;font-weight:400;
+  margin-bottom:8px;
+}
+.code-sub{
+  font-family:'Cormorant Garamond',serif;font-size:clamp(13px,2vw,16px);
+  color:#4a3a28;font-style:italic;margin-bottom:40px;text-align:center;
+}
+.code-input-wrap{text-align:center}
+.code-input{
+  background:transparent;border:none;border-bottom:1px solid rgba(200,160,80,0.2);
+  color:#c8a060;font-family:'Cinzel',serif;font-size:clamp(18px,3vw,24px);
+  letter-spacing:8px;text-align:center;padding:12px 20px;
+  width:200px;outline:none;caret-color:#c8a060;
+}
+.code-input::placeholder{color:#2a2218;font-size:14px;letter-spacing:4px}
+.code-input:focus{border-bottom-color:rgba(200,160,80,0.4)}
+.code-error{
+  font-family:'Cormorant Garamond',serif;font-size:13px;
+  color:#6b1c1c;font-style:italic;margin-top:12px;min-height:20px;
+}
+.code-hint{
+  font-family:'Cormorant Garamond',serif;font-size:12px;
+  color:#2a2218;font-style:italic;margin-top:40px;
+}
+
 /* ═══════════════════════════════════════ */
 /* ═══ MOBILE ═══ */
 /* ═══════════════════════════════════════ */
@@ -267,7 +301,7 @@ body{cursor:default}
   }
   .hotspots{
     width:auto;height:100%;
-    min-width:180%;
+    aspect-ratio:1200/670;
     left:50%;top:50%;
     transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
     transition:none;
@@ -437,12 +471,25 @@ body{cursor:default}
 </div>
 <div id="transition"></div>
 
+<!-- ═══════ SCENE: CODE ENTRY ═══════ -->
+<div class="scene active" id="scene-code">
+  <div class="code-screen">
+    <div class="code-title">NAMENLOS</div>
+    <div class="code-sub">The shop has no address. But it has a word.</div>
+    <div class="code-input-wrap">
+      <input type="text" id="codeInput" class="code-input" placeholder="Enter the code" maxlength="6" autocomplete="off" inputmode="numeric">
+      <div class="code-error" id="codeError"></div>
+    </div>
+    <div class="code-hint">If you know the word, you know the way in.</div>
+  </div>
+</div>
+
 <!-- ═══════ SCENE: ALLEY ═══════ -->
-<div class="scene active" id="scene-alley">
+<div class="scene" id="scene-alley">
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
   <img class="scene-highlight" id="hl-alley-door" data-src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="left:64%;top:27.3%;width:8.9%;height:51.9%">
+    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="left:69.2%;top:26.1%;width:12.5%;height:60.4%">
       <span class="label">Enter the Shop</span>
     </div>
   </div>
@@ -457,19 +504,19 @@ body{cursor:default}
   <img class="scene-highlight glow-silver" id="hl-artifacts" data-src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
   <div class="hotspots">
     <!-- Shopkeeper -->
-    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:22.3%;top:32%;width:12.6%;height:32.9%;--dot-x:45%;--dot-y:30%">
+    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:26.7%;top:23.9%;width:8.8%;height:35.8%;--dot-x:50%;--dot-y:25%">
       <span class="label">The Shopkeeper</span>
     </div>
     <!-- Bookshelf -->
-    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:54.9%;top:22.8%;width:10.2%;height:37%;--dot-x:50%;--dot-y:40%">
+    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:55%;top:23.1%;width:9.2%;height:34.3%;--dot-x:50%;--dot-y:40%">
       <span class="label">The Books</span>
     </div>
     <!-- Glass cabinet = artifacts -->
-    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:68.5%;top:18.7%;width:12.8%;height:45.7%;--dot-x:50%;--dot-y:35%">
+    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:72.9%;top:18.7%;width:9.6%;height:44.8%;--dot-x:50%;--dot-y:35%">
       <span class="label">Artifacts</span>
     </div>
     <!-- Red door -->
-    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:45.5%;top:39.5%;width:9.6%;height:31%;--dot-x:50%;--dot-y:40%">
+    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:46.5%;top:40.3%;width:6%;height:27.6%;--dot-x:50%;--dot-y:40%">
       <span class="label">The Red Door</span>
     </div>
   </div>
@@ -576,12 +623,12 @@ body{cursor:default}
   <img class="scene-highlight glow-red" id="hl-cinema" data-src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
   <img class="scene-highlight" id="hl-wc" data-src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
-    <!-- WC door: wooden door center-left -->
-    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:35%;top:28%;width:13%;height:60%;--dot-x:55%;--dot-y:40%">
+    <!-- WC door -->
+    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:36.7%;top:31.3%;width:7.5%;height:41.8%;--dot-x:55%;--dot-y:40%">
       <span class="label">WC</span>
     </div>
-    <!-- KINO door: red glowing door, center-right -->
-    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:49%;top:10%;width:16%;height:80%;--dot-x:50%;--dot-y:35%">
+    <!-- KINO door -->
+    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:50%;top:16.4%;width:10%;height:62.7%;--dot-x:50%;--dot-y:35%">
       <span class="label">Cinema</span>
     </div>
   </div>
@@ -722,7 +769,7 @@ body{cursor:default}
   <img class="scene-img" loading="lazy" src="img/Shop/008-WC.png" alt="wc">
   <img class="scene-highlight" id="hl-secret" data-src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:28.5%;top:29.6%;width:6.5%;height:59.6%">
+    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%">
       <span class="label">???</span>
     </div>
   </div>
@@ -744,47 +791,47 @@ body{cursor:default}
   <img class="scene-highlight" id="hl-sr-entity" data-src="img/Shop/layers/009-Secret-room_0019_Layer-20.png" alt="">
   <div class="hotspots">
     <!-- Journal on desk -->
-    <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:43.5%;top:62.7%;width:19.7%;height:16.4%">
+    <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:45.8%;top:65.7%;width:13.3%;height:10.4%">
       <span class="label">The Journal</span>
     </div>
-    <!-- Berlin Map (big parchment, center wall) -->
-    <div class="hotspot" data-note="map" data-glow="red" data-whisper="Oranienstraße..." data-highlight="hl-sr-map" style="left:41.8%;top:10.4%;width:28%;height:41.8%">
+    <!-- Berlin Map -->
+    <div class="hotspot" data-note="map" data-glow="red" data-whisper="Oranienstraße..." data-highlight="hl-sr-map" style="left:45%;top:13.4%;width:22.5%;height:37.3%">
       <span class="label">Map of Berlin</span>
     </div>
-    <!-- Note: Whip (left of map, upper) -->
-    <div class="hotspot" data-note="whip" data-glow="amber" data-whisper="she couldn't let go..." data-highlight="hl-sr-whip" style="left:36%;top:10.4%;width:8%;height:20.9%">
+    <!-- Note: Whip -->
+    <div class="hotspot" data-note="whip" data-glow="amber" data-whisper="she couldn't let go..." data-highlight="hl-sr-whip" style="left:37.1%;top:12.7%;width:5.4%;height:16.4%">
       <span class="label">Pinned Note</span>
     </div>
-    <!-- Note: Wig (below-left of map) -->
-    <div class="hotspot" data-note="wig" data-glow="amber" data-whisper="whose face is it now..." data-highlight="hl-sr-wig" style="left:33.5%;top:52.2%;width:7.2%;height:13.4%">
+    <!-- Note: Wig -->
+    <div class="hotspot" data-note="wig" data-glow="amber" data-whisper="whose face is it now..." data-highlight="hl-sr-wig" style="left:35%;top:54.5%;width:4.2%;height:9.7%">
       <span class="label">Yellowed Note</span>
     </div>
-    <!-- Note: Hourglass (left of map, middle) -->
-    <div class="hotspot" data-note="hourglass" data-glow="amber" data-whisper="the sand flows upward..." data-highlight="hl-sr-hourglass" style="left:36.8%;top:40.3%;width:8%;height:17.9%">
+    <!-- Note: Hourglass -->
+    <div class="hotspot" data-note="hourglass" data-glow="amber" data-whisper="the sand flows upward..." data-highlight="hl-sr-hourglass" style="left:38.8%;top:43.3%;width:5.4%;height:14.2%">
       <span class="label">Warning Note</span>
     </div>
-    <!-- Note: Tarot (between map and notes) -->
-    <div class="hotspot" data-note="tarot" data-glow="amber" data-whisper="79 cards..." data-highlight="hl-sr-tarot" style="left:39.3%;top:28.4%;width:7.6%;height:17.9%">
+    <!-- Note: Tarot -->
+    <div class="hotspot" data-note="tarot" data-glow="amber" data-whisper="79 cards..." data-highlight="hl-sr-tarot" style="left:41.2%;top:29.9%;width:5%;height:16.4%">
       <span class="label">Faded Note</span>
     </div>
-    <!-- Note: Mirror (upper-left) -->
-    <div class="hotspot" data-note="mirror" data-glow="amber" data-whisper="who will you become..." data-highlight="hl-sr-mirror" style="left:31.8%;top:8.2%;width:7.6%;height:16.4%">
+    <!-- Note: Mirror -->
+    <div class="hotspot" data-note="mirror" data-glow="amber" data-whisper="who will you become..." data-highlight="hl-sr-mirror" style="left:33.3%;top:11.2%;width:5%;height:12.7%">
       <span class="label">Old Note</span>
     </div>
-    <!-- Right wall: Shopkeeper (large dark parchment, lower) -->
-    <div class="hotspot" data-note="keeper" data-glow="mystic" data-whisper="he has no name..." data-highlight="hl-sr-keeper" style="left:73.5%;top:55.2%;width:11.3%;height:32.9%">
+    <!-- Right wall: Shopkeeper -->
+    <div class="hotspot" data-note="keeper" data-glow="mystic" data-whisper="he has no name..." data-highlight="hl-sr-keeper" style="left:75.8%;top:59.7%;width:8.3%;height:26.9%">
       <span class="label">Dark Parchment</span>
     </div>
-    <!-- Right wall: Compass (center-right) -->
-    <div class="hotspot" data-note="compass" data-glow="amber" data-whisper="follow it..." data-highlight="hl-sr-compass" style="left:59.3%;top:52.2%;width:8.8%;height:17.9%">
+    <!-- Right wall: Compass -->
+    <div class="hotspot" data-note="compass" data-glow="amber" data-whisper="follow it..." data-highlight="hl-sr-compass" style="left:61.7%;top:55.2%;width:5.8%;height:13.4%">
       <span class="label">Torn Page</span>
     </div>
-    <!-- Right wall: Entity (upper far right) -->
-    <div class="hotspot" data-note="entity" data-glow="mystic" data-whisper="the maker watches..." data-highlight="hl-sr-entity" style="left:75.2%;top:6%;width:14.7%;height:35.8%">
+    <!-- Right wall: Entity -->
+    <div class="hotspot" data-note="entity" data-glow="mystic" data-whisper="the maker watches..." data-highlight="hl-sr-entity" style="left:77.5%;top:9%;width:10.8%;height:29.9%">
       <span class="label">Ancient Document</span>
     </div>
-    <!-- Right wall: Author (note between entity and keeper) -->
-    <div class="hotspot" data-note="author" data-glow="silver" data-whisper="who writes these stories..." style="left:69.3%;top:25.4%;width:9.7%;height:25.4%">
+    <!-- Right wall: Author -->
+    <div class="hotspot" data-note="author" data-glow="silver" data-whisper="who writes these stories..." style="left:71.2%;top:28.4%;width:6.7%;height:23.9%">
       <span class="label">Sealed Letter</span>
     </div>
   </div>
@@ -899,6 +946,7 @@ function goTo(sceneId) {
     document.querySelector('.scene.active')?.classList.remove('active');
     document.getElementById('scene-'+sceneId)?.classList.add('active');
     navHistory.push(currentScene);
+    if(navHistory[navHistory.length-1]==='code') navHistory.pop(); // never go back to code screen
     currentScene = sceneId;
     updateUI();
     setTimeout(() => {trans.classList.remove('active');isTransitioning=false;}, 50);
@@ -921,7 +969,7 @@ function goBack() {
 }
 
 function updateUI() {
-  document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall');
+  document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall' && currentScene!=='code');
   document.getElementById('sceneTitle').textContent = SCENE_TITLES[currentScene] || 'NAMENLOS';
 }
 
@@ -1144,18 +1192,47 @@ function addGuestEntry() {
 }
 
 // ═══ INIT ═══
-// Load highlight layers only on desktop (mobile: 18 × 2752×1536 = 255MB RAM crashes Safari)
+// Load highlight layers only on desktop
 if(!(window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window)) {
   document.querySelectorAll('.scene-highlight[data-src]').forEach(img => {
     img.src = img.dataset.src;
   });
 }
+
+// ═══ CODE ENTRY ═══
 const params = new URLSearchParams(location.search);
+const bypass = params.get('r') === '1';
 const startAt = params.get('start');
-if(startAt && document.getElementById('scene-'+startAt)) {
-  document.querySelector('.scene.active')?.classList.remove('active');
-  document.getElementById('scene-'+startAt).classList.add('active');
-  currentScene = startAt;
+
+if(bypass || startAt) {
+  // Skip code screen
+  document.getElementById('scene-code')?.classList.remove('active');
+  const target = startAt || 'alley';
+  if(document.getElementById('scene-'+target)) {
+    document.getElementById('scene-'+target).classList.add('active');
+    currentScene = target;
+  } else {
+    document.getElementById('scene-alley').classList.add('active');
+    currentScene = 'alley';
+  }
+} else {
+  currentScene = 'code';
+}
+
+const codeInput = document.getElementById('codeInput');
+if(codeInput) {
+  codeInput.addEventListener('keydown', e => {
+    if(e.key === 'Enter') {
+      const val = codeInput.value.trim();
+      if(val === '547') {
+        goTo('alley');
+      } else {
+        document.getElementById('codeError').textContent = 'Wrong code. The shop stays hidden.';
+        codeInput.value = '';
+        setTimeout(() => { document.getElementById('codeError').textContent = ''; }, 3000);
+      }
+    }
+  });
 }
 updateUI();
 
