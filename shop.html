@@ -172,19 +172,34 @@ body{cursor:default}
 .chat-input-row button:hover{color:#c8a060}
 
 /* ═══ SECRET ROOM ═══ */
-.room-content{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;overflow-y:auto}
-.room-content h2{font-family:'Cinzel',serif;font-size:20px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:8px}
-.room-content .room-sub{font-family:'Cormorant Garamond',serif;font-size:14px;color:#7a6a55;font-style:italic;margin-bottom:30px}
-.author-card{background:rgba(15,12,8,0.8);border:1px solid rgba(200,160,80,0.1);padding:24px;max-width:420px;text-align:left}
-.author-card p{font-family:'Cormorant Garamond',serif;font-size:15px;color:#6a5a45;line-height:1.7;margin-bottom:12px}
+.room-content{position:absolute;inset:0;z-index:31;display:flex;flex-direction:column;align-items:center;text-align:center;padding:50px 20px 20px;overflow-y:auto}
+.room-content h2{font-family:'Cinzel',serif;font-size:24px;letter-spacing:5px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:8px}
+.room-content .room-sub{font-family:'Cormorant Garamond',serif;font-size:16px;color:#8a7a65;font-style:italic;margin-bottom:24px}
+.author-card{background:rgba(15,12,8,0.85);border:1px solid rgba(200,160,80,0.12);padding:24px;max-width:500px;text-align:left}
+.author-card p{font-family:'Cormorant Garamond',serif;font-size:17px;color:#8a7a65;line-height:1.8;margin-bottom:14px}
 .author-card .author-name{font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-top:16px}
-.guestbook{margin-top:24px;width:100%;max-width:420px}
-.guestbook textarea{width:100%;height:60px;background:rgba(15,12,8,0.6);border:1px solid rgba(200,160,80,0.1);color:#6a5a45;font-family:'Cormorant Garamond',serif;font-size:14px;padding:10px;resize:none;outline:none}
+
+/* ═══ SECRET ROOM: LORE NOTES ═══ */
+.lore-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;justify-content:center}
+.lore-tab{font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;border:1px solid rgba(200,160,80,0.12);color:#7a6a55;background:rgba(15,12,8,0.6);cursor:pointer;transition:all 0.3s}
+.lore-tab:hover,.lore-tab.active{color:#c8a060;border-color:rgba(200,160,80,0.3);background:rgba(200,160,80,0.06)}
+.lore-panel{display:none;max-width:540px;width:100%;text-align:left}
+.lore-panel.active{display:block}
+.lore-note{background:rgba(15,12,8,0.85);border:1px solid rgba(200,160,80,0.1);padding:20px;margin-bottom:12px;position:relative}
+.lore-note .note-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#c8a060;margin-bottom:8px}
+.lore-note .note-text{font-family:'Cormorant Garamond',serif;font-size:16px;color:#8a7a65;line-height:1.8;font-style:italic}
+.lore-note .note-source{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a5a45;margin-top:10px;text-align:right}
+
+/* ═══ GUESTBOOK ═══ */
+.guestbook{margin-top:20px;width:100%;max-width:540px}
+.guestbook h3{font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;margin-bottom:10px;font-weight:400}
+.guestbook textarea{width:100%;height:60px;background:rgba(15,12,8,0.7);border:1px solid rgba(200,160,80,0.12);color:#8a7a65;font-family:'Cormorant Garamond',serif;font-size:15px;padding:12px;resize:none;outline:none}
+.guestbook textarea:focus{border-color:rgba(200,160,80,0.25)}
 .guestbook textarea::placeholder{color:#6a5a45}
 .guestbook button{margin-top:8px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:8px 20px;border:1px solid rgba(200,160,80,0.2);color:#7a6a55;background:none;cursor:pointer;transition:all 0.3s}
 .guestbook button:hover{color:#c8a060;border-color:#c8a060}
-.guestbook-entries{margin-top:16px;max-height:120px;overflow-y:auto}
-.guestbook-entries .entry{font-family:'Cormorant Garamond',serif;font-size:13px;color:#7a6a55;font-style:italic;padding:6px 0;border-bottom:1px solid rgba(200,160,80,0.04)}
+.guestbook-entries{margin-top:16px;max-height:160px;overflow-y:auto}
+.guestbook-entries .entry{font-family:'Cormorant Garamond',serif;font-size:14px;color:#8a7a65;font-style:italic;padding:8px 0;border-bottom:1px solid rgba(200,160,80,0.06)}
 
 /* ═══ LOADING ═══ */
 #loading{position:fixed;inset:0;background:#000;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
@@ -646,17 +661,85 @@ body{cursor:default}
   <div class="hotspots"></div>
   <div class="room-content">
     <h2>The Secret Room</h2>
-    <div class="room-sub">You found the hidden door. Few do.</div>
-    <div class="author-card">
-      <p>Behind every nameless shop stands someone with a name.</p>
-      <p><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.</p>
-      <p>The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.</p>
-      <div class="author-name">Mary-Ann Black</div>
+    <div class="room-sub">You found the hidden door. Few do. The walls remember.</div>
+
+    <!-- TABS -->
+    <div class="lore-tabs">
+      <div class="lore-tab active" onclick="switchLore('notes')">The Wall Notes</div>
+      <div class="lore-tab" onclick="switchLore('journal')">The Journal</div>
+      <div class="lore-tab" onclick="switchLore('author')">The Author</div>
     </div>
-    <div class="guestbook">
-      <textarea id="guestbookInput" placeholder="Leave a mark in the guestbook..."></textarea>
-      <button onclick="addGuestEntry()">Sign</button>
-      <div class="guestbook-entries" id="guestbookEntries"></div>
+
+    <!-- WALL NOTES — lore about artifacts, past visitors, creatures -->
+    <div class="lore-panel active" id="lore-notes">
+      <div class="lore-note">
+        <div class="note-title">The Whip — Subject: Rita K.</div>
+        <div class="note-text">She found the shop on Oranienstraße. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."</div>
+        <div class="note-source">File 0041 — Berlin, 2024</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Wig — Subject: Unknown</div>
+        <div class="note-text">The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days. The wig was back on its shelf the next morning.</div>
+        <div class="note-source">File 0012 — Vienna, 1923</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Hourglass — Warning</div>
+        <div class="note-text">DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age — they un-aged. They are now seven years old and do not recognize their children. The shopkeeper refuses to discuss it.</div>
+        <div class="note-source">File 0007 — Location unknown</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Tarot Box — The Strength Card</div>
+        <div class="note-text">The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle. They always return. They never speak of where they went.</div>
+        <div class="note-source">File 0033 — Marseille, 1971</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Mirror — Observation</div>
+        <div class="note-text">It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian. A soldier looked into it and saw nothing. He died that winter.</div>
+        <div class="note-source">File 0002 — Prague, 1614</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Shopkeeper — Note to Self</div>
+        <div class="note-text">He has no name. He claims he never had one. The shop existed before the street. The street existed before the city. He accepts any coin but not money. "There is a difference," he says. No one has ever seen him eat, sleep, or leave.</div>
+        <div class="note-source">Unsigned — date unknown</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Compass — Subject: Elias M.</div>
+        <div class="note-text">The compass does not point north. It points to where you need to be. Elias followed it for forty days. It led him across three countries, through a forest, into a cave. Inside the cave: a letter from his dead mother, written the day before she died. It said: "Stop looking."</div>
+        <div class="note-source">File 0019 — Somewhere in Carpathians, 1958</div>
+      </div>
+      <div class="lore-note">
+        <div class="note-title">The Entity Behind the Shop</div>
+        <div class="note-text">Some files reference "the Maker." Not the shopkeeper — something older. The artifacts are not cursed. They are tests. Those who pass them are remembered. Those who fail are forgotten. The shop keeps score. The walls of this room are the scoreboard.</div>
+        <div class="note-source">Fragment — no file number</div>
+      </div>
+    </div>
+
+    <!-- JOURNAL — guestbook -->
+    <div class="lore-panel" id="lore-journal">
+      <div class="lore-note">
+        <div class="note-title">The Visitor's Journal</div>
+        <div class="note-text">Those who find this room are invited to leave their name. The ink fades, but the shop remembers.</div>
+      </div>
+      <div class="guestbook">
+        <h3>Sign the Journal</h3>
+        <textarea id="guestbookInput" placeholder="Write your name or leave a message..."></textarea>
+        <button onclick="addGuestEntry()">Sign</button>
+        <div class="guestbook-entries" id="guestbookEntries"></div>
+      </div>
+    </div>
+
+    <!-- AUTHOR -->
+    <div class="lore-panel" id="lore-author">
+      <div class="author-card">
+        <p>Behind every nameless shop stands someone with a name.</p>
+        <p><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.</p>
+        <p>The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.</p>
+        <p>The first door is already open. "Skin Me" is waiting on the shelf.</p>
+        <div class="author-name">Mary-Ann Black</div>
+      </div>
+      <div style="margin-top:16px">
+        <button class="chat-nav-btn" onclick="goTo('books')">Go to the Books →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -911,6 +994,18 @@ function addMsg(html, type) {
 function chatGo(s) { goTo(s); }
 
 // ═══ GUESTBOOK ═══
+// ═══ SECRET ROOM TABS ═══
+function switchLore(panel) {
+  document.querySelectorAll('.lore-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.lore-tab').forEach(t => t.classList.remove('active'));
+  const target = document.getElementById('lore-'+panel);
+  if(target) target.classList.add('active');
+  // Find the matching tab
+  document.querySelectorAll('.lore-tab').forEach(t => {
+    if(t.textContent.toLowerCase().includes(panel==='notes'?'wall':panel==='journal'?'journal':'author')) t.classList.add('active');
+  });
+}
+
 function addGuestEntry() {
   const input = document.getElementById('guestbookInput');
   const msg = input.value.trim(); if(!msg) return;
