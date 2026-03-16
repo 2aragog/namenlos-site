@@ -249,6 +249,9 @@ body{cursor:default}
 .media-tile .mt-desc{font-family:'Cormorant Garamond',serif;font-size:12px;color:#7a6a55;font-style:italic;line-height:1.4}
 .media-tile .mt-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:#7a6a55;margin-top:6px;display:inline-block;padding:3px 8px;border:1px solid rgba(200,160,80,0.08)}
 
+/* Mobile-only elements hidden by default */
+.mobile-hint-btn{display:none}
+
 /* ═══════════════════════════════════════ */
 /* ═══ MOBILE ═══ */
 /* ═══════════════════════════════════════ */
@@ -271,13 +274,65 @@ body{cursor:default}
   }
 
   /* Hotspot labels always visible on touch */
-  .hotspot .label{opacity:0.6;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px}
+  .hotspot .label{opacity:0;font-size:9px;padding:3px 10px;letter-spacing:2px;bottom:-22px;transition:opacity 0.3s}
+  .hotspot.tapped .label{opacity:0.8}
   .hotspot{min-width:44px;min-height:44px;cursor:default}
   .whisper{font-size:11px}
-  .ember{opacity:0.7}
+  .ember{display:none}
   #gameCursor{display:none}
-  /* CRITICAL: hide highlight layers on mobile — 15 images × 2752×1536 = 255MB RAM crashes Safari */
+  /* CRITICAL: hide highlight layers on mobile — 255MB RAM crashes Safari */
   .scene-highlight{display:none !important}
+
+  /* ═══ MOBILE: Pulsing golden dots instead of PNG highlights ═══ */
+  .hotspot::after{
+    content:'';
+    position:absolute;
+    top:50%;left:50%;
+    width:12px;height:12px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(200,160,80,0.9) 0%,rgba(200,160,80,0.3) 50%,transparent 70%);
+    border-radius:50%;
+    animation:mobilePulse 3s ease-in-out infinite;
+    pointer-events:none;
+    z-index:5;
+  }
+  .hotspot:nth-child(2)::after{animation-delay:0.5s}
+  .hotspot:nth-child(3)::after{animation-delay:1s}
+  .hotspot:nth-child(4)::after{animation-delay:1.5s}
+  .hotspot:nth-child(5)::after{animation-delay:0.7s}
+  .hotspot:nth-child(6)::after{animation-delay:1.2s}
+  @keyframes mobilePulse{
+    0%,100%{opacity:0.3;box-shadow:0 0 6px rgba(200,160,80,0.2);width:12px;height:12px}
+    50%{opacity:1;box-shadow:0 0 20px rgba(200,160,80,0.6),0 0 40px rgba(200,160,80,0.2);width:16px;height:16px}
+  }
+  /* Tap flash effect */
+  .hotspot.tapped::after{
+    animation:none;
+    opacity:1;
+    width:24px;height:24px;
+    box-shadow:0 0 30px rgba(200,160,80,0.8),0 0 60px rgba(200,160,80,0.3);
+    transition:all 0.2s ease;
+  }
+  /* Hint mode: all dots glow bright */
+  .hotspot.hint-active::after{
+    animation:none;
+    opacity:1;
+    width:20px;height:20px;
+    box-shadow:0 0 25px rgba(200,160,80,0.8),0 0 50px rgba(200,160,80,0.3);
+  }
+
+  /* Hint button */
+  .mobile-hint-btn{
+    display:flex;
+    position:fixed;bottom:16px;right:16px;z-index:65;
+    width:44px;height:44px;border-radius:50%;
+    background:rgba(10,8,5,0.85);border:1px solid rgba(200,160,80,0.2);
+    color:#c8a060;font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;transition:all 0.3s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mobile-hint-btn:active{background:rgba(200,160,80,0.15);border-color:#c8a060}
 
   /* Swipe hint */
   .swipe-hint{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);z-index:61;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;opacity:0;animation:hintFade 4s ease 2s forwards;pointer-events:none}
@@ -382,7 +437,7 @@ body{cursor:default}
 <!-- ═══════ SCENE: ALLEY ═══════ -->
 <div class="scene active" id="scene-alley">
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
-  <img class="scene-highlight" loading="lazy" id="hl-alley-door" src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
+  <img class="scene-highlight" id="hl-alley-door" data-src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
   <div class="hotspots">
     <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="left:64%;top:27.3%;width:8.9%;height:51.9%">
       <span class="label">Enter the Shop</span>
@@ -393,10 +448,10 @@ body{cursor:default}
 <!-- ═══════ SCENE: MAIN HALL ═══════ -->
 <div class="scene" id="scene-hall">
   <img class="scene-img" src="img/Shop/002-Main-hall.jpg" alt="shop">
-  <img class="scene-highlight" loading="lazy" id="hl-shopkeeper" src="img/Shop/layers/002-Main-hall_0000_Layer-1.png" alt="">
-  <img class="scene-highlight glow-red" loading="lazy" id="hl-reddoor" src="img/Shop/layers/002-Main-hall_0001_Layer-2.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-books" src="img/Shop/layers/002-Main-hall_0002_Layer-3.png" alt="">
-  <img class="scene-highlight glow-silver" loading="lazy" id="hl-artifacts" src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
+  <img class="scene-highlight" id="hl-shopkeeper" data-src="img/Shop/layers/002-Main-hall_0000_Layer-1.png" alt="">
+  <img class="scene-highlight glow-red" id="hl-reddoor" data-src="img/Shop/layers/002-Main-hall_0001_Layer-2.png" alt="">
+  <img class="scene-highlight" id="hl-books" data-src="img/Shop/layers/002-Main-hall_0002_Layer-3.png" alt="">
+  <img class="scene-highlight glow-silver" id="hl-artifacts" data-src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
   <div class="hotspots">
     <!-- Shopkeeper -->
     <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:22.3%;top:32%;width:12.6%;height:32.9%">
@@ -515,8 +570,8 @@ body{cursor:default}
 <!-- ═══════ SCENE: CORRIDOR ═══════ -->
 <div class="scene" id="scene-corridor">
   <img class="scene-img" loading="lazy" src="img/Shop/006-Cinema-door-wc.png" alt="corridor">
-  <img class="scene-highlight glow-red" loading="lazy" id="hl-cinema" src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
-  <img class="scene-highlight" loading="lazy" id="hl-wc" src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
+  <img class="scene-highlight glow-red" id="hl-cinema" data-src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
+  <img class="scene-highlight" id="hl-wc" data-src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
     <!-- WC door: wooden door center-left -->
     <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:35%;top:28%;width:13%;height:60%">
@@ -662,7 +717,7 @@ body{cursor:default}
 <!-- ═══════ SCENE: WC ═══════ -->
 <div class="scene" id="scene-wc">
   <img class="scene-img" loading="lazy" src="img/Shop/008-WC.png" alt="wc">
-  <img class="scene-highlight" loading="lazy" id="hl-secret" src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
+  <img class="scene-highlight" id="hl-secret" data-src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
     <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:28.5%;top:29.6%;width:6.5%;height:59.6%">
       <span class="label">???</span>
@@ -674,16 +729,16 @@ body{cursor:default}
 <div class="scene" id="scene-secret">
   <img class="scene-img" loading="lazy" src="img/Shop/009-Secret-room.png" alt="secret">
   <!-- Highlight layers -->
-  <img class="scene-highlight" loading="lazy" id="hl-sr-journal" src="img/Shop/layers/009-Secret-room_0000_Layer-1.png" alt="">
-  <img class="scene-highlight" loading="lazy" style="mix-blend-mode:screen" id="hl-sr-map" src="img/Shop/layers/009-Secret-room_0022_Layer-23.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-whip" src="img/Shop/layers/009-Secret-room_0004_Layer-5.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-wig" src="img/Shop/layers/009-Secret-room_0001_Layer-2.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-hourglass" src="img/Shop/layers/009-Secret-room_0009_Layer-10.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-tarot" src="img/Shop/layers/009-Secret-room_0014_Layer-15.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-mirror" src="img/Shop/layers/009-Secret-room_0003_Layer-4.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-keeper" src="img/Shop/layers/009-Secret-room_0017_Layer-18.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-compass" src="img/Shop/layers/009-Secret-room_0023_Layer-24.png" alt="">
-  <img class="scene-highlight" loading="lazy" id="hl-sr-entity" src="img/Shop/layers/009-Secret-room_0019_Layer-20.png" alt="">
+  <img class="scene-highlight" id="hl-sr-journal" data-src="img/Shop/layers/009-Secret-room_0000_Layer-1.png" alt="">
+  <img class="scene-highlight" style="mix-blend-mode:screen" id="hl-sr-map" data-src="img/Shop/layers/009-Secret-room_0022_Layer-23.png" alt="">
+  <img class="scene-highlight" id="hl-sr-whip" data-src="img/Shop/layers/009-Secret-room_0004_Layer-5.png" alt="">
+  <img class="scene-highlight" id="hl-sr-wig" data-src="img/Shop/layers/009-Secret-room_0001_Layer-2.png" alt="">
+  <img class="scene-highlight" id="hl-sr-hourglass" data-src="img/Shop/layers/009-Secret-room_0009_Layer-10.png" alt="">
+  <img class="scene-highlight" id="hl-sr-tarot" data-src="img/Shop/layers/009-Secret-room_0014_Layer-15.png" alt="">
+  <img class="scene-highlight" id="hl-sr-mirror" data-src="img/Shop/layers/009-Secret-room_0003_Layer-4.png" alt="">
+  <img class="scene-highlight" id="hl-sr-keeper" data-src="img/Shop/layers/009-Secret-room_0017_Layer-18.png" alt="">
+  <img class="scene-highlight" id="hl-sr-compass" data-src="img/Shop/layers/009-Secret-room_0023_Layer-24.png" alt="">
+  <img class="scene-highlight" id="hl-sr-entity" data-src="img/Shop/layers/009-Secret-room_0019_Layer-20.png" alt="">
   <div class="hotspots">
     <!-- Journal on desk -->
     <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:43.5%;top:62.7%;width:19.7%;height:16.4%">
@@ -787,6 +842,9 @@ body{cursor:default}
 
 <!-- SWIPE HINT (mobile) -->
 <div class="swipe-hint" id="swipeHint">← swipe or tilt to look around →</div>
+
+<!-- Mobile hint button: lights up all interactive dots -->
+<button class="mobile-hint-btn" id="mobileHintBtn" onclick="mobileHint()" aria-label="Show interactive objects">◈</button>
 
 <!-- OVERLAYS -->
 <div class="vignette"></div>
@@ -1083,6 +1141,12 @@ function addGuestEntry() {
 }
 
 // ═══ INIT ═══
+// Load highlight layers only on desktop (mobile: 18 × 2752×1536 = 255MB RAM crashes Safari)
+if(!(window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window)) {
+  document.querySelectorAll('.scene-highlight[data-src]').forEach(img => {
+    img.src = img.dataset.src;
+  });
+}
 const params = new URLSearchParams(location.search);
 const startAt = params.get('start');
 if(startAt && document.getElementById('scene-'+startAt)) {
@@ -1136,6 +1200,35 @@ if(isMobile) {
       el.classList.add('active');
       setTimeout(() => el.classList.remove('active'), 1500);
     }, {passive:true});
+  });
+}
+
+// ═══ MOBILE: HINT BUTTON + TAP FLASH ═══
+const hintBtn = document.getElementById('mobileHintBtn');
+if(!isMobile && hintBtn) hintBtn.style.display = 'none';
+
+function mobileHint() {
+  const active = document.querySelector('.scene.active');
+  if(!active) return;
+  active.querySelectorAll('.hotspot').forEach(h => {
+    h.classList.add('hint-active');
+    h.querySelector('.label') && (h.querySelector('.label').style.opacity = '0.7');
+  });
+  setTimeout(() => {
+    active.querySelectorAll('.hotspot').forEach(h => {
+      h.classList.remove('hint-active');
+      h.querySelector('.label') && (h.querySelector('.label').style.opacity = '');
+    });
+  }, 2500);
+}
+
+if(isMobile) {
+  // Tap flash: show label + bright dot, then action
+  document.querySelectorAll('.hotspot').forEach(h => {
+    h.addEventListener('click', () => {
+      h.classList.add('tapped');
+      setTimeout(() => h.classList.remove('tapped'), 600);
+    });
   });
 }
 
@@ -1196,10 +1289,7 @@ if(isMobile) {
     const hs = active.querySelector('.hotspots');
     if(img) img.style.setProperty('--panX', panX + 'px');
     if(hs) hs.style.setProperty('--panX', panX + 'px');
-    // Move highlight layers too
-    active.querySelectorAll('.scene-highlight').forEach(hl => {
-      hl.style.setProperty('--panX', panX + 'px');
-    });
+    // Highlight layers hidden on mobile — no need to update
   }
 
   // Gyroscope pan
@@ -1244,7 +1334,7 @@ if(isMobile) {
       const hs = active.querySelector('.hotspots');
       if(img) img.style.setProperty('--panX', val);
       if(hs) hs.style.setProperty('--panX', val);
-      active.querySelectorAll('.scene-highlight').forEach(hl => hl.style.setProperty('--panX', val));
+      // Highlight layers hidden on mobile — no pan needed
     }
   };
 }
