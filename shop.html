@@ -46,14 +46,19 @@ body{cursor:default}
   background:transparent !important;border:none !important;box-shadow:none !important;animation:none;
 }
 
-/* Highlight layers — for PNG overlays (Photoshop exports) */
-.hotspot .highlight-layer{
-  position:absolute;inset:0;pointer-events:none;
-  opacity:0;transition:opacity 0.5s ease;
-  mix-blend-mode:screen;
+/* Highlight layers — full-scene PNG overlays */
+.scene-highlight{
+  position:absolute;top:50%;left:50%;
+  width:110%;height:110%;
+  object-fit:cover;will-change:transform,opacity;
+  pointer-events:none;z-index:25;
+  opacity:0;
+  transition:opacity 0.4s ease;
+  filter:brightness(1.8) saturate(1.3);
 }
-.hotspot .highlight-layer img{width:100%;height:100%;object-fit:contain}
-.hotspot:hover .highlight-layer{opacity:1}
+.scene-highlight.glow-red{filter:brightness(1.6) saturate(1.5)}
+.scene-highlight.glow-silver{filter:brightness(2) saturate(0.8)}
+.scene-highlight.active{opacity:1}
 
 /* Embers — ABOVE vignette */
 .ember{position:fixed;width:2px;height:2px;border-radius:50%;pointer-events:none;z-index:45;animation:emberRise linear forwards}
@@ -238,6 +243,11 @@ body{cursor:default}
   .whisper{font-size:11px}
   .ember{opacity:0.7}
   #gameCursor{display:none}
+  .scene-highlight{
+    width:auto;height:100%;min-width:160%;
+    left:50%;top:50%;
+    transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
+  }
 
   /* Swipe hint */
   .swipe-hint{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);z-index:61;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#5a4a35;opacity:0;animation:hintFade 4s ease 2s forwards;pointer-events:none}
@@ -327,8 +337,9 @@ body{cursor:default}
 <!-- ═══════ SCENE: ALLEY ═══════ -->
 <div class="scene active" id="scene-alley">
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
+  <img class="scene-highlight" id="hl-alley-door" src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." style="right:12%;top:18%;width:22%;height:62%">
+    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="right:12%;top:18%;width:22%;height:62%">
       <span class="label">Enter the Shop</span>
     </div>
   </div>
@@ -337,21 +348,25 @@ body{cursor:default}
 <!-- ═══════ SCENE: MAIN HALL ═══════ -->
 <div class="scene" id="scene-hall">
   <img class="scene-img" src="img/Shop/002-Main-hall.jpg" alt="shop">
+  <img class="scene-highlight" id="hl-shopkeeper" src="img/Shop/layers/002-Main-hall_0000_Layer-1.png" alt="">
+  <img class="scene-highlight glow-red" id="hl-reddoor" src="img/Shop/layers/002-Main-hall_0001_Layer-2.png" alt="">
+  <img class="scene-highlight" id="hl-books" src="img/Shop/layers/002-Main-hall_0002_Layer-3.png" alt="">
+  <img class="scene-highlight glow-silver" id="hl-artifacts" src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
   <div class="hotspots">
     <!-- Shopkeeper -->
-    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." style="left:18%;top:15%;width:18%;height:50%">
+    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:18%;top:15%;width:18%;height:50%">
       <span class="label">The Shopkeeper</span>
     </div>
-    <!-- Bookshelf: wooden shelf with books, right of red door -->
-    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." style="left:58%;top:8%;width:20%;height:55%">
+    <!-- Bookshelf -->
+    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:58%;top:8%;width:20%;height:55%">
       <span class="label">The Books</span>
     </div>
-    <!-- Glass cabinet far right = artifacts -->
-    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." style="left:82%;top:5%;width:16%;height:70%">
+    <!-- Glass cabinet = artifacts -->
+    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:82%;top:5%;width:16%;height:70%">
       <span class="label">Artifacts</span>
     </div>
     <!-- Red door -->
-    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." style="left:42%;top:28%;width:14%;height:52%">
+    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:42%;top:28%;width:14%;height:52%">
       <span class="label">The Red Door</span>
     </div>
   </div>
@@ -455,13 +470,15 @@ body{cursor:default}
 <!-- ═══════ SCENE: CORRIDOR ═══════ -->
 <div class="scene" id="scene-corridor">
   <img class="scene-img" src="img/Shop/006-Cinema-door-wc.png" alt="corridor">
+  <img class="scene-highlight glow-red" id="hl-cinema" src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
+  <img class="scene-highlight" id="hl-wc" src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
-    <!-- WC door: closed wooden door, center -->
-    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." style="left:34%;top:12%;width:16%;height:68%">
+    <!-- WC door -->
+    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:34%;top:12%;width:16%;height:68%">
       <span class="label">WC</span>
     </div>
-    <!-- KINO door: open metal door with red glow, right -->
-    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." style="left:54%;top:8%;width:18%;height:78%">
+    <!-- KINO door -->
+    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:54%;top:8%;width:18%;height:78%">
       <span class="label">Cinema</span>
     </div>
   </div>
@@ -600,8 +617,9 @@ body{cursor:default}
 <!-- ═══════ SCENE: WC ═══════ -->
 <div class="scene" id="scene-wc">
   <img class="scene-img" src="img/Shop/008-WC.png" alt="wc">
+  <img class="scene-highlight" id="hl-secret" src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." style="left:35%;top:25%;width:30%;height:55%">
+    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:35%;top:25%;width:30%;height:55%">
       <span class="label">???</span>
     </div>
   </div>
@@ -917,13 +935,32 @@ if(!isMobile) {
     h.addEventListener('mouseenter', () => {
       gameCursor.classList.add('visible');
       cursorOnHotspot = true;
+      // Activate highlight layer
+      const hlId = h.dataset.highlight;
+      if(hlId) document.getElementById(hlId)?.classList.add('active');
     });
     h.addEventListener('mouseleave', () => {
       gameCursor.classList.remove('visible','active');
       cursorOnHotspot = false;
+      const hlId = h.dataset.highlight;
+      if(hlId) document.getElementById(hlId)?.classList.remove('active');
     });
     h.addEventListener('mousedown', () => gameCursor.classList.add('active'));
     h.addEventListener('mouseup', () => gameCursor.classList.remove('active'));
+  });
+}
+
+// Highlight on touch (mobile) — show on tap, hide after 1.5s
+if(isMobile) {
+  document.querySelectorAll('.hotspot[data-highlight]').forEach(h => {
+    h.addEventListener('touchstart', () => {
+      const hlId = h.dataset.highlight;
+      if(!hlId) return;
+      const el = document.getElementById(hlId);
+      if(!el) return;
+      el.classList.add('active');
+      setTimeout(() => el.classList.remove('active'), 1500);
+    }, {passive:true});
   });
 }
 
@@ -971,6 +1008,10 @@ if(isMobile) {
     const hs = active.querySelector('.hotspots');
     if(img) img.style.setProperty('--panX', panX + 'px');
     if(hs) hs.style.setProperty('--panX', panX + 'px');
+    // Move highlight layers too
+    active.querySelectorAll('.scene-highlight').forEach(hl => {
+      hl.style.setProperty('--panX', panX + 'px');
+    });
   }
 
   // Gyroscope pan
@@ -1026,7 +1067,7 @@ if(!isMobile) {
     cx+=(tx-cx)*0.05;cy+=(ty-cy)*0.05;
     const t='translate(calc(-50% + '+(-cx*12)+'px), calc(-50% + '+(-cy*4.8)+'px))';
     const a=document.querySelector('.scene.active');
-    if(a){const i=a.querySelector('.scene-img'),h=a.querySelector('.hotspots');if(i)i.style.transform=t;if(h)h.style.transform=t;}
+    if(a){const i=a.querySelector('.scene-img'),h=a.querySelector('.hotspots');if(i)i.style.transform=t;if(h)h.style.transform=t;a.querySelectorAll('.scene-highlight').forEach(hl=>hl.style.transform=t);}
     requestAnimationFrame(anim);
   })();
 }
