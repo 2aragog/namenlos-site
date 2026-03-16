@@ -512,10 +512,8 @@ body{cursor:default}
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
   <img class="scene-highlight" id="hl-alley-door" data-src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="left:69.2%;top:26.1%;width:12.5%;height:60.4%">
-      <span class="label">Enter the Shop</span>
+      <div class="hotspot" data-goto="hall" data-glow="amber" data-whisper="come in..." data-highlight="hl-alley-door" style="left:69.2%;top:26.1%;width:12.5%;height:60.4%"></div>
     </div>
-  </div>
 </div>
 
 <!-- ═══════ SCENE: MAIN HALL ═══════ -->
@@ -526,23 +524,11 @@ body{cursor:default}
   <img class="scene-highlight" id="hl-books" data-src="img/Shop/layers/002-Main-hall_0002_Layer-3.png" alt="">
   <img class="scene-highlight glow-silver" id="hl-artifacts" data-src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
   <div class="hotspots">
-    <!-- Shopkeeper -->
-    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:26.7%;top:23.9%;width:8.8%;height:35.8%;--dot-x:50%;--dot-y:25%">
-      <span class="label">The Shopkeeper</span>
+      <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:23.4%;top:30.7%;width:8.8%;height:35.8%;--dot-x:50%;--dot-y:25%"></div>
+      <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:55.7%;top:26.4%;width:9.2%;height:34.3%;--dot-x:50%;--dot-y:40%"></div>
+      <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:70.1%;top:21.6%;width:9.6%;height:44.8%;--dot-x:50%;--dot-y:35%"></div>
+      <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:47.8%;top:40.7%;width:6%;height:27.6%;--dot-x:50%;--dot-y:40%"></div>
     </div>
-    <!-- Bookshelf -->
-    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:55%;top:23.1%;width:9.2%;height:34.3%;--dot-x:50%;--dot-y:40%">
-      <span class="label">The Books</span>
-    </div>
-    <!-- Glass cabinet = artifacts -->
-    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:72.9%;top:18.7%;width:9.6%;height:44.8%;--dot-x:50%;--dot-y:35%">
-      <span class="label">Artifacts</span>
-    </div>
-    <!-- Red door -->
-    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:46.5%;top:40.3%;width:6%;height:27.6%;--dot-x:50%;--dot-y:40%">
-      <span class="label">The Red Door</span>
-    </div>
-  </div>
 </div>
 
 <!-- ═══════ SCENE: SHOPKEEPER ═══════ -->
@@ -565,33 +551,15 @@ body{cursor:default}
 <div class="scene" id="scene-display">
   <img class="scene-img" loading="lazy" src="img/Shop/004-Display-case.png" alt="display">
   <div class="hotspots">
-    <!-- Row 1: mirror, hourglass, tarot, wig -->
-    <div class="hotspot" data-artifact="mirror" data-glow="silver" data-whisper="don't look..." style="left:2%;top:2%;width:23%;height:46%">
-      <span class="label">The Mirror</span>
+      <div class="hotspot" data-artifact="mirror" data-glow="silver" data-whisper="don't look..." style="left:2%;top:2%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="hourglass" data-glow="red" data-whisper="time is running out..." style="left:26%;top:2%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="tarot" data-glow="mystic" data-whisper="the cards know..." style="left:50%;top:2%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="wig" data-glow="amber" data-whisper="it watches..." style="left:74%;top:2%;width:24%;height:46%"></div>
+      <div class="hotspot" data-artifact="glove" data-glow="red" data-whisper="you can't let go..." style="left:2%;top:52%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="whip" data-glow="red" data-whisper="the whip remembers..." style="left:26%;top:52%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="compass" data-glow="silver" data-whisper="where do you need to be..." style="left:50%;top:52%;width:23%;height:46%"></div>
+      <div class="hotspot" data-artifact="scrolls" data-glow="amber" data-whisper="the ink is still wet..." style="left:74%;top:52%;width:24%;height:46%"></div>
     </div>
-    <div class="hotspot" data-artifact="hourglass" data-glow="red" data-whisper="time is running out..." style="left:26%;top:2%;width:23%;height:46%">
-      <span class="label">The Hourglass</span>
-    </div>
-    <div class="hotspot" data-artifact="tarot" data-glow="mystic" data-whisper="the cards know..." style="left:50%;top:2%;width:23%;height:46%">
-      <span class="label">The Tarot Box</span>
-    </div>
-    <div class="hotspot" data-artifact="wig" data-glow="amber" data-whisper="it watches..." style="left:74%;top:2%;width:24%;height:46%">
-      <span class="label">The Wig</span>
-    </div>
-    <!-- Row 2: glove, whip, compass, scrolls -->
-    <div class="hotspot" data-artifact="glove" data-glow="red" data-whisper="you can't let go..." style="left:2%;top:52%;width:23%;height:46%">
-      <span class="label">The Glove</span>
-    </div>
-    <div class="hotspot" data-artifact="whip" data-glow="red" data-whisper="the whip remembers..." style="left:26%;top:52%;width:23%;height:46%">
-      <span class="label">The Whip</span>
-    </div>
-    <div class="hotspot" data-artifact="compass" data-glow="silver" data-whisper="where do you need to be..." style="left:50%;top:52%;width:23%;height:46%">
-      <span class="label">The Compass</span>
-    </div>
-    <div class="hotspot" data-artifact="scrolls" data-glow="amber" data-whisper="the ink is still wet..." style="left:74%;top:52%;width:24%;height:46%">
-      <span class="label">The Scrolls</span>
-    </div>
-  </div>
 </div>
 
 <!-- ═══════ SCENE: BOOKS ═══════ -->
@@ -646,15 +614,9 @@ body{cursor:default}
   <img class="scene-highlight glow-red" id="hl-cinema" data-src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
   <img class="scene-highlight" id="hl-wc" data-src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
-    <!-- WC door -->
-    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:36.7%;top:31.3%;width:7.5%;height:41.8%;--dot-x:55%;--dot-y:40%">
-      <span class="label">WC</span>
+      <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:36.7%;top:31.3%;width:7.5%;height:41.8%;--dot-x:55%;--dot-y:40%"></div>
+      <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:50%;top:16.4%;width:10%;height:62.7%;--dot-x:50%;--dot-y:35%"></div>
     </div>
-    <!-- KINO door -->
-    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:50%;top:16.4%;width:10%;height:62.7%;--dot-x:50%;--dot-y:35%">
-      <span class="label">Cinema</span>
-    </div>
-  </div>
 </div>
 
 <!-- ═══════ SCENE: CINEMA ═══════ -->
@@ -792,10 +754,8 @@ body{cursor:default}
   <img class="scene-img" loading="lazy" src="img/Shop/008-WC.png" alt="wc">
   <img class="scene-highlight" id="hl-secret" data-src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secretgate" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%">
-      <span class="label">???</span>
+      <div class="hotspot" data-goto="secretgate" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%"></div>
     </div>
-  </div>
 </div>
 
 <!-- ═══════ SCENE: SECRET GATE (riddle) ═══════ -->
@@ -832,51 +792,18 @@ body{cursor:default}
   <img class="scene-highlight" id="hl-sr-compass" data-src="img/Shop/layers/009-Secret-room_0023_Layer-24.png" alt="">
   <img class="scene-highlight" id="hl-sr-entity" data-src="img/Shop/layers/009-Secret-room_0019_Layer-20.png" alt="">
   <div class="hotspots">
-    <!-- Journal on desk -->
-    <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:45.8%;top:65.7%;width:13.3%;height:10.4%">
-      <span class="label">The Journal</span>
+      <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:45.8%;top:65.7%;width:13.3%;height:10.4%"></div>
+      <div class="hotspot" data-note="map" data-glow="red" data-whisper="Oranienstraße..." data-highlight="hl-sr-map" style="left:45%;top:13.4%;width:22.5%;height:37.3%"></div>
+      <div class="hotspot" data-note="whip" data-glow="amber" data-whisper="she couldn't let go..." data-highlight="hl-sr-whip" style="left:37.1%;top:12.7%;width:5.4%;height:16.4%"></div>
+      <div class="hotspot" data-note="wig" data-glow="amber" data-whisper="whose face is it now..." data-highlight="hl-sr-wig" style="left:35%;top:54.5%;width:4.2%;height:9.7%"></div>
+      <div class="hotspot" data-note="hourglass" data-glow="amber" data-whisper="the sand flows upward..." data-highlight="hl-sr-hourglass" style="left:38.8%;top:43.3%;width:5.4%;height:14.2%"></div>
+      <div class="hotspot" data-note="tarot" data-glow="amber" data-whisper="79 cards..." data-highlight="hl-sr-tarot" style="left:41.2%;top:29.9%;width:5%;height:16.4%"></div>
+      <div class="hotspot" data-note="mirror" data-glow="amber" data-whisper="who will you become..." data-highlight="hl-sr-mirror" style="left:33.3%;top:11.2%;width:5%;height:12.7%"></div>
+      <div class="hotspot" data-note="keeper" data-glow="mystic" data-whisper="he has no name..." data-highlight="hl-sr-keeper" style="left:75.8%;top:59.7%;width:8.3%;height:26.9%"></div>
+      <div class="hotspot" data-note="compass" data-glow="amber" data-whisper="follow it..." data-highlight="hl-sr-compass" style="left:61.7%;top:55.2%;width:5.8%;height:13.4%"></div>
+      <div class="hotspot" data-note="entity" data-glow="mystic" data-whisper="the maker watches..." data-highlight="hl-sr-entity" style="left:77.5%;top:9%;width:10.8%;height:29.9%"></div>
+      <div class="hotspot" data-note="author" data-glow="silver" data-whisper="who writes these stories..." style="left:71.2%;top:28.4%;width:6.7%;height:23.9%"></div>
     </div>
-    <!-- Berlin Map -->
-    <div class="hotspot" data-note="map" data-glow="red" data-whisper="Oranienstraße..." data-highlight="hl-sr-map" style="left:45%;top:13.4%;width:22.5%;height:37.3%">
-      <span class="label">Map of Berlin</span>
-    </div>
-    <!-- Note: Whip -->
-    <div class="hotspot" data-note="whip" data-glow="amber" data-whisper="she couldn't let go..." data-highlight="hl-sr-whip" style="left:37.1%;top:12.7%;width:5.4%;height:16.4%">
-      <span class="label">Pinned Note</span>
-    </div>
-    <!-- Note: Wig -->
-    <div class="hotspot" data-note="wig" data-glow="amber" data-whisper="whose face is it now..." data-highlight="hl-sr-wig" style="left:35%;top:54.5%;width:4.2%;height:9.7%">
-      <span class="label">Yellowed Note</span>
-    </div>
-    <!-- Note: Hourglass -->
-    <div class="hotspot" data-note="hourglass" data-glow="amber" data-whisper="the sand flows upward..." data-highlight="hl-sr-hourglass" style="left:38.8%;top:43.3%;width:5.4%;height:14.2%">
-      <span class="label">Warning Note</span>
-    </div>
-    <!-- Note: Tarot -->
-    <div class="hotspot" data-note="tarot" data-glow="amber" data-whisper="79 cards..." data-highlight="hl-sr-tarot" style="left:41.2%;top:29.9%;width:5%;height:16.4%">
-      <span class="label">Faded Note</span>
-    </div>
-    <!-- Note: Mirror -->
-    <div class="hotspot" data-note="mirror" data-glow="amber" data-whisper="who will you become..." data-highlight="hl-sr-mirror" style="left:33.3%;top:11.2%;width:5%;height:12.7%">
-      <span class="label">Old Note</span>
-    </div>
-    <!-- Right wall: Shopkeeper -->
-    <div class="hotspot" data-note="keeper" data-glow="mystic" data-whisper="he has no name..." data-highlight="hl-sr-keeper" style="left:75.8%;top:59.7%;width:8.3%;height:26.9%">
-      <span class="label">Dark Parchment</span>
-    </div>
-    <!-- Right wall: Compass -->
-    <div class="hotspot" data-note="compass" data-glow="amber" data-whisper="follow it..." data-highlight="hl-sr-compass" style="left:61.7%;top:55.2%;width:5.8%;height:13.4%">
-      <span class="label">Torn Page</span>
-    </div>
-    <!-- Right wall: Entity -->
-    <div class="hotspot" data-note="entity" data-glow="mystic" data-whisper="the maker watches..." data-highlight="hl-sr-entity" style="left:77.5%;top:9%;width:10.8%;height:29.9%">
-      <span class="label">Ancient Document</span>
-    </div>
-    <!-- Right wall: Author -->
-    <div class="hotspot" data-note="author" data-glow="silver" data-whisper="who writes these stories..." style="left:71.2%;top:28.4%;width:6.7%;height:23.9%">
-      <span class="label">Sealed Letter</span>
-    </div>
-  </div>
   <!-- Hint overlay -->
   <div class="secret-hint">Click the notes on the wall to read them</div>
 </div>
