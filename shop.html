@@ -764,7 +764,7 @@ body{cursor:default}
   <div class="code-screen">
     <div class="code-title" style="font-size:clamp(16px,3vw,22px);margin-bottom:16px">The door is locked.</div>
     <div class="code-sub" style="max-width:340px;line-height:1.8;margin-bottom:12px">A word is scratched into the wood. Below it — a question:</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.5vw,20px);color:#c8a060;font-style:italic;line-height:1.9;max-width:320px;text-align:center;margin-bottom:32px">
+    <div id="riddleText" style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.5vw,20px);color:#c8a060;font-style:italic;line-height:1.9;max-width:320px;text-align:center;margin-bottom:32px">
       "The shopkeeper remembers everything.<br>He asks only one thing of those who leave:<br><span style="color:#8a7a65">___________</span>"
     </div>
     <div class="code-input-wrap">
@@ -772,7 +772,7 @@ body{cursor:default}
       <button class="code-btn" onclick="checkSecretCode()">Enter</button>
       <div class="code-error" id="codeError"></div>
     </div>
-    <div class="code-hint" style="margin-top:30px">The answer is in the language of the city.</div>
+    <div class="code-hint" id="riddleHint" style="margin-top:30px">The answer is in the language of the city.</div>
     <div style="margin-top:24px"><a onclick="goTo('wc')" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#3a2a18;cursor:pointer;transition:color 0.3s" onmouseover="this.style.color='#7a6a55'" onmouseout="this.style.color='#3a2a18'">← Walk away</a></div>
   </div>
 </div>
@@ -1184,11 +1184,22 @@ if(startAt && document.getElementById('scene-'+startAt)) {
   currentScene = startAt;
 }
 
+let secretPwd = 'vergiss', secretAlt = 'forget';
+(async function loadRiddle(){
+  try {
+    const r = await fetch('data/secret-room.json?t='+Date.now());
+    const d = await r.json();
+    if(d.riddle) document.getElementById('riddleText').innerHTML = '"'+d.riddle+'<br><span style="color:#8a7a65">___________</span>"';
+    if(d.hint) document.getElementById('riddleHint').textContent = d.hint;
+    if(d.password) secretPwd = d.password.toLowerCase();
+    if(d.password_alt) secretAlt = d.password_alt.toLowerCase();
+  } catch(e){ console.log('Riddle fallback to defaults'); }
+})();
 function checkSecretCode() {
   const input = document.getElementById('codeInput');
   if(!input) return;
   const val = input.value.trim().toLowerCase();
-  if(val === 'vergiss' || val === 'forget') {
+  if(val === secretPwd || val === secretAlt) {
     goTo('secret');
   } else {
     document.getElementById('codeError').textContent = 'The door stays shut.';

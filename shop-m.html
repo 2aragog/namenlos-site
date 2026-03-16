@@ -334,11 +334,11 @@ body{background:#000;overflow:hidden;height:100vh;height:100dvh;width:100vw;font
   <div class="code-screen">
     <div class="ct">The door is locked.</div>
     <div class="cs">A word is scratched into the wood. Below it — a question:</div>
-    <div class="riddle">"The shopkeeper remembers everything.<br>He asks only one thing of those who leave:<br><span style="color:#8a7a65">___________</span>"</div>
+    <div class="riddle" id="riddleText">"The shopkeeper remembers everything.<br>He asks only one thing of those who leave:<br><span style="color:#8a7a65">___________</span>"</div>
     <input type="text" id="codeInput" class="code-input" placeholder="..." maxlength="20" autocomplete="off">
     <button class="code-btn" onclick="checkCode()">Enter</button>
     <div class="code-error" id="codeError"></div>
-    <div class="code-hint">The answer is in the language of the city.</div>
+    <div class="code-hint" id="riddleHint">The answer is in the language of the city.</div>
     <div class="code-back" onclick="goTo('wc')">← Walk away</div>
   </div>
 </div>
@@ -564,9 +564,20 @@ function addGB() {
 function closeModal(){document.getElementById('modal').classList.remove('open');}
 
 // ═══ CODE ═══
+let secretPwd = 'vergiss', secretAlt = 'forget';
+(async function loadRiddle(){
+  try {
+    const r = await fetch('data/secret-room.json?t='+Date.now());
+    const d = await r.json();
+    if(d.riddle) document.getElementById('riddleText').innerHTML = '"'+d.riddle+'<br><span style="color:#8a7a65">___________</span>"';
+    if(d.hint) document.getElementById('riddleHint').textContent = d.hint;
+    if(d.password) secretPwd = d.password.toLowerCase();
+    if(d.password_alt) secretAlt = d.password_alt.toLowerCase();
+  } catch(e){ console.log('Riddle fallback to defaults'); }
+})();
 function checkCode() {
   const v = document.getElementById('codeInput').value.trim().toLowerCase();
-  if(v==='vergiss'||v==='forget'){goTo('secret');}
+  if(v===secretPwd||v===secretAlt){goTo('secret');}
   else{document.getElementById('codeError').textContent='The door stays shut.';document.getElementById('codeInput').value='';setTimeout(()=>{document.getElementById('codeError').textContent='';},3000);}
 }
 document.getElementById('codeInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')checkCode();});

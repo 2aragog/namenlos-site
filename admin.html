@@ -234,7 +234,24 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       </div>
       <div class="sr-card">
         <h3>Tips</h3>
-        <p style="color:var(--text2);font-size:11px;line-height:1.7">This message appears in the secret room (code: "vergiss"). Keep it short and mysterious. Change weekly to give visitors a reason to return.</p>
+        <p style="color:var(--text2);font-size:11px;line-height:1.7">This message appears in the secret room. Keep it short and mysterious. Change weekly to give visitors a reason to return.</p>
+      </div>
+      <div class="sr-card">
+        <h2>Riddle & Password</h2>
+        <h3>Current riddle (shown at the locked door)</h3>
+        <div class="sr-preview" id="srRiddlePreview" style="font-style:normal">Loading...</div>
+        <h3 style="margin-top:16px">Edit riddle</h3>
+        <textarea class="sr-textarea" id="srRiddleEditor" placeholder="The shopkeeper remembers everything.&#10;He asks only one thing of those who leave:" style="min-height:70px"></textarea>
+        <p style="font-size:10px;color:var(--text2);margin-top:4px">Use &lt;br&gt; for line breaks. This text appears in quotes above the input field.</p>
+        <h3 style="margin-top:16px">Hint</h3>
+        <input type="text" id="srHintEditor" class="sr-textarea" style="min-height:0;padding:8px;font-size:14px" placeholder="The answer is in the language of the city.">
+        <h3 style="margin-top:16px">Password (main)</h3>
+        <input type="text" id="srPwdEditor" class="sr-textarea" style="min-height:0;padding:8px;font-size:14px;letter-spacing:3px" placeholder="vergiss">
+        <h3 style="margin-top:8px">Password (alternative)</h3>
+        <input type="text" id="srPwdAltEditor" class="sr-textarea" style="min-height:0;padding:8px;font-size:14px;letter-spacing:3px" placeholder="forget">
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-primary" onclick="saveRiddle()">Save Riddle & Password</button>
+        </div>
       </div>
       <div class="sr-card"><h3>History</h3><div id="srHistory">Loading...</div></div>
     </div>
@@ -648,6 +665,17 @@ async function loadSecretRoom(){
     document.getElementById('srPreview').textContent=json.message||'(empty)';
     document.getElementById('srDate').textContent=json.date||'--';
     document.getElementById('srEditor').value=json.message||'';
+    // Riddle fields
+    const rp=document.getElementById('srRiddlePreview');
+    if(rp) rp.innerHTML=json.riddle?'"'+json.riddle+'"':'(default riddle)';
+    const re=document.getElementById('srRiddleEditor');
+    if(re) re.value=(json.riddle||'').replace(/<br>/g,'\n');
+    const he=document.getElementById('srHintEditor');
+    if(he) he.value=json.hint||'';
+    const pe=document.getElementById('srPwdEditor');
+    if(pe) pe.value=json.password||'';
+    const pa=document.getElementById('srPwdAltEditor');
+    if(pa) pa.value=json.password_alt||'';
     const hist=json.history||[];
     document.getElementById('srHistory').innerHTML=hist.length?hist.map(h=>`<div class="sr-history-item"><span class="msg">${esc(h.message)}</span><span class="date">${h.date}</span></div>`).join(''):'<div style="color:var(--text2);font-size:11px;padding:8px">No history yet</div>';
   }catch(e){
@@ -665,6 +693,23 @@ async function saveWeeklyMessage(){
   const content=btoa(unescape(encodeURIComponent(JSON.stringify(existing,null,2))));
   const body={message:'Update weekly message',content,branch:BRANCH};if(sha)body.sha=sha;
   try{await api(`contents/${SR_PATH}`,{method:'PUT',body:JSON.stringify(body)});toast('Published!','success');loadSecretRoom();}
+  catch(e){toast('Error: '+e.message,'error');}
+}
+async function saveRiddle(){
+  const riddle=document.getElementById('srRiddleEditor').value.trim().replace(/\n/g,'<br>');
+  const hint=document.getElementById('srHintEditor').value.trim();
+  const pwd=document.getElementById('srPwdEditor').value.trim();
+  const pwdAlt=document.getElementById('srPwdAltEditor').value.trim();
+  if(!pwd){toast('Password is required','error');return;}
+  let existing={},sha;
+  try{const data=await api(`contents/${SR_PATH}?ref=${BRANCH}`);existing=JSON.parse(decodeURIComponent(escape(atob(data.content))));sha=data.sha;}catch(e){}
+  existing.riddle=riddle;
+  existing.hint=hint;
+  existing.password=pwd;
+  existing.password_alt=pwdAlt;
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(existing,null,2))));
+  const body={message:'Update riddle & password',content,branch:BRANCH};if(sha)body.sha=sha;
+  try{await api(`contents/${SR_PATH}`,{method:'PUT',body:JSON.stringify(body)});toast('Riddle & password saved!','success');loadSecretRoom();}
   catch(e){toast('Error: '+e.message,'error');}
 }
 function previewSrMessage(){document.getElementById('srPreview').textContent=document.getElementById('srEditor').value.trim()||'(empty)';}
