@@ -198,6 +198,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <button class="tab" data-tab="media">Media</button>
     <button class="tab" data-tab="books">Books</button>
     <button class="tab" data-tab="analytics">Analytics</button>
+    <button class="tab" data-tab="comments">Comments</button>
   </div>
   <div class="panel active" id="panel-files">
     <div class="toolbar">
@@ -545,6 +546,32 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       </div>
     </div>
   </div>
+
+  <!-- ═══ COMMENTS PANEL ═══ -->
+  <div class="panel" id="panel-comments">
+    <div class="toolbar">
+      <span class="path"><span style="color:var(--gold)">Comments</span> — Skin Me</span>
+      <button class="btn" onclick="cmLoad()">↻ Refresh</button>
+      <button class="btn btn-danger" onclick="cmDeleteAll()">Delete All</button>
+      <span id="cmCount" style="font-size:10px;color:var(--text2)"></span>
+    </div>
+    <div class="content" id="cmContent" style="padding:0">
+      <table style="width:100%;border-collapse:collapse;font-size:12px" id="cmTable">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg2)">
+            <th style="padding:8px 12px;text-align:left;color:var(--gold);font-weight:500;width:120px">Name</th>
+            <th style="padding:8px 12px;text-align:left;color:var(--gold);font-weight:500">Comment</th>
+            <th style="padding:8px 12px;text-align:left;color:var(--gold);font-weight:500;width:130px">Date</th>
+            <th style="padding:8px 12px;text-align:center;color:var(--gold);font-weight:500;width:100px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="cmBody"></tbody>
+      </table>
+      <div id="cmEmpty" style="padding:40px;text-align:center;color:var(--text2);font-style:italic;display:none">No comments yet</div>
+      <div id="cmLoading" style="padding:40px;text-align:center;color:var(--text2)">Loading...</div>
+    </div>
+  </div>
+
 </div>
   <div class="modal">
     <div class="modal-header"><h3 id="modalTitle">Preview</h3><button class="btn" onclick="closeModal()">X</button></div>
@@ -1860,6 +1887,155 @@ function gaRenderTable(data, dimName, metricName) {
 document.querySelector('[data-tab="analytics"]').addEventListener('click', () => {
   gaUpdateUI();
 });
+
+// ═══════════════════════════════════════════════════
+// COMMENTS ADMIN
+// ═══════════════════════════════════════════════════
+const CM_API = 'https://amkostiuk.de/comments-api.php';
+const CM_KEY = 'nmls-adm-2026-q8k3';
+let cmComments = [];
+
+document.querySelector('[data-tab="comments"]').addEventListener('click', () => {
+  if (cmComments.length === 0) cmLoad();
+});
+
+async function cmLoad() {
+  const body = document.getElementById('cmBody');
+  const empty = document.getElementById('cmEmpty');
+  const loading = document.getElementById('cmLoading');
+  const count = document.getElementById('cmCount');
+  body.innerHTML = '';
+  loading.style.display = '';
+  empty.style.display = 'none';
+
+  try {
+    const res = await fetch(CM_API);
+    const data = await res.json();
+    cmComments = data.comments || [];
+  } catch(e) {
+    loading.textContent = 'Error loading comments';
+    return;
+  }
+
+  loading.style.display = 'none';
+
+  if (cmComments.length === 0) {
+    empty.style.display = '';
+    count.textContent = '0 comments';
+    return;
+  }
+
+  count.textContent = cmComments.length + ' comment' + (cmComments.length !== 1 ? 's' : '');
+
+  // newest first
+  const sorted = [...cmComments].sort((a, b) => b.ts - a.ts);
+  sorted.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.style.borderBottom = '1px solid var(--border)';
+    tr.id = 'cm-' + c.id;
+    const d = new Date(c.ts);
+    const date = d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const edited = c.edited ? ' <span style="color:#6b1c1c;font-size:10px">(edited)</span>' : '';
+    tr.innerHTML = `
+      <td style="padding:8px 12px;color:var(--gold);vertical-align:top" id="cm-name-${c.id}">${esc(c.name)}</td>
+      <td style="padding:8px 12px;color:var(--text);vertical-align:top;line-height:1.6" id="cm-body-${c.id}">${esc(c.body)}${edited}</td>
+      <td style="padding:8px 12px;color:var(--text2);vertical-align:top;font-size:11px">${date}</td>
+      <td style="padding:8px 12px;text-align:center;vertical-align:top">
+        <button class="btn" onclick="cmEdit('${c.id}')" style="margin-right:4px" title="Edit">✎</button>
+        <button class="btn btn-danger" onclick="cmDelete('${c.id}')" title="Delete">✕</button>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function cmDelete(id) {
+  const c = cmComments.find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`Delete comment by "${c.name}"?\n\n"${c.body.slice(0, 100)}..."`)) return;
+
+  try {
+    const res = await fetch(CM_API, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-Admin-Key':CM_KEY},
+      body: JSON.stringify({action:'delete', id})
+    });
+    if (!res.ok) throw new Error(res.status);
+    toast('Comment deleted');
+    cmLoad();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function cmEdit(id) {
+  const c = cmComments.find(x => x.id === id);
+  if (!c) return;
+
+  const row = document.getElementById('cm-' + id);
+  if (!row) return;
+
+  // Replace row with edit form
+  const nameCell = document.getElementById('cm-name-' + id);
+  const bodyCell = document.getElementById('cm-body-' + id);
+
+  const origName = c.name;
+  const origBody = c.body;
+
+  nameCell.innerHTML = `<input type="text" value="${esc(c.name)}" id="cm-edit-name-${id}" class="search" style="width:100%;font-size:12px;padding:4px 6px">`;
+  bodyCell.innerHTML = `<textarea id="cm-edit-body-${id}" class="search" style="width:100%;font-size:12px;padding:4px 6px;min-height:60px;resize:vertical;font-family:inherit">${esc(c.body)}</textarea>
+    <div style="margin-top:4px;display:flex;gap:4px">
+      <button class="btn btn-primary" onclick="cmSaveEdit('${id}')">Save</button>
+      <button class="btn" onclick="cmLoad()">Cancel</button>
+    </div>`;
+}
+
+async function cmSaveEdit(id) {
+  const name = document.getElementById('cm-edit-name-' + id)?.value?.trim();
+  const body = document.getElementById('cm-edit-body-' + id)?.value?.trim();
+
+  if (!name || !body || body.length < 3) {
+    alert('Name and comment (3+ chars) required');
+    return;
+  }
+
+  try {
+    const res = await fetch(CM_API, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-Admin-Key':CM_KEY},
+      body: JSON.stringify({action:'edit', id, name, body})
+    });
+    if (!res.ok) throw new Error(res.status);
+    toast('Comment updated');
+    cmLoad();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
+
+async function cmDeleteAll() {
+  if (!confirm('DELETE ALL COMMENTS?\n\nThis cannot be undone.')) return;
+  if (!confirm('Are you sure? All reader comments will be permanently deleted.')) return;
+
+  try {
+    const res = await fetch(CM_API, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json','X-Admin-Key':CM_KEY},
+      body: JSON.stringify({action:'delete_all'})
+    });
+    if (!res.ok) throw new Error(res.status);
+    toast('All comments deleted');
+    cmLoad();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
 </script>
 </body>
 </html>
