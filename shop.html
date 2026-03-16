@@ -1022,6 +1022,10 @@ function openMediaDetail(id) {
     const vid = item.youtube.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
     if(vid) html += '<div style="margin-top:16px"><iframe width="100%" height="300" src="https://www.youtube-nocookie.com/embed/'+vid[1]+'" frameborder="0" allowfullscreen style="border:1px solid rgba(200,160,80,0.1)"></iframe></div>';
   }
+  // Video file from server (premium content)
+  if(item.video_url) {
+    html += '<div style="margin-top:16px"><video controls src="'+item.video_url+'" style="width:100%;max-height:400px;border:1px solid rgba(200,160,80,0.1)" controlsList="nodownload"></video></div>';
+  }
   // Audio player
   if(item.audio_url) {
     html += '<div style="margin-top:16px"><audio controls src="'+item.audio_url+'" style="width:100%;filter:sepia(0.3)"></audio></div>';

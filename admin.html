@@ -362,10 +362,11 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
         </div>
         <div class="ve-prop-row" id="meYoutubeRow"><label style="width:80px">YouTube</label><input id="meYoutube" placeholder="https://youtube.com/watch?v=..." style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
         <div class="ve-prop-row" id="meAudioRow"><label style="width:80px">Audio URL</label><input id="meAudio" placeholder="https://amkostiuk.de/namenlos-audio/..." style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
+        <div class="ve-prop-row" id="meVideoUrlRow" style="display:none"><label style="width:80px">Video URL</label><input id="meVideoUrl" placeholder="https://amkostiuk.de/namenlos-video/..." style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
         <div class="ve-prop-row" id="meUploadRow">
           <label style="width:80px">Upload</label>
-          <input type="file" id="meFile" accept=".mp3,.wav,.ogg,.m4a,.flac,.aac" style="flex:1;font-size:11px;color:var(--text2)">
-          <button class="btn" onclick="mediaUploadAudio()" style="margin-left:6px">Upload to amkostiuk.de</button>
+          <input type="file" id="meFile" accept=".mp3,.wav,.ogg,.m4a,.mp4,.webm,.mov" style="flex:1;font-size:11px;color:var(--text2)">
+          <button class="btn" onclick="mediaUploadFile()" style="margin-left:6px">Upload to Server</button>
         </div>
         <div id="mePreview" style="margin-top:10px"></div>
         <div style="margin-top:12px;display:flex;gap:6px">
@@ -1250,8 +1251,8 @@ window.addEventListener('resize',()=>{if(veLoaded)veRender();});
 
 // ═══ MEDIA MANAGER ═══
 const MEDIA_PATH='data/media.json';
-const AUDIO_UPLOAD_URL='https://amkostiuk.de/audio-upload.php';
-const AUDIO_UPLOAD_KEY='nm-audio-2026-x4k';
+const MEDIA_UPLOAD_URL='https://amkostiuk.de/media-upload.php';
+const MEDIA_UPLOAD_KEY='nm-media-2026-x4k';
 let mediaData=null, mediaSha=null, mediaEditIdx=-1;
 
 async function mediaLoad(){
@@ -1299,14 +1300,16 @@ function mediaStartEdit(idx){
   document.getElementById('meTitle').value=it.title||'';
   document.getElementById('meDesc').value=it.desc||'';
   document.getElementById('meStatus').value=it.status||'coming_soon';
-  // Show/hide youtube vs audio fields
+  // Show/hide youtube vs audio vs video fields
   const isVideo=cat==='films'||cat==='clips';
   const isAudio=cat==='tracks'||cat==='audiobooks';
   document.getElementById('meYoutubeRow').style.display=isVideo?'flex':'none';
   document.getElementById('meAudioRow').style.display=isAudio?'flex':'none';
-  document.getElementById('meUploadRow').style.display=isAudio?'flex':'none';
+  document.getElementById('meVideoUrlRow').style.display=isVideo?'flex':'none';
+  document.getElementById('meUploadRow').style.display='flex';
   document.getElementById('meYoutube').value=it.youtube||'';
   document.getElementById('meAudio').value=it.audio_url||'';
+  document.getElementById('meVideoUrl').value=it.video_url||'';
   // Preview
   const prev=document.getElementById('mePreview');
   if(isVideo&&it.youtube){
@@ -1328,7 +1331,7 @@ function mediaApplyEdit(){
   it.title=document.getElementById('meTitle').value.trim();
   it.desc=document.getElementById('meDesc').value.trim();
   it.status=document.getElementById('meStatus').value;
-  if(cat==='films'||cat==='clips') it.youtube=document.getElementById('meYoutube').value.trim();
+  if(cat==='films'||cat==='clips') { it.youtube=document.getElementById('meYoutube').value.trim(); it.video_url=document.getElementById('meVideoUrl').value.trim(); }
   if(cat==='tracks'||cat==='audiobooks') it.audio_url=document.getElementById('meAudio').value.trim();
   document.getElementById('mediaEdit').style.display='none';
   mediaEditIdx=-1;
@@ -1373,23 +1376,33 @@ async function mediaSave(){
   }catch(e){st.textContent='Error';st.style.color='#a44';toast('Error: '+e.message,'error');}
 }
 
-async function mediaUploadAudio(){
+async function mediaUploadFile(){
   const file=document.getElementById('meFile').files[0];
   if(!file){toast('Select a file first','error');return;}
+  const cat=mediaCat();
+  const isVideo=cat==='films'||cat==='clips';
+  const uploadType=isVideo?'video':'audio';
   const st=document.getElementById('mediaStatus');
-  st.textContent='Uploading '+file.name+'...';st.style.color='var(--gold)';
+  const sizeMB=(file.size/1024/1024).toFixed(1);
+  st.textContent=`Uploading ${file.name} (${sizeMB}MB)...`;st.style.color='var(--gold)';
   try{
     const fd=new FormData();
     fd.append('file',file);
-    fd.append('key',AUDIO_UPLOAD_KEY);
-    const r=await fetch(AUDIO_UPLOAD_URL,{method:'POST',body:fd});
+    fd.append('key',MEDIA_UPLOAD_KEY);
+    fd.append('type',uploadType);
+    const r=await fetch(MEDIA_UPLOAD_URL,{method:'POST',body:fd});
     const d=await r.json();
     if(d.error){throw new Error(d.error);}
-    document.getElementById('meAudio').value=d.url;
-    st.textContent='Uploaded!';st.style.color='#4a4';
-    toast('Audio uploaded: '+d.name,'success');
-    // Auto-preview
-    document.getElementById('mePreview').innerHTML=`<audio controls src="${d.url}" style="width:100%"></audio>`;
+    // Fill correct URL field
+    if(uploadType==='video'){
+      document.getElementById('meVideoUrl').value=d.url;
+      document.getElementById('mePreview').innerHTML=`<video controls src="${d.url}" style="width:100%;max-height:250px;border:1px solid var(--border)"></video>`;
+    } else {
+      document.getElementById('meAudio').value=d.url;
+      document.getElementById('mePreview').innerHTML=`<audio controls src="${d.url}" style="width:100%"></audio>`;
+    }
+    st.textContent=`Uploaded! (${sizeMB}MB)`;st.style.color='#4a4';
+    toast(`${uploadType} uploaded: ${d.name}`,'success');
   }catch(e){st.textContent='Upload failed';st.style.color='#a44';toast('Upload error: '+e.message,'error');}
 }
 </script>
