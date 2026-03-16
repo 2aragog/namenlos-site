@@ -308,9 +308,7 @@ body{cursor:default}
     transition:none;
   }
   .hotspots{
-    height:100%;
-    aspect-ratio:1200/670;
-    min-width:180%;
+    position:absolute;
     left:50%;top:50%;
     transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
     transition:none;
@@ -1290,6 +1288,37 @@ if(isMobile) {
       setTimeout(() => el.classList.remove('active'), 1500);
     }, {passive:true});
   });
+}
+
+// ═══ MOBILE: SYNC HOTSPOTS TO IMAGE ═══
+if(isMobile) {
+  function syncHotspots() {
+    document.querySelectorAll('.scene').forEach(scene => {
+      const img = scene.querySelector('.scene-img');
+      const hs = scene.querySelector('.hotspots');
+      if(!img || !hs) return;
+      // Use scene's actual dimensions (position:fixed;inset:0)
+      const sh = scene.clientHeight;
+      const sw = scene.clientWidth;
+      // Image: height:100%, width:auto, min-width:180%
+      const ratio = (img.naturalWidth || 1200) / (img.naturalHeight || 670);
+      const w = Math.max(sh * ratio, sw * 1.8);
+      hs.style.width = w + 'px';
+      hs.style.height = sh + 'px';
+    });
+  }
+  // Run on multiple events to catch all timing
+  document.addEventListener('DOMContentLoaded', syncHotspots);
+  window.addEventListener('load', syncHotspots);
+  window.addEventListener('resize', syncHotspots);
+  window.addEventListener('orientationchange', () => setTimeout(syncHotspots, 300));
+  // Also run now and with delays
+  syncHotspots();
+  setTimeout(syncHotspots, 200);
+  setTimeout(syncHotspots, 1000);
+  // Hook into scene changes
+  const _origGoTo = goTo;
+  goTo = function(id) { _origGoTo(id); setTimeout(syncHotspots, 100); };
 }
 
 // ═══ MOBILE: HINT BUTTON + TAP FLASH ═══
