@@ -318,10 +318,18 @@ function injectEditMode() {
     if(el.tagName === 'A') { el.dataset.origHref = el.href; el.href = 'javascript:void(0)'; }
   });
 
-  // Make text editable
-  const editable = 'h1,h2,h3,h4,h5,h6,p,span.label,div.ct,div.cs,div.riddle,div.code-title,div.code-sub,div.code-hint,.note-title,.note-text,.note-source,button,.mt-title,.mt-desc,.bc-name,.bc-status,.foot-brand,.buy-btn';
+  // Make text editable — broad selectors for all page types
+  const editable = 'h1,h2,h3,h4,h5,h6,p,a,span,div';
   doc.querySelectorAll(editable).forEach(el => {
-    if(el.children.length > 3) return; // skip complex containers
+    // Only make leaf/near-leaf elements editable (those with mostly text content)
+    if(el.children.length > 3) return;
+    const text = (el.textContent||'').trim();
+    if(!text || text.length < 2) return;
+    // Skip script, style, containers with many children
+    if(el.tagName==='SCRIPT'||el.tagName==='STYLE') return;
+    // Skip if it contains mostly other elements (container divs)
+    const childTextLen = [...el.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim().length).reduce((a,b)=>a+b,0);
+    if(childTextLen < 2 && el.children.length > 0) return;
     el.contentEditable = true;
     el.style.outline = '1px dashed rgba(200,160,80,0.2)';
     el.style.cursor = 'text';
@@ -379,24 +387,23 @@ function scanElements() {
   const list = document.getElementById('elementList');
   const items = [];
 
-  // Find key editable sections
-  const selectors = [
-    {sel:'h1,h2,h3', type:'heading'},
-    {sel:'p', type:'text'},
-    {sel:'.hotspot .label', type:'label'},
-    {sel:'img.scene-img', type:'image'},
-    {sel:'.code-title,.ct', type:'riddle'},
-    {sel:'button,.buy-btn', type:'button'},
-  ];
-
-  let count = 0;
-  selectors.forEach(({sel, type}) => {
-    doc.querySelectorAll(sel).forEach(el => {
-      const text = (el.textContent || '').trim().slice(0, 40);
-      if(!text && type !== 'image') return;
-      const label = type === 'image' ? (el.alt || el.src.split('/').pop()) : text;
-      items.push({el, type, label, idx: count++});
-    });
+  // Scan all text-bearing elements
+  doc.body.querySelectorAll('h1,h2,h3,h4,h5,h6,p,a,span,div,button,img').forEach(el => {
+    if(el.tagName==='SCRIPT'||el.tagName==='STYLE') return;
+    const isImg = el.tagName==='IMG';
+    if(!isImg) {
+      // Only leaf/near-leaf text elements
+      if(el.children.length > 3) return;
+      const text = (el.textContent||'').trim();
+      if(!text || text.length < 2) return;
+      const childTextLen = [...el.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent.trim().length).reduce((a,b)=>a+b,0);
+      if(childTextLen < 2 && el.children.length > 0) return;
+    }
+    const tag = el.tagName.toLowerCase();
+    const type = isImg ? 'image' : (/^h\d$/.test(tag) ? 'heading' : (tag==='a'?'link':(tag==='button'?'button':'text')));
+    const label = isImg ? (el.alt||el.src.split('/').pop().slice(0,30)) : (el.textContent||'').trim().slice(0,40);
+    if(!label) return;
+    items.push({el, type, label, idx: items.length});
   });
 
   list.innerHTML = items.slice(0, 60).map((it, i) =>
