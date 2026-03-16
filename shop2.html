@@ -308,10 +308,9 @@ body{cursor:default}
     transition:none;
   }
   .hotspots{
-    position:absolute;
-    left:50%;top:50%;
-    transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
-    transition:none;
+    position:fixed;
+    pointer-events:auto;
+    z-index:30;
   }
 
   /* Hotspot labels always visible on touch */
@@ -1297,16 +1296,19 @@ if(isMobile) {
       const img = scene.querySelector('.scene-img');
       const hs = scene.querySelector('.hotspots');
       if(!img || !hs) return;
-      // getBoundingClientRect gives ACTUAL rendered pixels after all CSS
       const rect = img.getBoundingClientRect();
-      if(rect.width > 0 && rect.height > 0) {
-        hs.style.width = rect.width + 'px';
-        hs.style.height = rect.height + 'px';
-      }
+      if(rect.width < 10) return; // not rendered yet
+      // Position the hotspots container to exactly overlay the image
+      hs.style.position = 'fixed';
+      hs.style.left = rect.left + 'px';
+      hs.style.top = rect.top + 'px';
+      hs.style.width = rect.width + 'px';
+      hs.style.height = rect.height + 'px';
+      hs.style.transform = 'none';
     });
   }
 
-  // ResizeObserver: fires when img actually changes size
+  // ResizeObserver
   if(window.ResizeObserver) {
     const ro = new ResizeObserver(syncHotspots);
     document.querySelectorAll('.scene-img').forEach(img => ro.observe(img));
@@ -1322,7 +1324,8 @@ if(isMobile) {
   goTo = function(id) {
     _origGoTo(id);
     requestAnimationFrame(syncHotspots);
-    setTimeout(syncHotspots, 100);
+    setTimeout(syncHotspots, 50);
+    setTimeout(syncHotspots, 200);
     setTimeout(syncHotspots, 500);
   };
 }
@@ -1410,10 +1413,9 @@ if(isMobile) {
     const active = document.querySelector('.scene.active');
     if(!active) return;
     const img = active.querySelector('.scene-img');
-    const hs = active.querySelector('.hotspots');
     if(img) img.style.setProperty('--panX', panX + 'px');
-    if(hs) hs.style.setProperty('--panX', panX + 'px');
-    // Highlight layers hidden on mobile — no need to update
+    // Sync hotspots to follow image position
+    if(typeof syncHotspots === 'function') syncHotspots();
   }
 
   // Gyroscope pan
@@ -1457,7 +1459,7 @@ if(isMobile) {
       const img = active.querySelector('.scene-img');
       const hs = active.querySelector('.hotspots');
       if(img) img.style.setProperty('--panX', val);
-      if(hs) hs.style.setProperty('--panX', val);
+      if(typeof syncHotspots === 'function') setTimeout(syncHotspots, 50);
       // Highlight layers hidden on mobile — no pan needed
     }
   };
