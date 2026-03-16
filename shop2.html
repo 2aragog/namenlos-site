@@ -1295,22 +1295,20 @@ if(isMobile) {
 // ═══ MOBILE: SYNC HOTSPOTS WITH IMAGE SIZE ═══
 if(isMobile) {
   function syncHotspots() {
-    document.querySelectorAll('.scene').forEach(scene => {
-      const img = scene.querySelector('.scene-img');
-      const hs = scene.querySelector('.hotspots');
-      if(!img || !hs) return;
-      const w = img.offsetWidth || img.naturalWidth * (window.innerHeight / img.naturalHeight);
-      const h = img.offsetHeight || window.innerHeight;
-      hs.style.width = w + 'px';
-      hs.style.height = h + 'px';
+    // Image is height:100% with aspect-ratio 1200:670
+    // So width = viewportHeight * 1200/670
+    const vh = window.innerHeight;
+    const vw = window.innerWidth;
+    const imgW = Math.max(vh * 1200 / 670, vw * 1.8); // match min-width:180%
+    const imgH = vh;
+    document.querySelectorAll('.scene .hotspots').forEach(hs => {
+      hs.style.width = imgW + 'px';
+      hs.style.height = imgH + 'px';
     });
   }
-  // Run after images load and on resize
   window.addEventListener('load', syncHotspots);
   window.addEventListener('resize', syncHotspots);
-  // Run immediately for already-loaded images
-  setTimeout(syncHotspots, 100);
-  setTimeout(syncHotspots, 500);
+  syncHotspots();
 }
 
 // ═══ MOBILE: HINT BUTTON + TAP FLASH ═══
