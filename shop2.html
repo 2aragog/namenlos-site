@@ -252,6 +252,12 @@ body{cursor:default}
 /* Mobile-only elements hidden by default */
 .mobile-hint-btn{display:none}
 
+/* Keyframes for mobile dots (outside media queries) */
+@keyframes mobilePulse{
+  0%,100%{opacity:0.4;box-shadow:0 0 8px rgba(200,160,80,0.3);width:18px;height:18px}
+  50%{opacity:1;box-shadow:0 0 24px rgba(200,160,80,0.8),0 0 48px rgba(200,160,80,0.3);width:24px;height:24px}
+}
+
 /* ═══ CODE ENTRY SCREEN ═══ */
 .code-screen{
   position:absolute;inset:0;
@@ -308,9 +314,15 @@ body{cursor:default}
     transition:none;
   }
   .hotspots{
-    position:fixed;
+    position:fixed !important;
+    left:0 !important;
+    top:0 !important;
+    width:0 !important;
+    height:0 !important;
+    transform:none !important;
     pointer-events:auto;
     z-index:30;
+    overflow:visible;
   }
 
   /* Hotspot labels always visible on touch */
@@ -343,10 +355,6 @@ body{cursor:default}
   .hotspot:nth-child(6)::after{animation-delay:1.0s}
   .hotspot:nth-child(7)::after{animation-delay:0.3s}
   .hotspot:nth-child(8)::after{animation-delay:0.9s}
-  @keyframes mobilePulse{
-    0%,100%{opacity:0.4;box-shadow:0 0 8px rgba(200,160,80,0.3);width:18px;height:18px}
-    50%{opacity:1;box-shadow:0 0 24px rgba(200,160,80,0.8),0 0 48px rgba(200,160,80,0.3);width:24px;height:24px}
-  }
   /* Tap flash effect */
   .hotspot.tapped::after{
     animation:none;
@@ -466,6 +474,21 @@ body{cursor:default}
   .top-bar{padding:4px 10px}
   .nav-toggle{top:4px;right:8px}
   .info{padding:4px 12px}
+  /* Dots + hide highlights in landscape too */
+  .scene-highlight{display:none !important}
+  #gameCursor{display:none}
+  .hotspots{
+    position:fixed !important;left:0 !important;top:0 !important;
+    width:0 !important;height:0 !important;transform:none !important;
+    pointer-events:auto;z-index:30;overflow:visible;
+  }
+  .hotspot::after{
+    content:'';position:absolute;top:var(--dot-y,50%);left:var(--dot-x,50%);
+    width:14px;height:14px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(200,160,80,1) 0%,rgba(200,160,80,0.5) 40%,transparent 70%);
+    border-radius:50%;animation:mobilePulse 2.5s ease-in-out infinite;pointer-events:none;z-index:5;
+  }
+  .mobile-hint-btn{display:flex;bottom:8px;right:8px;width:36px;height:36px;font-size:14px}
 }
 </style>
 </head>
