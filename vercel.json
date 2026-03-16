@@ -12,5 +12,19 @@
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     }
+  ],
+  "functions": {
+    "api/webhook.js": {
+      "maxDuration": 10
+    },
+    "api/download.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/files/:path*",
+      "destination": "/404.html"
+    }
   ]
 }

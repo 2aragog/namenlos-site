@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Purchase — NAMENLOS</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0a0505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:#0a0505;
+  color:#8a7a65;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:17px;line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+::selection{background:#3a1515;color:#c8a060}
+a{color:#c8a060;text-decoration:none;transition:all 0.3s}
+a:hover{color:#e0c080}
+
+/* ─── Layout ─── */
+.page{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:60px 24px;
+}
+.container{
+  max-width:640px;width:100%;
+  text-align:center;
+}
+
+/* ─── Brand ─── */
+.brand{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:8px;
+  text-transform:uppercase;color:#4a3a2a;margin-bottom:60px;
+}
+.brand a{color:#4a3a2a}
+.brand a:hover{color:#c8a060}
+
+/* ─── States ─── */
+.state{display:none}
+.state.active{display:block}
+
+/* ─── Loading ─── */
+.loading-text{
+  font-style:italic;color:#5a4a35;font-size:18px;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+
+.loading-symbol{
+  font-size:32px;color:#6b1c1c;margin-bottom:24px;
+  animation:spin 3s linear infinite;
+}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* ─── Success ─── */
+.success-icon{
+  font-size:48px;margin-bottom:24px;
+  color:#c8a060;
+  animation:fadeIn 0.6s ease-out;
+}
+.success-title{
+  font-family:'Cinzel',serif;font-size:clamp(20px,3vw,28px);
+  letter-spacing:4px;text-transform:uppercase;
+  color:#c8a060;margin-bottom:12px;
+}
+.success-sub{
+  font-style:italic;color:#6a5a45;font-size:16px;
+  margin-bottom:48px;
+}
+.bundle-label{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:4px;
+  text-transform:uppercase;color:#6b1c1c;
+  margin-bottom:32px;
+  padding-bottom:16px;border-bottom:1px solid #1a1210;
+}
+
+/* ─── Download list ─── */
+.downloads{
+  list-style:none;text-align:left;
+}
+.download-item{
+  border:1px solid #1a1210;
+  margin-bottom:12px;
+  transition:all 0.4s;
+  background:rgba(10,5,5,0.5);
+  animation:slideUp 0.5s ease-out both;
+}
+.download-item:nth-child(1){animation-delay:0.1s}
+.download-item:nth-child(2){animation-delay:0.2s}
+.download-item:nth-child(3){animation-delay:0.3s}
+.download-item:nth-child(4){animation-delay:0.4s}
+.download-item:nth-child(5){animation-delay:0.5s}
+.download-item:nth-child(6){animation-delay:0.6s}
+
+@keyframes slideUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.download-item:hover{
+  border-color:#2a1a15;
+  transform:translateY(-2px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+.download-link{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 22px;
+  color:#8a7a65;text-decoration:none;
+}
+.download-link:hover{color:#c8a060}
+.download-icon{
+  font-size:22px;flex-shrink:0;
+  width:40px;text-align:center;
+}
+.download-name{
+  flex:1;font-size:15px;
+}
+.download-arrow{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;
+  text-transform:uppercase;color:#6b1c1c;
+  flex-shrink:0;transition:color 0.3s;
+}
+.download-link:hover .download-arrow{color:#c8a060}
+
+/* ─── Expiry notice ─── */
+.expiry{
+  margin-top:40px;padding-top:24px;
+  border-top:1px solid #1a1210;
+  font-size:13px;color:#4a3a2a;font-style:italic;
+}
+.expiry strong{color:#6a5a45;font-weight:400}
+
+/* ─── Error ─── */
+.error-icon{font-size:36px;margin-bottom:20px;color:#6b1c1c}
+.error-title{
+  font-family:'Cinzel',serif;font-size:20px;
+  letter-spacing:3px;text-transform:uppercase;
+  color:#8a7a65;margin-bottom:12px;
+}
+.error-text{font-style:italic;color:#5a4a35;margin-bottom:32px}
+.btn-back{
+  display:inline-block;
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;padding:12px 32px;
+  border:1px solid #2a1a15;color:#8a7a65;
+  transition:all 0.3s;
+}
+.btn-back:hover{border-color:#c8a060;color:#c8a060;background:rgba(200,160,96,0.05)}
+
+/* ─── Footer ─── */
+footer{
+  text-align:center;padding:30px 24px;
+  font-size:12px;color:#2a1a15;
+  border-top:1px solid #0f0a08;
+}
+footer a{color:#3a2a1a;font-size:11px;letter-spacing:1px}
+
+@keyframes fadeIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="container">
+    <div class="brand"><a href="/home.html">NAMENLOS</a></div>
+
+    <!-- Loading State -->
+    <div id="state-loading" class="state active">
+      <div class="loading-symbol">◈</div>
+      <div class="loading-text">The shopkeeper is checking the ledger…</div>
+    </div>
+
+    <!-- Success State -->
+    <div id="state-success" class="state">
+      <div class="success-icon">◈</div>
+      <div class="success-title">It's Yours</div>
+      <div class="success-sub">The artifact has chosen its keeper.</div>
+      <div id="bundle-label" class="bundle-label"></div>
+      <ul id="downloads" class="downloads"></ul>
+      <div class="expiry">
+        Downloads expire in <strong>24 hours</strong>. Save your files now.<br>
+        A copy of this page was sent to <strong id="email-display"></strong>.
+      </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="state-error" class="state">
+      <div class="error-icon">✕</div>
+      <div class="error-title">Something went wrong</div>
+      <div id="error-text" class="error-text">Payment could not be verified.</div>
+      <a href="/skin-me.html#buy" class="btn-back">← Back to the shop</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="/home.html">NAMENLOS</a> · 
+  <a href="/legal/impressum.html">Impressum</a> · 
+  <a href="/legal/datenschutz.html">Datenschutz</a>
+</footer>
+
+<script>
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  const show = (id) => {
+    document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  };
+
+  if (!sessionId) {
+    document.getElementById('error-text').textContent = 'No purchase session found.';
+    show('state-error');
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/verify?session_id=${encodeURIComponent(sessionId)}`);
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      const msg = data.error || 'Payment verification failed.';
+      document.getElementById('error-text').textContent = msg;
+      show('state-error');
+      return;
+    }
+
+    // ─── Populate downloads ───
+    const bundleNames = {
+      standard: 'Standard Bundle',
+      premium: 'Premium Bundle',
+      subscription: 'Serialized — Episode Access'
+    };
+    document.getElementById('bundle-label').textContent = bundleNames[data.bundle] || data.bundle;
+
+    const list = document.getElementById('downloads');
+    data.files.forEach(file => {
+      const li = document.createElement('li');
+      li.className = 'download-item';
+      li.innerHTML = `
+        <a href="${file.url}" class="download-link" download>
+          <span class="download-icon">${file.icon}</span>
+          <span class="download-name">${file.name}</span>
+          <span class="download-arrow">Download ↓</span>
+        </a>
+      `;
+      list.appendChild(li);
+    });
+
+    // Show email
+    const emailEl = document.getElementById('email-display');
+    if (data.email) {
+      emailEl.textContent = data.email;
+    } else {
+      emailEl.parentElement.style.display = 'none';
+    }
+
+    show('state-success');
+  } catch (err) {
+    console.error('Verification error:', err);
+    document.getElementById('error-text').textContent = 'Could not connect to the server. Please try refreshing.';
+    show('state-error');
+  }
+})();
+</script>
+</body>
+</html>

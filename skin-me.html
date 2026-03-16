@@ -691,7 +691,7 @@ footer .legal-links a:hover{color:#7a6a55}
         <li>Full soundtrack — 20 tracks</li>
         <li>Character art collection</li>
       </ul>
-      <a href="#" class="bundle-btn" data-bundle="standard">Coming Soon</a>
+      <a href="#" class="bundle-btn" data-bundle="standard" onclick="buyBundle('standard');return false">Buy Now</a>
     </div>
     <!-- Premium -->
     <div class="bundle featured">
@@ -702,7 +702,7 @@ footer .legal-links a:hover{color:#7a6a55}
         <li>15 exclusive video clips</li>
         <li>Full audiobook (ElevenLabs AI voice)</li>
       </ul>
-      <a href="#" class="bundle-btn" data-bundle="premium">Coming Soon</a>
+      <a href="#" class="bundle-btn" data-bundle="premium" onclick="buyBundle('premium');return false">Buy Now</a>
     </div>
     <!-- Subscription -->
     <div class="bundle">
@@ -713,12 +713,12 @@ footer .legal-links a:hover{color:#7a6a55}
         <li>Serialized reading experience</li>
         <li>Cancel anytime</li>
       </ul>
-      <a href="#" class="bundle-btn" data-bundle="subscription">Coming Soon</a>
+      <a href="#" class="bundle-btn" data-bundle="subscription" onclick="buyBundle('subscription');return false">Subscribe</a>
     </div>
   </div>
   <div style="text-align:center;margin-top:30px" class="reveal">
     <p style="font-size:13px;color:#4a3a2a;font-style:italic">
-      Payments processed via Digistore24. Sold exclusively through namenlos.black.<br>
+      Secure payments via Stripe. Sold exclusively through namenlos.black.<br>
       Not available on Amazon. Not available on streaming platforms.
     </p>
   </div>
@@ -877,6 +877,32 @@ cSubmit.addEventListener('click', async () => {
 });
 
 loadComments();
+
+/* ═══ STRIPE CHECKOUT ═══ */
+async function buyBundle(product) {
+  const btn = document.querySelector(`[data-bundle="${product}"]`);
+  const origText = btn.textContent;
+  btn.textContent = '...';
+  btn.style.pointerEvents = 'none';
+  try {
+    const res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Checkout failed');
+    }
+  } catch (err) {
+    console.error('Checkout error:', err);
+    alert('Could not start checkout. Please try again.');
+    btn.textContent = origText;
+    btn.style.pointerEvents = '';
+  }
+}
 
 /* ═══ SMOOTH NAV ═══ */
 document.querySelectorAll('nav a[href^="#"]').forEach(a => {
