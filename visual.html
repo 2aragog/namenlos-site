@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAMENLOS — Visual Editor</title>
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--border:#222;--gold:#c8a060;--text:#999;--text2:#666}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+/* TOP BAR */
+.topbar{display:flex;align-items:center;gap:12px;padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.topbar .logo{font-family:'Cinzel',serif;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#2a2218}
+.topbar .logo span{color:var(--gold)}
+.topbar select,.topbar button,.topbar input{font-family:inherit;font-size:11px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;cursor:pointer;outline:none}
+.topbar select:focus,.topbar button:hover,.topbar input:focus{border-color:var(--gold);color:var(--gold)}
+.topbar .sep{width:1px;height:20px;background:var(--border)}
+.topbar .spacer{flex:1}
+.btn-gold{border-color:var(--gold)!important;color:var(--gold)!important}
+.btn-gold:hover{background:var(--gold)!important;color:var(--bg)!important}
+/* MAIN LAYOUT */
+.main{display:flex;flex:1;overflow:hidden}
+/* SIDEBAR */
+.sidebar{width:260px;min-width:260px;border-right:1px solid var(--border);overflow-y:auto;background:var(--bg2);display:flex;flex-direction:column}
+.sb-section{padding:10px 12px;border-bottom:1px solid var(--border)}
+.sb-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.sb-item{padding:5px 8px;font-size:11px;color:var(--text2);cursor:pointer;border:1px solid transparent;transition:all 0.15s;display:flex;align-items:center;gap:6px}
+.sb-item:hover{color:var(--text);background:rgba(200,160,80,0.03)}
+.sb-item.active{color:var(--gold);border-color:rgba(200,160,80,0.15);background:rgba(200,160,80,0.05)}
+.sb-item .badge{font-size:8px;margin-left:auto;color:var(--text2)}
+/* ELEMENT TREE */
+.el-item{padding:4px 8px;font-size:10px;color:var(--text2);cursor:pointer;border-left:2px solid transparent;padding-left:12px;transition:all 0.15s}
+.el-item:hover{color:var(--text);background:rgba(200,160,80,0.03)}
+.el-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(200,160,80,0.05)}
+.el-item .tag{color:var(--text2);font-size:9px}
+/* PROPERTIES PANEL */
+.prop-row{display:flex;align-items:flex-start;gap:6px;margin-bottom:6px}
+.prop-row label{width:55px;color:var(--text2);font-size:10px;flex-shrink:0;padding-top:4px}
+.prop-row input,.prop-row textarea,.prop-row select{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:11px;padding:3px 6px;outline:none;min-width:0}
+.prop-row textarea{min-height:50px;resize:vertical}
+.prop-row input:focus,.prop-row textarea:focus{border-color:var(--gold)}
+/* CANVAS */
+.canvas-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#050505}
+.device-bar{display:flex;align-items:center;gap:6px;padding:4px 12px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.device-btn{background:none;border:1px solid var(--border);color:var(--text2);font-size:14px;width:30px;height:26px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.device-btn.active,.device-btn:hover{border-color:var(--gold);color:var(--gold)}
+.canvas{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px}
+.frame{position:relative;background:#000;transition:all 0.3s}
+.frame.phone{width:375px;border:3px solid #333;border-radius:20px;overflow:hidden}
+.frame.tablet{width:768px;border:3px solid #333;border-radius:10px;overflow:hidden}
+.frame.desktop{width:100%;max-width:1200px;border:1px solid var(--border)}
+.frame iframe{width:100%;height:100%;border:none;display:block}
+/* STATUS */
+.statusbar{padding:3px 12px;background:var(--bg2);border-top:1px solid var(--border);font-size:10px;color:var(--text2);display:flex;justify-content:space-between}
+/* TOAST */
+.toast{position:fixed;bottom:12px;right:12px;padding:8px 16px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:11px;z-index:200;transform:translateY(50px);opacity:0;transition:all 0.3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{border-color:#1c4a1c;color:#4a4}
+.toast.error{border-color:#6b1c1c;color:#a44}
+/* AUTH */
+#auth{display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:20px}
+#auth .brand{font-family:'Cinzel',serif;font-size:11px;letter-spacing:8px;text-transform:uppercase;color:#2a2218}
+#auth .brand span{color:var(--gold)}
+#auth input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:inherit;font-size:14px;padding:10px 20px;text-align:center;width:280px;outline:none}
+#auth input:focus{border-color:#3a2a18}
+#auth .err{color:#a33;font-size:11px;height:16px}
+#app{display:none;flex-direction:column;height:100vh}
+</style>
+</head>
+<body>
+
+<div id="auth">
+  <div class="brand">NAMENLOS <span>VISUAL EDITOR</span></div>
+  <input type="password" id="passInput" placeholder="GitHub token (ghp_...)" autofocus>
+  <div class="err" id="authErr"></div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="logo">NAMENLOS <span>EDITOR</span></div>
+    <div class="sep"></div>
+    <select id="pageSelect" onchange="loadPage()"></select>
+    <div class="sep"></div>
+    <label style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:4px">
+      <input type="checkbox" id="editMode" onchange="toggleEditMode()"> Edit mode
+    </label>
+    <div class="spacer"></div>
+    <button onclick="reloadPreview()">Reload</button>
+    <button class="btn-gold" onclick="saveCurrentPage()">Save to GitHub</button>
+    <div class="sep"></div>
+    <a href="admin.html" style="font-size:10px;color:var(--text2);text-decoration:none">← Admin</a>
+  </div>
+
+  <div class="main">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+      <div class="sb-section">
+        <div class="sb-title">Pages</div>
+        <div id="pageList"></div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-title">Editable Elements</div>
+        <div id="elementList" style="max-height:300px;overflow-y:auto"></div>
+      </div>
+      <div class="sb-section">
+        <div class="sb-title">Properties</div>
+        <div id="propPanel"><span style="color:var(--text2)">Click an element in the preview</span></div>
+      </div>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="canvas-wrap">
+      <div class="device-bar">
+        <button class="device-btn" onclick="setDevice('phone')" title="Phone 375px">📱</button>
+        <button class="device-btn" onclick="setDevice('tablet')" title="Tablet 768px">💻</button>
+        <button class="device-btn active" onclick="setDevice('desktop')" title="Desktop">🖥</button>
+        <span style="flex:1"></span>
+        <span id="deviceInfo" style="font-size:10px;color:var(--text2)"></span>
+      </div>
+      <div class="canvas" id="canvas">
+        <div class="frame desktop" id="frame">
+          <iframe id="preview" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="statusbar">
+    <span id="statusLeft">Ready</span>
+    <span id="statusRight"></span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const REPO='2aragog/namenlos-site', BRANCH='main';
+let TOKEN='';
+
+// Pages config
+const PAGES = [
+  {id:'home', file:'home.html', label:'Home (Landing)', icon:'🏠'},
+  {id:'index', file:'index.html', label:'Entry Code Page', icon:'🔑'},
+  {id:'shop', file:'shop.html', label:'Shop (Desktop)', icon:'🖥'},
+  {id:'shop-m', file:'shop-m.html', label:'Shop (Mobile)', icon:'📱'},
+  {id:'classic', file:'classic.html', label:'Classic Layout', icon:'📜'},
+  {id:'browse', file:'browse.html', label:'Browse Collection', icon:'📖'},
+];
+
+let currentPage = null; // {id, file, sha, raw}
+let currentDevice = 'desktop';
+let editModeOn = false;
+let selectedElement = null;
+let unsavedChanges = false;
+
+// ─── AUTH ───
+document.getElementById('passInput').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const v = e.target.value.trim();
+  if(v.startsWith('ghp_') || v.startsWith('github_pat_')) {
+    TOKEN = v; localStorage.setItem('nm-tk', TOKEN); showApp();
+  } else {
+    document.getElementById('authErr').textContent = 'Enter GitHub token (ghp_...)';
+    e.target.value = '';
+  }
+});
+if(localStorage.getItem('nm-tk')) { TOKEN = localStorage.getItem('nm-tk'); showApp(); }
+
+function showApp() {
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  initPages();
+}
+
+// ─── API ───
+async function api(ep, opts={}) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/${ep}`, {...opts,
+    headers: {'Authorization':`Bearer ${TOKEN}`, 'Accept':'application/vnd.github.v3+json',
+    ...(opts.headers||{}), ...(opts.body?{'Content-Type':'application/json'}:{})}
+  });
+  if(!r.ok) { const t = await r.text(); throw new Error(`${r.status}: ${t.slice(0,200)}`); }
+  return r.json();
+}
+
+// ─── PAGES ───
+function initPages() {
+  const sel = document.getElementById('pageSelect');
+  sel.innerHTML = PAGES.map(p => `<option value="${p.id}">${p.icon} ${p.label}</option>`).join('');
+
+  const list = document.getElementById('pageList');
+  list.innerHTML = PAGES.map(p =>
+    `<div class="sb-item" data-page="${p.id}" onclick="selectPage('${p.id}')">
+      <span>${p.icon}</span> <span>${p.label}</span>
+      <span class="badge">${p.file}</span>
+    </div>`
+  ).join('');
+
+  selectPage('home');
+}
+
+async function selectPage(id) {
+  if(unsavedChanges && !confirm('Unsaved changes will be lost. Continue?')) return;
+
+  const page = PAGES.find(p => p.id === id);
+  if(!page) return;
+
+  // Update UI
+  document.querySelectorAll('.sb-item[data-page]').forEach(el =>
+    el.classList.toggle('active', el.dataset.page === id));
+  document.getElementById('pageSelect').value = id;
+
+  status('Loading ' + page.file + '...');
+
+  try {
+    const d = await api(`contents/${page.file}?ref=${BRANCH}`);
+    currentPage = {
+      id: page.id,
+      file: page.file,
+      label: page.label,
+      sha: d.sha,
+      raw: decodeURIComponent(escape(atob(d.content)))
+    };
+    unsavedChanges = false;
+    loadPreview();
+    status('Loaded ' + page.file);
+  } catch(e) {
+    status('Error: ' + e.message, true);
+  }
+}
+
+function loadPage() {
+  selectPage(document.getElementById('pageSelect').value);
+}
+
+// ─── PREVIEW ───
+function loadPreview() {
+  if(!currentPage) return;
+  const iframe = document.getElementById('preview');
+  const frame = document.getElementById('frame');
+
+  // Adjust frame height based on device
+  if(currentDevice === 'phone') {
+    frame.style.height = '812px';
+  } else if(currentDevice === 'tablet') {
+    frame.style.height = '1024px';
+  } else {
+    frame.style.height = '800px';
+  }
+
+  // Write HTML to iframe
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(currentPage.raw);
+  doc.close();
+
+  // Wait for load, then inject edit helpers
+  iframe.onload = () => {
+    updateDeviceInfo();
+    if(editModeOn) injectEditMode();
+    scanElements();
+  };
+  // Also try after a delay (some pages have async content)
+  setTimeout(() => {
+    updateDeviceInfo();
+    if(editModeOn) injectEditMode();
+    scanElements();
+  }, 500);
+}
+
+function reloadPreview() {
+  if(currentPage) loadPreview();
+}
+
+// ─── DEVICE ───
+function setDevice(mode) {
+  currentDevice = mode;
+  document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const frame = document.getElementById('frame');
+  frame.className = 'frame ' + mode;
+
+  if(currentPage) {
+    if(mode === 'phone') frame.style.height = '812px';
+    else if(mode === 'tablet') frame.style.height = '1024px';
+    else frame.style.height = '800px';
+  }
+  updateDeviceInfo();
+}
+
+function updateDeviceInfo() {
+  const iframe = document.getElementById('preview');
+  const w = iframe.clientWidth;
+  document.getElementById('deviceInfo').textContent = `${w}px · ${currentDevice}`;
+}
+
+// ─── EDIT MODE ───
+function toggleEditMode() {
+  editModeOn = document.getElementById('editMode').checked;
+  if(editModeOn && currentPage) {
+    injectEditMode();
+  } else {
+    removeEditMode();
+  }
+}
+
+function injectEditMode() {
+  const iframe = document.getElementById('preview');
+  const doc = iframe.contentDocument;
+  if(!doc || !doc.body) return;
+
+  // Disable navigation
+  doc.querySelectorAll('a, [onclick], [data-goto], [data-artifact], [data-note]').forEach(el => {
+    el.dataset.origClick = el.getAttribute('onclick') || '';
+    el.removeAttribute('onclick');
+    if(el.tagName === 'A') { el.dataset.origHref = el.href; el.href = 'javascript:void(0)'; }
+  });
+
+  // Make text editable
+  const editable = 'h1,h2,h3,h4,h5,h6,p,span.label,div.ct,div.cs,div.riddle,div.code-title,div.code-sub,div.code-hint,.note-title,.note-text,.note-source,button,.mt-title,.mt-desc,.bc-name,.bc-status,.foot-brand,.buy-btn';
+  doc.querySelectorAll(editable).forEach(el => {
+    if(el.children.length > 3) return; // skip complex containers
+    el.contentEditable = true;
+    el.style.outline = '1px dashed rgba(200,160,80,0.2)';
+    el.style.cursor = 'text';
+    el.addEventListener('focus', () => {
+      el.style.outline = '2px solid rgba(200,160,80,0.6)';
+      highlightElement(el);
+    });
+    el.addEventListener('blur', () => {
+      el.style.outline = '1px dashed rgba(200,160,80,0.2)';
+    });
+    el.addEventListener('input', () => {
+      unsavedChanges = true;
+      document.getElementById('statusRight').textContent = '● Unsaved changes';
+      document.getElementById('statusRight').style.color = '#c8a060';
+    });
+  });
+
+  // Click handler for selecting elements
+  doc.body.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    const el = e.target;
+    highlightElement(el);
+  }, true);
+
+  // Add edit mode indicator
+  const indicator = doc.createElement('div');
+  indicator.id = 've-indicator';
+  indicator.style.cssText = 'position:fixed;top:4px;left:4px;background:rgba(200,160,80,0.9);color:#000;font-size:9px;padding:2px 8px;z-index:99999;font-family:monospace;letter-spacing:1px';
+  indicator.textContent = 'EDIT MODE';
+  doc.body.appendChild(indicator);
+}
+
+function removeEditMode() {
+  const iframe = document.getElementById('preview');
+  const doc = iframe.contentDocument;
+  if(!doc || !doc.body) return;
+
+  doc.querySelectorAll('[contenteditable]').forEach(el => {
+    el.contentEditable = false;
+    el.style.outline = '';
+    el.style.cursor = '';
+  });
+
+  const ind = doc.getElementById('ve-indicator');
+  if(ind) ind.remove();
+}
+
+// ─── ELEMENT SCANNING ───
+function scanElements() {
+  const iframe = document.getElementById('preview');
+  const doc = iframe.contentDocument;
+  if(!doc || !doc.body) return;
+
+  const list = document.getElementById('elementList');
+  const items = [];
+
+  // Find key editable sections
+  const selectors = [
+    {sel:'h1,h2,h3', type:'heading'},
+    {sel:'p', type:'text'},
+    {sel:'.hotspot .label', type:'label'},
+    {sel:'img.scene-img', type:'image'},
+    {sel:'.code-title,.ct', type:'riddle'},
+    {sel:'button,.buy-btn', type:'button'},
+  ];
+
+  let count = 0;
+  selectors.forEach(({sel, type}) => {
+    doc.querySelectorAll(sel).forEach(el => {
+      const text = (el.textContent || '').trim().slice(0, 40);
+      if(!text && type !== 'image') return;
+      const label = type === 'image' ? (el.alt || el.src.split('/').pop()) : text;
+      items.push({el, type, label, idx: count++});
+    });
+  });
+
+  list.innerHTML = items.slice(0, 60).map((it, i) =>
+    `<div class="el-item" onclick="focusElement(${i})" data-idx="${i}">
+      <span class="tag">${it.type}</span> ${escH(it.label)}
+    </div>`
+  ).join('') || '<span style="color:var(--text2);font-size:10px">No elements found</span>';
+
+  // Store for reference
+  window._elements = items;
+}
+
+function focusElement(idx) {
+  const items = window._elements || [];
+  const item = items[idx];
+  if(!item || !item.el) return;
+
+  document.querySelectorAll('.el-item').forEach(el =>
+    el.classList.toggle('active', +el.dataset.idx === idx));
+
+  item.el.scrollIntoView({behavior:'smooth', block:'center'});
+  highlightElement(item.el);
+
+  if(editModeOn && item.el.contentEditable === 'true') {
+    item.el.focus();
+  }
+}
+
+function highlightElement(el) {
+  selectedElement = el;
+  showProperties(el);
+}
+
+// ─── PROPERTIES ───
+function showProperties(el) {
+  const panel = document.getElementById('propPanel');
+  if(!el) { panel.innerHTML = '<span style="color:var(--text2)">Click an element</span>'; return; }
+
+  const tag = el.tagName.toLowerCase();
+  const text = (el.textContent || '').trim().slice(0, 100);
+  const isImg = tag === 'img';
+
+  let html = `<div style="margin-bottom:8px;color:var(--gold);font-size:10px">&lt;${tag}&gt; ${el.className ? '.' + el.className.split(' ')[0] : ''}</div>`;
+
+  if(isImg) {
+    html += `<div class="prop-row"><label>src</label><input value="${escH(el.src.split('/').pop())}" readonly style="color:var(--text2)"></div>`;
+    html += `<div class="prop-row"><label>alt</label><input value="${escH(el.alt)}" onchange="setProp(this,'alt')"></div>`;
+    html += `<div style="margin:8px 0"><img src="${el.src}" style="max-width:100%;max-height:80px;border:1px solid var(--border)"></div>`;
+  } else {
+    html += `<div class="prop-row"><label>text</label><textarea oninput="setProp(this,'text')">${escH(text)}</textarea></div>`;
+  }
+
+  // Style shortcuts
+  html += `<div style="margin-top:8px;font-size:9px;color:var(--text2)">`;
+  html += `color: ${getComputedStyle(el).color}<br>`;
+  html += `font-size: ${getComputedStyle(el).fontSize}`;
+  html += `</div>`;
+
+  panel.innerHTML = html;
+}
+
+function setProp(input, prop) {
+  if(!selectedElement) return;
+  if(prop === 'text') {
+    selectedElement.textContent = input.value;
+  } else if(prop === 'alt') {
+    selectedElement.alt = input.value;
+  }
+  unsavedChanges = true;
+  document.getElementById('statusRight').textContent = '● Unsaved changes';
+  document.getElementById('statusRight').style.color = '#c8a060';
+}
+
+// ─── SAVE ───
+async function saveCurrentPage() {
+  if(!currentPage) { toast('No page loaded', 'error'); return; }
+
+  status('Extracting changes...');
+
+  // Get current HTML from iframe
+  const iframe = document.getElementById('preview');
+  const doc = iframe.contentDocument;
+
+  // Remove edit mode artifacts before saving
+  if(editModeOn) removeEditMode();
+
+  // Get the full HTML
+  let html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+
+  // Clean up any injected elements
+  html = html.replace(/<div id="ve-indicator"[^>]*>.*?<\/div>/g, '');
+
+  status('Saving ' + currentPage.file + '...');
+
+  try {
+    // Need fresh SHA in case file changed
+    const fresh = await api(`contents/${currentPage.file}?ref=${BRANCH}`);
+    const content = btoa(unescape(encodeURIComponent(html)));
+    const r = await api(`contents/${currentPage.file}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        message: `Visual editor: update ${currentPage.file}`,
+        content,
+        sha: fresh.sha,
+        branch: BRANCH
+      })
+    });
+    currentPage.sha = r.content.sha;
+    currentPage.raw = html;
+    unsavedChanges = false;
+    document.getElementById('statusRight').textContent = '';
+    status('Saved ' + currentPage.file + '!');
+    toast('Saved to GitHub!', 'success');
+
+    // Re-enable edit mode if it was on
+    if(editModeOn) setTimeout(() => injectEditMode(), 300);
+  } catch(e) {
+    status('Error: ' + e.message, true);
+    toast('Save failed: ' + e.message, 'error');
+    if(editModeOn) injectEditMode();
+  }
+}
+
+// ─── HELPERS ───
+function status(msg, isError) {
+  const el = document.getElementById('statusLeft');
+  el.textContent = msg;
+  el.style.color = isError ? '#a44' : '';
+}
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (type || '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = 'toast', 3000);
+}
+function escH(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Warn before leaving with unsaved changes
+window.addEventListener('beforeunload', e => {
+  if(unsavedChanges) { e.preventDefault(); e.returnValue = ''; }
+});
+</script>
+</body>
+</html>
