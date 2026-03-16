@@ -327,10 +327,6 @@ body{cursor:default}
 
 /* Landscape mobile */
 @media(max-height:500px) and (orientation:landscape){
-  .scene-img,.hotspots,.scene-highlight{
-    width:100% !important;height:auto !important;min-height:100%;min-width:100%;
-    transform:translate(-50%,-50%) !important;
-  }
   .books-panel{padding:8px 3% 8px}
   .books-row{gap:8px}
   .book-card{flex:0 0 70px}
@@ -1102,6 +1098,26 @@ if(!isMobile) {
     requestAnimationFrame(anim);
   })();
 }
+
+// ═══ ORIENTATION CHANGE ═══
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    // Reset all pan values
+    document.querySelectorAll('.scene-img,.hotspots,.scene-highlight').forEach(el => {
+      el.style.setProperty('--panX', '0px');
+    });
+    // Force repaint
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }, 300);
+});
+window.addEventListener('resize', () => {
+  // Safety: if viewport changes drastically, reset pan
+  document.querySelectorAll('.scene-img,.hotspots,.scene-highlight').forEach(el => {
+    el.style.setProperty('--panX', '0px');
+  });
+});
 
 // Dust
 const d=document.getElementById('dust');

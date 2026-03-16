@@ -309,6 +309,17 @@ if(isMobile) {
   }
 }
 
+// ═══ ORIENTATION CHANGE ═══
+window.addEventListener('orientationchange', () => {
+  setTimeout(() => {
+    bgImg.style.setProperty('--panX', '0px');
+    bgHighlight.style.setProperty('--panX', '0px');
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+  }, 300);
+});
+
 // ═══ DUST ═══
 const d = document.getElementById('dust');
 for(let i=0;i<20;i++){
