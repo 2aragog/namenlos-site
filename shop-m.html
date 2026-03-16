@@ -514,19 +514,28 @@ function openBookModal(id) {
   document.getElementById('modalBody').innerHTML = h;
   document.getElementById('modal').classList.add('open');
 }
+let MEDIA_DATA = null;
+(async function loadMedia(){
+  try { const r=await fetch('data/media.json?t='+Date.now()); MEDIA_DATA=await r.json(); } catch(e){ console.log('Media fallback'); }
+})();
 function openMediaDetail(id) {
   document.getElementById('modalImg').style.display='none';
-  const items = {
-    film1:{title:'Episode 1 — The Shop Without a Name',desc:'Rita turns left when she meant to turn right. The door has no sign.',badge:'Coming Soon'},
-    film2:{title:'Episode 2 — The Whip Chooses',desc:'She sees it behind the glass — black leather, braided tight.',badge:'Coming Soon'},
-    track1:{title:'Track 01 — The Nameless Shop',desc:'Ambient dark atmosphere. The sound of a door opening.',badge:'Preview Soon'},
-    track2:{title:'Track 02 — Rita\'s Theme',desc:'A pulse. A heartbeat. Between longing and fear.',badge:'Preview Soon'},
-    album:{title:'Full Soundtrack — 20 Tracks',desc:'20 original tracks. Each belongs to a scene. Included in Premium ($49).',badge:'In Dev'},
-    clips_all:{title:'All Music Videos',desc:'5 free on YouTube. 15 exclusive in Premium bundle.',badge:'In Dev'},
-    audiobook_skinme:{title:'Audiobook — Skin Me',desc:'The complete novel, read aloud. Premium bundle ($49).',badge:'Premium'}
-  };
-  const it = items[id]||{title:id,desc:'',badge:'Coming Soon'};
-  document.getElementById('modalBody').innerHTML = '<h2>'+it.title+'</h2><div class="modal-lore">'+it.desc+'</div><div class="dev-badge">'+it.badge+'</div>';
+  let item = null;
+  if(MEDIA_DATA) {
+    for(const cat of ['films','tracks','clips','audiobooks']) {
+      const found = (MEDIA_DATA[cat]||[]).find(it=>it.id===id);
+      if(found){ item=found; break; }
+    }
+    if(id==='album' && MEDIA_DATA.album) item = MEDIA_DATA.album;
+    if(id==='clips_all') item = {title:'All Music Videos',desc:'5 free on YouTube. 15 exclusive in Premium bundle.',status:'in_dev'};
+  }
+  if(!item) item = {title:id,desc:'',status:'coming_soon'};
+  const badges = {published:'Available Now',coming_soon:'Coming Soon',preview_soon:'Preview Soon',in_dev:'In Development',premium:'Premium Only'};
+  const badge = badges[item.status]||item.status||'Coming Soon';
+  let html = '<h2>'+item.title+'</h2><div class="modal-lore">'+item.desc+'</div><div class="dev-badge">'+badge+'</div>';
+  if(item.youtube){const vid=item.youtube.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);if(vid)html+='<div style="margin-top:12px"><iframe width="100%" height="200" src="https://www.youtube-nocookie.com/embed/'+vid[1]+'" frameborder="0" allowfullscreen></iframe></div>';}
+  if(item.audio_url){html+='<div style="margin-top:12px"><audio controls src="'+item.audio_url+'" style="width:100%"></audio></div>';}
+  document.getElementById('modalBody').innerHTML = html;
   document.getElementById('modal').classList.add('open');
 }
 function openNote(id) {

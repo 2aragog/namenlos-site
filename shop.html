@@ -997,25 +997,36 @@ function openMediaModal(type) {
   document.getElementById('modal').classList.add('open');
 }
 
+let MEDIA_DATA = null;
+(async function loadMedia(){
+  try { const r=await fetch('data/media.json?t='+Date.now()); MEDIA_DATA=await r.json(); } catch(e){ console.log('Media fallback'); }
+})();
+
 function openMediaDetail(id) {
   document.getElementById('modalImg').style.display='none';
-  const items = {
-    film1:    {title:'Episode 1 — The Shop Without a Name', desc:'Rita turns left when she meant to turn right. The alley narrows. The door has no sign. Inside, the shopkeeper is already waiting.', badge:'Coming Soon'},
-    film2:    {title:'Episode 2 — The Whip Chooses', desc:'She sees it behind the glass — black leather, braided tight. The handle is bone. She shouldn\'t touch it. But some things choose you.', badge:'Coming Soon'},
-    film3:    {title:'Episode 3 — Berlin, 3 AM', desc:'The city sleeps. Rita doesn\'t. The whip hums in her bag. She walks toward Oranienstraße without knowing why.', badge:'Coming Soon'},
-    track1:   {title:'Track 01 — The Nameless Shop', desc:'Ambient dark atmosphere. The sound of a door opening into a space that shouldn\'t exist.', badge:'Preview Soon'},
-    track2:   {title:'Track 02 — Rita\'s Theme', desc:'A pulse. A heartbeat. Something between longing and fear.', badge:'Preview Soon'},
-    track3:   {title:'Track 03 — The First Touch', desc:'The moment skin meets leather. Everything changes.', badge:'Preview Soon'},
-    album:    {title:'Full Soundtrack — 20 Tracks', desc:'20 original tracks composed for the Namenlos universe. Each song belongs to a scene, a character, a turning point. The full album is included in the Premium bundle ($49).', badge:'In Development'},
-    clip1:    {title:'Music Video 01', desc:'Visual story for Track 01. Dark, atmospheric, AI-animated.', badge:'Coming Soon'},
-    clip2:    {title:'Music Video 02', desc:'Visual story for Track 02. A face in the window. A door that shouldn\'t be there.', badge:'Coming Soon'},
-    clips_all:{title:'All Music Videos', desc:'5 clips free on YouTube. 15 exclusive clips available only in the Premium bundle. Dark visuals for every track — atmospheric, unforgettable.', badge:'In Development'},
-    audiobook_skinme: {title:'Audiobook — Skin Me', desc:'The complete novel, read aloud. Every whisper, every silence — preserved. Generated with ElevenLabs. Included in the Premium bundle ($49).', badge:'Premium Only'},
-    audiobook_future: {title:'More Audiobooks Coming', desc:'Every book in the Namenlos universe will be available as an audiobook. Carry Me, Lay Me, Spin Me — all coming.', badge:'In Development'}
-  };
-  const item = items[id] || {title:id, desc:'', badge:'Coming Soon'};
-  let html = '<h2>'+item.title+'</h2><div class="modal-lore">'+item.desc+'</div><div class="dev-badge">'+item.badge+'</div>';
-  if(item.badge==='Premium Only') {
+  let item = null;
+  // Search across all categories in media.json
+  if(MEDIA_DATA) {
+    for(const cat of ['films','tracks','clips','audiobooks']) {
+      const found = (MEDIA_DATA[cat]||[]).find(it=>it.id===id);
+      if(found){ item=found; break; }
+    }
+    if(id==='album' && MEDIA_DATA.album) item = MEDIA_DATA.album;
+  }
+  if(!item) item = {title:id, desc:'', status:'coming_soon'};
+  const badges = {published:'Available Now',coming_soon:'Coming Soon',preview_soon:'Preview Soon',in_dev:'In Development',premium:'Premium Only'};
+  const badge = badges[item.status] || item.status || 'Coming Soon';
+  let html = '<h2>'+item.title+'</h2><div class="modal-lore">'+item.desc+'</div><div class="dev-badge">'+badge+'</div>';
+  // YouTube embed
+  if(item.youtube) {
+    const vid = item.youtube.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+    if(vid) html += '<div style="margin-top:16px"><iframe width="100%" height="300" src="https://www.youtube-nocookie.com/embed/'+vid[1]+'" frameborder="0" allowfullscreen style="border:1px solid rgba(200,160,80,0.1)"></iframe></div>';
+  }
+  // Audio player
+  if(item.audio_url) {
+    html += '<div style="margin-top:16px"><audio controls src="'+item.audio_url+'" style="width:100%;filter:sepia(0.3)"></audio></div>';
+  }
+  if(item.status==='premium') {
     html += '<div class="buy-row" style="margin-top:16px"><a class="buy-btn primary" href="#">Premium — $49</a></div>';
   }
   document.getElementById('modalBody').innerHTML = html;
