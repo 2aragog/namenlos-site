@@ -287,39 +287,42 @@ body{cursor:default}
   .hotspot::after{
     content:'';
     position:absolute;
-    top:50%;left:50%;
-    width:12px;height:12px;
+    top:var(--dot-y,50%);left:var(--dot-x,50%);
+    width:18px;height:18px;
     transform:translate(-50%,-50%);
-    background:radial-gradient(circle,rgba(200,160,80,0.9) 0%,rgba(200,160,80,0.3) 50%,transparent 70%);
+    background:radial-gradient(circle,rgba(200,160,80,1) 0%,rgba(200,160,80,0.5) 40%,transparent 70%);
     border-radius:50%;
-    animation:mobilePulse 3s ease-in-out infinite;
+    animation:mobilePulse 2.5s ease-in-out infinite;
     pointer-events:none;
     z-index:5;
   }
-  .hotspot:nth-child(2)::after{animation-delay:0.5s}
-  .hotspot:nth-child(3)::after{animation-delay:1s}
-  .hotspot:nth-child(4)::after{animation-delay:1.5s}
-  .hotspot:nth-child(5)::after{animation-delay:0.7s}
-  .hotspot:nth-child(6)::after{animation-delay:1.2s}
+  .hotspot:nth-child(2)::after{animation-delay:0.4s}
+  .hotspot:nth-child(3)::after{animation-delay:0.8s}
+  .hotspot:nth-child(4)::after{animation-delay:1.2s}
+  .hotspot:nth-child(5)::after{animation-delay:0.6s}
+  .hotspot:nth-child(6)::after{animation-delay:1.0s}
+  .hotspot:nth-child(7)::after{animation-delay:0.3s}
+  .hotspot:nth-child(8)::after{animation-delay:0.9s}
   @keyframes mobilePulse{
-    0%,100%{opacity:0.3;box-shadow:0 0 6px rgba(200,160,80,0.2);width:12px;height:12px}
-    50%{opacity:1;box-shadow:0 0 20px rgba(200,160,80,0.6),0 0 40px rgba(200,160,80,0.2);width:16px;height:16px}
+    0%,100%{opacity:0.4;box-shadow:0 0 8px rgba(200,160,80,0.3);width:18px;height:18px}
+    50%{opacity:1;box-shadow:0 0 24px rgba(200,160,80,0.8),0 0 48px rgba(200,160,80,0.3);width:24px;height:24px}
   }
   /* Tap flash effect */
   .hotspot.tapped::after{
     animation:none;
     opacity:1;
-    width:24px;height:24px;
-    box-shadow:0 0 30px rgba(200,160,80,0.8),0 0 60px rgba(200,160,80,0.3);
-    transition:all 0.2s ease;
+    width:32px;height:32px;
+    box-shadow:0 0 40px rgba(200,160,80,1),0 0 80px rgba(200,160,80,0.4);
+    transition:all 0.15s ease;
   }
   /* Hint mode: all dots glow bright */
   .hotspot.hint-active::after{
     animation:none;
     opacity:1;
-    width:20px;height:20px;
-    box-shadow:0 0 25px rgba(200,160,80,0.8),0 0 50px rgba(200,160,80,0.3);
+    width:28px;height:28px;
+    box-shadow:0 0 30px rgba(200,160,80,0.9),0 0 60px rgba(200,160,80,0.4);
   }
+  .hotspot.hint-active .label{opacity:0.8 !important}
 
   /* Hint button */
   .mobile-hint-btn{
@@ -454,19 +457,19 @@ body{cursor:default}
   <img class="scene-highlight glow-silver" id="hl-artifacts" data-src="img/Shop/layers/002-Main-hall_0003_Layer-4.png" alt="">
   <div class="hotspots">
     <!-- Shopkeeper -->
-    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:22.3%;top:32%;width:12.6%;height:32.9%">
+    <div class="hotspot" data-goto="shopkeeper" data-glow="amber" data-whisper="he knows your name..." data-highlight="hl-shopkeeper" style="left:22.3%;top:32%;width:12.6%;height:32.9%;--dot-x:45%;--dot-y:30%">
       <span class="label">The Shopkeeper</span>
     </div>
     <!-- Bookshelf -->
-    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:54.9%;top:22.8%;width:10.2%;height:37%">
+    <div class="hotspot" data-goto="books" data-glow="amber" data-whisper="choose wisely..." data-highlight="hl-books" style="left:54.9%;top:22.8%;width:10.2%;height:37%;--dot-x:50%;--dot-y:40%">
       <span class="label">The Books</span>
     </div>
     <!-- Glass cabinet = artifacts -->
-    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:68.5%;top:18.7%;width:12.8%;height:45.7%">
+    <div class="hotspot" data-goto="display" data-glow="silver" data-whisper="don't touch..." data-highlight="hl-artifacts" style="left:68.5%;top:18.7%;width:12.8%;height:45.7%;--dot-x:50%;--dot-y:35%">
       <span class="label">Artifacts</span>
     </div>
     <!-- Red door -->
-    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:45.5%;top:39.5%;width:9.6%;height:31%">
+    <div class="hotspot" data-goto="corridor" data-glow="red" data-whisper="what lies beyond..." data-highlight="hl-reddoor" style="left:45.5%;top:39.5%;width:9.6%;height:31%;--dot-x:50%;--dot-y:40%">
       <span class="label">The Red Door</span>
     </div>
   </div>
@@ -574,11 +577,11 @@ body{cursor:default}
   <img class="scene-highlight" id="hl-wc" data-src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
     <!-- WC door: wooden door center-left -->
-    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:35%;top:28%;width:13%;height:60%">
+    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:35%;top:28%;width:13%;height:60%;--dot-x:55%;--dot-y:40%">
       <span class="label">WC</span>
     </div>
     <!-- KINO door: red glowing door, center-right -->
-    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:49%;top:10%;width:16%;height:80%">
+    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:49%;top:10%;width:16%;height:80%;--dot-x:50%;--dot-y:35%">
       <span class="label">Cinema</span>
     </div>
   </div>
