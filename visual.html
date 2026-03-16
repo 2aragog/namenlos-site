@@ -256,17 +256,15 @@ function loadPreview() {
   doc.close();
 
   // Wait for load, then inject edit helpers
-  iframe.onload = () => {
+  // Pages have heavy scripts (parallax, dust, etc.) — need multiple retries
+  function tryInit() {
     updateDeviceInfo();
     if(editModeOn) injectEditMode();
     scanElements();
-  };
-  // Also try after a delay (some pages have async content)
-  setTimeout(() => {
-    updateDeviceInfo();
-    if(editModeOn) injectEditMode();
-    scanElements();
-  }, 500);
+  }
+  iframe.onload = () => setTimeout(tryInit, 300);
+  // Retry at increasing intervals — some pages need 2+ seconds
+  [800, 1500, 3000].forEach(ms => setTimeout(tryInit, ms));
 }
 
 function reloadPreview() {
