@@ -303,13 +303,14 @@ body{cursor:default}
     height:100%;
     width:auto;
     min-width:180%;
-    object-fit:cover;
     left:50%;top:50%;
     transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
     transition:none;
   }
   .hotspots{
-    position:absolute;
+    height:100%;
+    aspect-ratio:1200/670;
+    min-width:180%;
     left:50%;top:50%;
     transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
     transition:none;
@@ -985,7 +986,6 @@ function goBack() {
 function updateUI() {
   document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall' && currentScene!=='code' && currentScene!=='secretgate');
   document.getElementById('sceneTitle').textContent = SCENE_TITLES[currentScene] || 'NAMENLOS';
-  if(typeof syncHotspots === 'function') setTimeout(syncHotspots, 50);
 }
 
 // ═══ NAV MENU ═══
@@ -1290,25 +1290,6 @@ if(isMobile) {
       setTimeout(() => el.classList.remove('active'), 1500);
     }, {passive:true});
   });
-}
-
-// ═══ MOBILE: SYNC HOTSPOTS WITH IMAGE SIZE ═══
-if(isMobile) {
-  function syncHotspots() {
-    // Image is height:100% with aspect-ratio 1200:670
-    // So width = viewportHeight * 1200/670
-    const vh = window.innerHeight;
-    const vw = window.innerWidth;
-    const imgW = Math.max(vh * 1200 / 670, vw * 1.8); // match min-width:180%
-    const imgH = vh;
-    document.querySelectorAll('.scene .hotspots').forEach(hs => {
-      hs.style.width = imgW + 'px';
-      hs.style.height = imgH + 'px';
-    });
-  }
-  window.addEventListener('load', syncHotspots);
-  window.addEventListener('resize', syncHotspots);
-  syncHotspots();
 }
 
 // ═══ MOBILE: HINT BUTTON + TAP FLASH ═══
