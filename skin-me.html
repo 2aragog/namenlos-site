@@ -424,7 +424,7 @@ footer .legal-links a:hover{color:#7a6a55}
       <div class="hero-meta">
         <span><span class="dot">◈</span> Metaphysical Dark Romance 18+</span>
         <span><span class="dot">◈</span> Mary-Ann Black</span>
-        <span><span class="dot">◈</span> ~79,000 words · Russian</span>
+        <span><span class="dot">◈</span> ~79,000 words · English</span>
       </div>
       <div class="hero-cta">
         <a href="#buy" class="btn btn-primary">Buy Now</a>
@@ -465,7 +465,7 @@ footer .legal-links a:hover{color:#7a6a55}
     <div class="detail-card">
       <span class="d-icon">🌍</span>
       <div class="d-label">Language</div>
-      <div class="d-value">Russian</div>
+      <div class="d-value">English</div>
     </div>
     <div class="detail-card">
       <span class="d-icon">♫</span>
@@ -486,7 +486,7 @@ footer .legal-links a:hover{color:#7a6a55}
 <section id="soundtrack">
   <div class="section-header reveal">
     <div class="section-title">Soundtrack</div>
-    <div class="section-sub">20 original tracks. Each song belongs to a scene, a character, a turning point.</div>
+    <div class="section-sub">20 original tracks · Included in Standard &amp; Premium bundles</div>
     <div class="section-line"></div>
   </div>
   <div class="track-list reveal">
@@ -582,9 +582,9 @@ footer .legal-links a:hover{color:#7a6a55}
   <div style="text-align:center;margin-top:30px" class="reveal">
     <p style="font-size:14px;color:#5a4a3a;font-style:italic;margin-bottom:16px">
       The soundtrack is not available on streaming platforms.<br>
-      It exists only here — inside the Namenlos universe.
+      It exists only here — inside the Standard &amp; Premium bundles.
     </p>
-    <a href="#buy" class="btn">Get the Soundtrack</a>
+    <a href="#buy" class="btn">Get the Bundle</a>
   </div>
 </section>
 
@@ -594,7 +594,7 @@ footer .legal-links a:hover{color:#7a6a55}
 <section id="clips">
   <div class="section-header reveal">
     <div class="section-title">Video Clips</div>
-    <div class="section-sub">5 free on YouTube. 15 exclusive in Premium.</div>
+    <div class="section-sub">5 free on YouTube · 15 exclusive in the Premium bundle</div>
     <div class="section-line"></div>
   </div>
   <div class="clips-grid reveal">
@@ -655,7 +655,7 @@ footer .legal-links a:hover{color:#7a6a55}
       <span class="clip-badge premium">Premium</span>
       <div class="clip-info">
         <div class="clip-title">Clips 06–20</div>
-        <div class="clip-desc">15 exclusive clips. Only in the Premium bundle ($49).</div>
+        <div class="clip-desc">15 exclusive clips · Included in the Premium bundle</div>
       </div>
     </div>
   </div>
@@ -777,24 +777,31 @@ window.addEventListener('scroll', () => {
 });
 toTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
 
-/* ═══ COMMENTS (localStorage) ═══ */
-const KEY = 'namenlos_skinme_comments';
+/* ═══ COMMENTS (shared via API) ═══ */
+const API = '/api/comments';
 const cName = document.getElementById('c-name');
 const cBody = document.getElementById('c-body');
 const cSubmit = document.getElementById('c-submit');
 const cCount = document.getElementById('c-count');
 const cList = document.getElementById('comments-list');
 const noComments = document.getElementById('no-comments');
+let isPosting = false;
 
-function loadComments() {
+async function loadComments() {
   try {
-    const data = JSON.parse(localStorage.getItem(KEY) || '[]');
-    if (data.length === 0) { noComments.style.display = ''; return; }
+    const res = await fetch(API);
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const comments = data.comments || [];
+    if (comments.length === 0) { noComments.style.display = ''; return; }
     noComments.style.display = 'none';
     // Show newest first
-    data.sort((a,b) => b.ts - a.ts);
-    data.forEach(c => appendComment(c, false));
-  } catch(e) {}
+    comments.sort((a,b) => b.ts - a.ts);
+    comments.forEach(c => appendComment(c, false));
+  } catch(e) {
+    console.error('Failed to load comments:', e);
+    noComments.textContent = 'Comments are temporarily unavailable.';
+  }
 }
 
 function appendComment(c, prepend) {
@@ -822,22 +829,43 @@ cBody.addEventListener('input', () => {
   cCount.textContent = cBody.value.length + ' / 1000';
 });
 
-cSubmit.addEventListener('click', () => {
+cSubmit.addEventListener('click', async () => {
+  if (isPosting) return;
   const name = cName.value.trim();
   const body = cBody.value.trim();
   if (!name || !body) return;
   if (body.length < 3) return;
 
-  const comment = { name, body, ts: Date.now() };
+  isPosting = true;
+  cSubmit.disabled = true;
+  cSubmit.textContent = 'Sending...';
+
   try {
-    const data = JSON.parse(localStorage.getItem(KEY) || '[]');
-    data.push(comment);
-    localStorage.setItem(KEY, JSON.stringify(data));
-  } catch(e) {}
-  appendComment(comment, true);
-  cName.value = '';
-  cBody.value = '';
-  cCount.textContent = '0 / 1000';
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, body })
+    });
+
+    if (res.status === 429) {
+      alert('Please wait a moment before posting again.');
+      return;
+    }
+    if (!res.ok) throw new Error(res.status);
+
+    const data = await res.json();
+    appendComment(data.comment, true);
+    cName.value = '';
+    cBody.value = '';
+    cCount.textContent = '0 / 1000';
+  } catch(e) {
+    console.error('Failed to post comment:', e);
+    alert('Could not post your comment. Please try again.');
+  } finally {
+    isPosting = false;
+    cSubmit.disabled = false;
+    cSubmit.textContent = 'Leave a Mark';
+  }
 });
 
 loadComments();
