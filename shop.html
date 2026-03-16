@@ -201,6 +201,22 @@ body{cursor:default}
 .guestbook-entries{margin-top:16px;max-height:160px;overflow-y:auto}
 .guestbook-entries .entry{font-family:'Cormorant Garamond',serif;font-size:14px;color:#8a7a65;font-style:italic;padding:8px 0;border-bottom:1px solid rgba(200,160,80,0.06)}
 
+/* ═══ SECRET ROOM HINT ═══ */
+.secret-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:35;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;opacity:0;animation:secretHintFade 6s ease 1.5s forwards;pointer-events:none;white-space:nowrap}
+@keyframes secretHintFade{0%{opacity:0}15%{opacity:0.7}85%{opacity:0.7}100%{opacity:0}}
+
+/* ═══ NOTE MODAL EXTRAS ═══ */
+.note-modal-title{font-family:'Cinzel',serif;font-size:16px;letter-spacing:4px;text-transform:uppercase;color:#c8a060;font-weight:400;margin-bottom:8px}
+.note-modal-text{font-family:'Cormorant Garamond',serif;font-size:17px;color:#8a7a65;line-height:1.8;font-style:italic;margin-bottom:16px}
+.note-modal-source{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6a5a45;text-align:right;margin-top:12px}
+.note-modal-divider{width:40px;height:1px;background:rgba(200,160,80,0.2);margin:16px 0}
+.guestbook-modal textarea{width:100%;height:70px;background:rgba(10,8,5,0.6);border:1px solid rgba(200,160,80,0.15);color:#8a7a65;font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;padding:12px;resize:none;outline:none;margin-top:12px}
+.guestbook-modal textarea:focus{border-color:rgba(200,160,80,0.3)}
+.guestbook-modal button{display:block;margin-top:8px;background:none;border:1px solid rgba(200,160,80,0.2);color:#7a6a55;font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:8px 20px;cursor:pointer;transition:all 0.3s}
+.guestbook-modal button:hover{color:#c8a060;border-color:#c8a060}
+.guestbook-modal .gb-entries{margin-top:14px;max-height:180px;overflow-y:auto}
+.guestbook-modal .gb-entry{font-family:'Cormorant Garamond',serif;font-size:14px;color:#6a5a45;font-style:italic;padding:6px 0;border-bottom:1px solid rgba(200,160,80,0.06)}
+
 /* ═══ LOADING ═══ */
 #loading{position:fixed;inset:0;background:#000;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity 0.8s}
 #loading.done{opacity:0;pointer-events:none}
@@ -658,90 +674,65 @@ body{cursor:default}
 <!-- ═══════ SCENE: SECRET ROOM ═══════ -->
 <div class="scene" id="scene-secret">
   <img class="scene-img" src="img/Shop/009-Secret-room.png" alt="secret">
-  <div class="hotspots"></div>
-  <div class="room-content">
-    <h2>The Secret Room</h2>
-    <div class="room-sub">You found the hidden door. Few do. The walls remember.</div>
-
-    <!-- TABS -->
-    <div class="lore-tabs">
-      <div class="lore-tab active" onclick="switchLore('notes')">The Wall Notes</div>
-      <div class="lore-tab" onclick="switchLore('journal')">The Journal</div>
-      <div class="lore-tab" onclick="switchLore('author')">The Author</div>
+  <!-- Highlight layers -->
+  <img class="scene-highlight" id="hl-sr-journal" src="img/Shop/layers/009-Secret-room_0000_Layer-1.png" alt="">
+  <img class="scene-highlight" id="hl-sr-map" src="img/Shop/layers/009-Secret-room_0022_Layer-23.png" alt="">
+  <img class="scene-highlight" id="hl-sr-whip" src="img/Shop/layers/009-Secret-room_0004_Layer-5.png" alt="">
+  <img class="scene-highlight" id="hl-sr-wig" src="img/Shop/layers/009-Secret-room_0001_Layer-2.png" alt="">
+  <img class="scene-highlight" id="hl-sr-hourglass" src="img/Shop/layers/009-Secret-room_0009_Layer-10.png" alt="">
+  <img class="scene-highlight" id="hl-sr-tarot" src="img/Shop/layers/009-Secret-room_0014_Layer-15.png" alt="">
+  <img class="scene-highlight" id="hl-sr-mirror" src="img/Shop/layers/009-Secret-room_0003_Layer-4.png" alt="">
+  <img class="scene-highlight" id="hl-sr-keeper" src="img/Shop/layers/009-Secret-room_0017_Layer-18.png" alt="">
+  <img class="scene-highlight" id="hl-sr-compass" src="img/Shop/layers/009-Secret-room_0023_Layer-24.png" alt="">
+  <img class="scene-highlight" id="hl-sr-entity" src="img/Shop/layers/009-Secret-room_0019_Layer-20.png" alt="">
+  <div class="hotspots">
+    <!-- Journal on desk -->
+    <div class="hotspot" data-note="journal" data-glow="amber" data-whisper="sign the book..." data-highlight="hl-sr-journal" style="left:40%;top:50%;width:18%;height:22%">
+      <span class="label">The Journal</span>
     </div>
-
-    <!-- WALL NOTES — lore about artifacts, past visitors, creatures -->
-    <div class="lore-panel active" id="lore-notes">
-      <div class="lore-note">
-        <div class="note-title">The Whip — Subject: Rita K.</div>
-        <div class="note-text">She found the shop on Oranienstraße. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."</div>
-        <div class="note-source">File 0041 — Berlin, 2024</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Wig — Subject: Unknown</div>
-        <div class="note-text">The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days. The wig was back on its shelf the next morning.</div>
-        <div class="note-source">File 0012 — Vienna, 1923</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Hourglass — Warning</div>
-        <div class="note-text">DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age — they un-aged. They are now seven years old and do not recognize their children. The shopkeeper refuses to discuss it.</div>
-        <div class="note-source">File 0007 — Location unknown</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Tarot Box — The Strength Card</div>
-        <div class="note-text">The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle. They always return. They never speak of where they went.</div>
-        <div class="note-source">File 0033 — Marseille, 1971</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Mirror — Observation</div>
-        <div class="note-text">It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian. A soldier looked into it and saw nothing. He died that winter.</div>
-        <div class="note-source">File 0002 — Prague, 1614</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Shopkeeper — Note to Self</div>
-        <div class="note-text">He has no name. He claims he never had one. The shop existed before the street. The street existed before the city. He accepts any coin but not money. "There is a difference," he says. No one has ever seen him eat, sleep, or leave.</div>
-        <div class="note-source">Unsigned — date unknown</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Compass — Subject: Elias M.</div>
-        <div class="note-text">The compass does not point north. It points to where you need to be. Elias followed it for forty days. It led him across three countries, through a forest, into a cave. Inside the cave: a letter from his dead mother, written the day before she died. It said: "Stop looking."</div>
-        <div class="note-source">File 0019 — Somewhere in Carpathians, 1958</div>
-      </div>
-      <div class="lore-note">
-        <div class="note-title">The Entity Behind the Shop</div>
-        <div class="note-text">Some files reference "the Maker." Not the shopkeeper — something older. The artifacts are not cursed. They are tests. Those who pass them are remembered. Those who fail are forgotten. The shop keeps score. The walls of this room are the scoreboard.</div>
-        <div class="note-source">Fragment — no file number</div>
-      </div>
+    <!-- Berlin Map -->
+    <div class="hotspot" data-note="map" data-glow="red" data-whisper="Oranienstraße..." data-highlight="hl-sr-map" style="left:43%;top:5%;width:24%;height:40%">
+      <span class="label">Map of Berlin</span>
     </div>
-
-    <!-- JOURNAL — guestbook -->
-    <div class="lore-panel" id="lore-journal">
-      <div class="lore-note">
-        <div class="note-title">The Visitor's Journal</div>
-        <div class="note-text">Those who find this room are invited to leave their name. The ink fades, but the shop remembers.</div>
-      </div>
-      <div class="guestbook">
-        <h3>Sign the Journal</h3>
-        <textarea id="guestbookInput" placeholder="Write your name or leave a message..."></textarea>
-        <button onclick="addGuestEntry()">Sign</button>
-        <div class="guestbook-entries" id="guestbookEntries"></div>
-      </div>
+    <!-- Note: Whip -->
+    <div class="hotspot" data-note="whip" data-glow="amber" data-whisper="she couldn't let go..." data-highlight="hl-sr-whip" style="left:40%;top:2%;width:10%;height:16%">
+      <span class="label">Pinned Note</span>
     </div>
-
-    <!-- AUTHOR -->
-    <div class="lore-panel" id="lore-author">
-      <div class="author-card">
-        <p>Behind every nameless shop stands someone with a name.</p>
-        <p><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.</p>
-        <p>The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.</p>
-        <p>The first door is already open. "Skin Me" is waiting on the shelf.</p>
-        <div class="author-name">Mary-Ann Black</div>
-      </div>
-      <div style="margin-top:16px">
-        <button class="chat-nav-btn" onclick="goTo('books')">Go to the Books →</button>
-      </div>
+    <!-- Note: Wig -->
+    <div class="hotspot" data-note="wig" data-glow="amber" data-whisper="whose face is it now..." data-highlight="hl-sr-wig" style="left:36%;top:28%;width:10%;height:16%">
+      <span class="label">Yellowed Note</span>
+    </div>
+    <!-- Note: Hourglass -->
+    <div class="hotspot" data-note="hourglass" data-glow="amber" data-whisper="the sand flows upward..." data-highlight="hl-sr-hourglass" style="left:42%;top:22%;width:12%;height:18%">
+      <span class="label">Warning Note</span>
+    </div>
+    <!-- Note: Tarot -->
+    <div class="hotspot" data-note="tarot" data-glow="amber" data-whisper="79 cards..." data-highlight="hl-sr-tarot" style="left:46%;top:12%;width:10%;height:14%">
+      <span class="label">Faded Note</span>
+    </div>
+    <!-- Note: Mirror -->
+    <div class="hotspot" data-note="mirror" data-glow="amber" data-whisper="who will you become..." data-highlight="hl-sr-mirror" style="left:35%;top:2%;width:8%;height:14%">
+      <span class="label">Old Note</span>
+    </div>
+    <!-- Right wall: Shopkeeper -->
+    <div class="hotspot" data-note="keeper" data-glow="mystic" data-whisper="he has no name..." data-highlight="hl-sr-keeper" style="left:74%;top:28%;width:14%;height:24%">
+      <span class="label">Dark Parchment</span>
+    </div>
+    <!-- Right wall: Compass -->
+    <div class="hotspot" data-note="compass" data-glow="amber" data-whisper="follow it..." data-highlight="hl-sr-compass" style="left:62%;top:32%;width:12%;height:18%">
+      <span class="label">Torn Page</span>
+    </div>
+    <!-- Right wall: Entity -->
+    <div class="hotspot" data-note="entity" data-glow="mystic" data-whisper="the maker watches..." data-highlight="hl-sr-entity" style="left:74%;top:52%;width:18%;height:22%">
+      <span class="label">Ancient Document</span>
+    </div>
+    <!-- Author (bookshelf area, left) -->
+    <div class="hotspot" data-note="author" data-glow="silver" data-whisper="who writes these stories..." style="left:2%;top:10%;width:14%;height:70%">
+      <span class="label">The Bookshelf</span>
     </div>
   </div>
+  <!-- Hint overlay -->
+  <div class="secret-hint">Click the notes on the wall to read them</div>
 </div>
 
 <!-- ═══════ SCENE: CASH ═══════ -->
@@ -993,30 +984,104 @@ function addMsg(html, type) {
 
 function chatGo(s) { goTo(s); }
 
-// ═══ GUESTBOOK ═══
-// ═══ SECRET ROOM TABS ═══
-function switchLore(panel) {
-  document.querySelectorAll('.lore-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.lore-tab').forEach(t => t.classList.remove('active'));
-  const target = document.getElementById('lore-'+panel);
-  if(target) target.classList.add('active');
-  // Find the matching tab
-  document.querySelectorAll('.lore-tab').forEach(t => {
-    if(t.textContent.toLowerCase().includes(panel==='notes'?'wall':panel==='journal'?'journal':'author')) t.classList.add('active');
-  });
+// ═══ SECRET ROOM NOTES (point-and-click) ═══
+const NOTES = {
+  whip: {
+    title: 'The Whip — Subject: Rita K.',
+    text: 'She found the shop on Oranienstraße. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."',
+    source: 'File 0041 — Berlin, 2024'
+  },
+  wig: {
+    title: 'The Wig — Subject: Unknown',
+    text: 'The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days. The wig was back on its shelf the next morning.',
+    source: 'File 0012 — Vienna, 1923'
+  },
+  hourglass: {
+    title: 'The Hourglass — Warning',
+    text: 'DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age — they un-aged. They are now seven years old and do not recognize their children. The shopkeeper refuses to discuss it.',
+    source: 'File 0007 — Location unknown'
+  },
+  tarot: {
+    title: 'The Tarot Box — The Strength Card',
+    text: 'The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle. They always return. They never speak of where they went.',
+    source: 'File 0033 — Marseille, 1971'
+  },
+  mirror: {
+    title: 'The Mirror — Observation',
+    text: 'It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian. A soldier looked into it and saw nothing. He died that winter.',
+    source: 'File 0002 — Prague, 1614'
+  },
+  keeper: {
+    title: 'The Shopkeeper — Note to Self',
+    text: 'He has no name. He claims he never had one. The shop existed before the street. The street existed before the city. He accepts any coin but not money. "There is a difference," he says. No one has ever seen him eat, sleep, or leave.',
+    source: 'Unsigned — date unknown'
+  },
+  compass: {
+    title: 'The Compass — Subject: Elias M.',
+    text: 'The compass does not point north. It points to where you need to be. Elias followed it for forty days. It led him across three countries, through a forest, into a cave. Inside the cave: a letter from his dead mother, written the day before she died. It said: "Stop looking."',
+    source: 'File 0019 — Somewhere in Carpathians, 1958'
+  },
+  entity: {
+    title: 'The Entity Behind the Shop',
+    text: 'Some files reference "the Maker." Not the shopkeeper — something older. The artifacts are not cursed. They are tests. Those who pass them are remembered. Those who fail are forgotten. The shop keeps score. The walls of this room are the scoreboard.',
+    source: 'Fragment — no file number'
+  },
+  map: {
+    title: 'Map of Berlin — Kreuzberg',
+    text: 'Red threads connect seven points across the city. Oranienstraße. Görlitzer Park. The canal. The old post office on Wiener Straße. A cellar bar with no sign. A courtyard that doesn\'t appear on Google Maps. And the shop itself — unmarked, unnumbered, but always there if you know where not to look.<br><br>The map is old. The threads are new. Someone is still tracking something.',
+    source: 'Pinned to the wall — updated weekly'
+  },
+  author: {
+    title: 'The Bookshelf',
+    text: 'Behind every nameless shop stands someone with a name.<br><br><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact in this shop carries a curse, a memory, or a promise. Sometimes all three.<br><br>The Namenlos universe is not a series — it is a world. One shop. Different artifacts. Different genres. Different doors to walk through.<br><br>The first door is already open.',
+    source: 'Mary-Ann Black',
+    cta: true
+  }
+};
+
+function openNote(id) {
+  if(id === 'journal') { openJournalModal(); return; }
+  const n = NOTES[id]; if(!n) return;
+  document.getElementById('modalImg').style.display = 'none';
+  let html = '<div class="note-modal-title">'+n.title+'</div>';
+  html += '<div class="note-modal-divider"></div>';
+  html += '<div class="note-modal-text">'+n.text+'</div>';
+  html += '<div class="note-modal-source">'+n.source+'</div>';
+  if(n.cta) html += '<div style="margin-top:16px"><button class="modal-book-link" onclick="closeModal();goTo(\'books\')">Go to the Books →</button></div>';
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
+}
+
+function openJournalModal() {
+  document.getElementById('modalImg').style.display = 'none';
+  let entries = [];
+  try { entries = JSON.parse(localStorage.getItem('nm_gb')||'[]'); } catch(e){}
+  let html = '<div class="note-modal-title">The Visitor\'s Journal</div>';
+  html += '<div class="note-modal-divider"></div>';
+  html += '<div class="note-modal-text">Those who find this room are invited to leave their name. The ink fades, but the shop remembers.</div>';
+  html += '<div class="guestbook-modal">';
+  html += '<textarea id="guestbookInput" placeholder="Write your name or leave a message..."></textarea>';
+  html += '<button onclick="addGuestEntry()">Sign the Journal</button>';
+  html += '<div class="gb-entries" id="guestbookEntries">';
+  entries.forEach(m => { html += '<div class="gb-entry">— '+m.replace(/</g,'&lt;')+'</div>'; });
+  html += '</div></div>';
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modal').classList.add('open');
 }
 
 function addGuestEntry() {
   const input = document.getElementById('guestbookInput');
+  if(!input) return;
   const msg = input.value.trim(); if(!msg) return;
   input.value = '';
   const entries = document.getElementById('guestbookEntries');
-  const div = document.createElement('div');
-  div.className = 'entry'; div.textContent = '— ' + msg;
-  entries.prepend(div);
+  if(entries) {
+    const div = document.createElement('div');
+    div.className = 'gb-entry'; div.textContent = '— ' + msg;
+    entries.prepend(div);
+  }
   try { const s=JSON.parse(localStorage.getItem('nm_gb')||'[]'); s.unshift(msg); localStorage.setItem('nm_gb',JSON.stringify(s.slice(0,50))); } catch(e){}
 }
-try { JSON.parse(localStorage.getItem('nm_gb')||'[]').forEach(m => { const d=document.createElement('div'); d.className='entry'; d.textContent='— '+m; document.getElementById('guestbookEntries').appendChild(d); }); } catch(e){}
 
 // ═══ INIT ═══
 const params = new URLSearchParams(location.search);
@@ -1030,6 +1095,7 @@ updateUI();
 
 document.querySelectorAll('[data-goto]').forEach(el => el.addEventListener('click', () => goTo(el.dataset.goto)));
 document.querySelectorAll('[data-artifact]').forEach(el => el.addEventListener('click', () => openArtifactModal(el.dataset.artifact)));
+document.querySelectorAll('[data-note]').forEach(el => el.addEventListener('click', () => openNote(el.dataset.note)));
 document.getElementById('backBtn').addEventListener('click', goBack);
 
 // ═══ GAME CURSOR ═══
