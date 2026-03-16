@@ -276,11 +276,8 @@ body{cursor:default}
   .whisper{font-size:11px}
   .ember{opacity:0.7}
   #gameCursor{display:none}
-  .scene-highlight{
-    width:auto;height:100%;min-width:180%;
-    left:50%;top:50%;
-    transform:translate(-50%,-50%) translateX(var(--panX,0px)) !important;
-  }
+  /* CRITICAL: hide highlight layers on mobile — 15 images × 2752×1536 = 255MB RAM crashes Safari */
+  .scene-highlight{display:none !important}
 
   /* Swipe hint */
   .swipe-hint{position:fixed;bottom:50px;left:50%;transform:translateX(-50%);z-index:61;font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;opacity:0;animation:hintFade 4s ease 2s forwards;pointer-events:none}
