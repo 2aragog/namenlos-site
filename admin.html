@@ -109,6 +109,16 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
 .statusbar{padding:4px 16px;border-top:1px solid var(--border);background:var(--bg2);display:flex;justify-content:space-between;font-size:10px;color:var(--text2);flex-shrink:0}
 .drag-ghost{position:fixed;pointer-events:none;z-index:999;padding:4px 10px;background:var(--gold);color:var(--bg);font-size:11px;font-family:inherit;opacity:0.9;white-space:nowrap;display:none}
 @media(max-width:768px){.file-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}.toolbar{gap:4px}.search{width:100%}}
+/* ═══ HOTSPOT EDITOR ═══ */
+.hs-dot{position:absolute;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,rgba(200,160,80,1) 0%,rgba(200,160,80,0.4) 60%,transparent 70%);transform:translate(-50%,-50%);cursor:grab;z-index:10;box-shadow:0 0 12px rgba(200,160,80,0.6);pointer-events:auto}
+.hs-dot:hover{box-shadow:0 0 24px rgba(200,160,80,1);width:28px;height:28px}
+.hs-dot.dragging{cursor:grabbing;box-shadow:0 0 32px rgba(200,160,80,1);width:30px;height:30px}
+.hs-dot .hs-name{position:absolute;top:26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.9);color:var(--gold);font-size:9px;padding:2px 8px;white-space:nowrap;letter-spacing:1px;pointer-events:none}
+.hs-tbl{width:100%;max-width:900px;border-collapse:collapse;font-size:11px}
+.hs-tbl th{text-align:left;color:var(--gold);padding:4px 8px;border-bottom:1px solid var(--border);font-weight:500}
+.hs-tbl td{padding:4px 8px;color:var(--text);border-bottom:1px solid var(--border)}
+.hs-tbl input{background:var(--bg2);border:1px solid var(--border);color:var(--gold);font-family:inherit;font-size:11px;padding:2px 6px;width:60px;text-align:center;outline:none}
+.hs-tbl input:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -132,6 +142,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <button class="tab" data-tab="editor">Editor</button>
     <button class="tab" data-tab="deploy">Deploy</button>
     <button class="tab" data-tab="secret">Secret Room</button>
+    <button class="tab" data-tab="hotspots">Hotspots</button>
   </div>
   <div class="panel active" id="panel-files">
     <div class="toolbar">
@@ -198,7 +209,31 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       <div class="sr-card"><h3>History</h3><div id="srHistory">Loading...</div></div>
     </div>
   </div>
-</div>
+  <!-- ═══ HOTSPOTS EDITOR ═══ -->
+  <div class="panel" id="panel-hotspots">
+    <div style="padding:16px;overflow-y:auto;flex:1">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+        <span style="color:var(--gold);font-size:14px">Hotspot Editor</span>
+        <select id="hsScene" onchange="hsLoadScene()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px">
+          <option value="hall">Main Hall</option>
+          <option value="corridor">Corridor</option>
+          <option value="display">Display Case</option>
+          <option value="wc">WC</option>
+          <option value="secret">Secret Room</option>
+          <option value="alley">Alley</option>
+        </select>
+        <span style="color:var(--text2);font-size:10px">Drag dots to reposition &middot; Click image to see %</span>
+        <button class="btn btn-primary" onclick="hsSave()">Save to GitHub</button>
+        <span id="hsStatus" style="font-size:11px;color:var(--text2)"></span>
+      </div>
+      <div id="hsEditor" style="position:relative;display:inline-block;max-width:100%;border:1px solid var(--border);background:#000;cursor:crosshair">
+        <img id="hsImg" style="display:block;max-width:min(100%,900px);height:auto" draggable="false">
+        <div id="hsDots" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none"></div>
+        <div id="hsCoords" style="position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.85);color:var(--gold);font-size:11px;padding:4px 8px;pointer-events:none;display:none"></div>
+      </div>
+      <div id="hsTable" style="margin-top:16px"></div>
+    </div>
+  </div>
 <div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <div class="modal-header"><h3 id="modalTitle">Preview</h3><button class="btn" onclick="closeModal()">X</button></div>
@@ -250,7 +285,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();if(t.dataset.tab==='hotspots'&&!hsData){hsLoadFile().then(()=>hsLoadScene());}
 }));
 
 // API
@@ -605,6 +640,220 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Backspace'&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();const p=currentPath.split('/').filter(Boolean);p.pop();loadFolder(p.join('/'));}
   if(e.key==='a'&&(e.ctrlKey||e.metaKey)&&!['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();selectAll();}
 });
+
+// ═══ HOTSPOT EDITOR ═══
+const HS_SCENES={
+  hall:{img:'img/Shop/mobile/002-Main-hall.jpg',label:'Main Hall'},
+  corridor:{img:'img/Shop/mobile/006-Cinema-door-wc.jpg',label:'Corridor'},
+  display:{img:'img/Shop/mobile/004-Display-case.jpg',label:'Display Case'},
+  wc:{img:'img/Shop/mobile/008-WC.jpg',label:'WC'},
+  secret:{img:'img/Shop/mobile/009-Secret-room.jpg',label:'Secret Room'},
+  alley:{img:'img/Shop/mobile/001-Alley.jpg',label:'Alley'}
+};
+let hsData=null; // {sha, content, hotspots:{scene:[{id,left,top,width,height,label,extra}]}}
+let hsCurrent='hall';
+
+async function hsLoadFile(){
+  const st=document.getElementById('hsStatus');
+  st.textContent='Loading shop-m.html...';st.style.color='var(--text2)';
+  try{
+    const d=await api('contents/shop-m.html?ref='+BRANCH);
+    const raw=atob(d.content);
+    hsData={sha:d.sha,raw,hotspots:{}};
+    // Parse all scenes
+    for(const sceneId of Object.keys(HS_SCENES)){
+      hsData.hotspots[sceneId]=hsParseScene(raw,sceneId);
+    }
+    st.textContent='Loaded';st.style.color='#4a4';
+  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';}
+}
+
+function hsParseScene(html,sceneId){
+  // Find scene block
+  const sceneRegex=new RegExp(`id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">([\\s\\S]*?)</div>`);
+  const m=html.match(sceneRegex);
+  if(!m)return [];
+  const block=m[1];
+  const dots=[];
+  const re=/<div class="hotspot"([^>]*)>(?:<span class="label">([^<]*)<\/span>)?/g;
+  let match;
+  while((match=re.exec(block))!==null){
+    const attrs=match[1];
+    const label=match[2]||'';
+    // Parse data-goto or data-artifact or data-note
+    const idm=attrs.match(/data-(?:goto|artifact|note)="([^"]+)"/);
+    const id=idm?idm[1]:'?';
+    // Parse style
+    const stm=attrs.match(/style="([^"]+)"/);
+    const style=stm?stm[1]:'';
+    const left=parseFloat((style.match(/left:([\d.]+)%/)||[0,0])[1]);
+    const top=parseFloat((style.match(/top:([\d.]+)%/)||[0,0])[1]);
+    const width=parseFloat((style.match(/width:([\d.]+)%/)||[0,9])[1]);
+    const height=parseFloat((style.match(/height:([\d.]+)%/)||[0,30])[1]);
+    // Keep extra style props (--dot-x, --dot-y, etc.)
+    const extra=style.replace(/left:[\d.]+%/,'').replace(/top:[\d.]+%/,'').replace(/width:[\d.]+%/,'').replace(/height:[\d.]+%/,'').replace(/^[;\s]+|[;\s]+$/g,'').replace(/;{2,}/g,';').replace(/^;|;$/g,'');
+    dots.push({id,left,top,width,height,label,extra});
+  }
+  return dots;
+}
+
+function hsLoadScene(){
+  hsCurrent=document.getElementById('hsScene').value;
+  const scene=HS_SCENES[hsCurrent];
+  if(!scene)return;
+  const img=document.getElementById('hsImg');
+  document.getElementById('hsDots').innerHTML='';
+  document.getElementById('hsTable').innerHTML='';
+  img.src='https://raw.githubusercontent.com/'+REPO+'/'+BRANCH+'/'+scene.img+'?t='+Date.now();
+  img.onload=()=>{if(hsData)hsRender();};
+}
+
+function hsRender(){
+  const container=document.getElementById('hsDots');
+  container.innerHTML='';
+  const dots=hsData?.hotspots[hsCurrent]||[];
+  const img=document.getElementById('hsImg');
+  const w=img.clientWidth,h=img.clientHeight;
+  if(!w||!h)return;
+
+  dots.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='hs-dot';
+    // dot center = left + width/2, top + height/2
+    const cx=d.left+d.width/2;
+    const cy=d.top+d.height/2;
+    el.style.left=(cx/100*w)+'px';
+    el.style.top=(cy/100*h)+'px';
+    el.innerHTML=`<span class="hs-name">${d.label||d.id}</span>`;
+    el.dataset.idx=i;
+    // Drag
+    el.addEventListener('mousedown',e=>hsDragStart(e,i));
+    el.addEventListener('touchstart',e=>hsDragStart(e,i),{passive:false});
+    container.appendChild(el);
+  });
+
+  // Render table
+  hsRenderTable(dots);
+}
+
+function hsRenderTable(dots){
+  const tb=document.getElementById('hsTable');
+  if(!dots.length){tb.innerHTML='<span style="color:var(--text2);font-size:11px">No hotspots in this scene</span>';return;}
+  let html='<table class="hs-tbl"><tr><th>Name</th><th>left %</th><th>top %</th><th>width %</th><th>height %</th><th>dot center</th></tr>';
+  dots.forEach((d,i)=>{
+    const cx=(d.left+d.width/2).toFixed(1);
+    const cy=(d.top+d.height/2).toFixed(1);
+    html+=`<tr>
+      <td style="color:var(--gold)">${d.label||d.id}</td>
+      <td><input value="${d.left}" onchange="hsEditVal(${i},'left',this.value)"></td>
+      <td><input value="${d.top}" onchange="hsEditVal(${i},'top',this.value)"></td>
+      <td><input value="${d.width}" onchange="hsEditVal(${i},'width',this.value)"></td>
+      <td><input value="${d.height}" onchange="hsEditVal(${i},'height',this.value)"></td>
+      <td style="color:var(--text2)">${cx}, ${cy}</td>
+    </tr>`;
+  });
+  html+='</table>';
+  tb.innerHTML=html;
+}
+
+function hsEditVal(idx,prop,val){
+  const v=parseFloat(val);
+  if(isNaN(v))return;
+  hsData.hotspots[hsCurrent][idx][prop]=v;
+  hsRender();
+}
+
+let hsDragging=null;
+function hsDragStart(e,idx){
+  e.preventDefault();
+  const el=document.querySelectorAll('.hs-dot')[idx];
+  el.classList.add('dragging');
+  hsDragging={idx,el};
+  const move=e.type==='mousedown'?'mousemove':'touchmove';
+  const end=e.type==='mousedown'?'mouseup':'touchend';
+  const onMove=ev=>{
+    ev.preventDefault();
+    const cx=ev.touches?ev.touches[0].clientX:ev.clientX;
+    const cy=ev.touches?ev.touches[0].clientY:ev.clientY;
+    const img=document.getElementById('hsImg');
+    const rect=img.getBoundingClientRect();
+    const px=Math.max(0,Math.min(1,(cx-rect.left)/rect.width))*100;
+    const py=Math.max(0,Math.min(1,(cy-rect.top)/rect.height))*100;
+    // Update dot position (center = px, py → left = px - width/2)
+    const d=hsData.hotspots[hsCurrent][idx];
+    d.left=Math.max(0,Math.round((px-d.width/2)*10)/10);
+    d.top=Math.max(0,Math.round((py-d.height/2)*10)/10);
+    el.style.left=(px/100*rect.width)+'px';
+    el.style.top=(py/100*rect.height)+'px';
+    // Show coords
+    const co=document.getElementById('hsCoords');
+    co.style.display='block';
+    co.textContent=`${d.left}%, ${d.top}%  (center: ${px.toFixed(1)}%, ${py.toFixed(1)}%)`;
+  };
+  const onEnd=()=>{
+    el.classList.remove('dragging');
+    hsDragging=null;
+    document.getElementById('hsCoords').style.display='none';
+    document.removeEventListener(move,onMove);
+    document.removeEventListener(end,onEnd);
+    hsRender(); // update table
+  };
+  document.addEventListener(move,onMove,{passive:false});
+  document.addEventListener(end,onEnd);
+}
+
+// Click image to show coordinates
+document.getElementById('hsImg')?.addEventListener?.('click',e=>{
+  const img=e.target;
+  const rect=img.getBoundingClientRect();
+  const px=((e.clientX-rect.left)/rect.width*100).toFixed(1);
+  const py=((e.clientY-rect.top)/rect.height*100).toFixed(1);
+  const co=document.getElementById('hsCoords');
+  co.style.display='block';co.textContent=`Click: ${px}%, ${py}%`;
+  setTimeout(()=>co.style.display='none',2000);
+});
+
+async function hsSave(){
+  if(!hsData){toast('Load file first','error');return;}
+  const st=document.getElementById('hsStatus');
+  st.textContent='Saving...';st.style.color='var(--gold)';
+  try{
+    let html=hsData.raw;
+    // For each scene, rebuild hotspot HTML
+    for(const sceneId of Object.keys(hsData.hotspots)){
+      const dots=hsData.hotspots[sceneId];
+      if(!dots.length)continue;
+      // Find the hotspots block for this scene
+      const re=new RegExp(`(id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">)([\\s\\S]*?)(</div>)`);
+      const m=html.match(re);
+      if(!m)continue;
+      // Rebuild hotspot divs
+      let newBlock='\n';
+      dots.forEach(d=>{
+        const dataAttr=sceneId==='display'?`data-artifact="${d.id}"`
+          :sceneId==='secret'?`data-note="${d.id}"`
+          :`data-goto="${d.id}"`;
+        const style=`left:${d.left}%;top:${d.top}%;width:${d.width}%;height:${d.height}%${d.extra?';'+d.extra:''}`;
+        const lbl=d.label?`<span class="label">${d.label}</span>`:'';
+        newBlock+=`      <div class="hotspot" ${dataAttr} style="${style}">${lbl}</div>\n`;
+      });
+      newBlock+='    ';
+      html=html.replace(re,'$1'+newBlock+'$3');
+    }
+    // Commit
+    const content=btoa(unescape(encodeURIComponent(html)));
+    const r=await api('contents/shop-m.html',{method:'PUT',body:JSON.stringify({
+      message:'Hotspot positions updated via admin',content,sha:hsData.sha,branch:BRANCH
+    })});
+    hsData.sha=r.content.sha;
+    hsData.raw=html;
+    st.textContent='Saved!';st.style.color='#4a4';
+    toast('Hotspots saved to GitHub','success');
+  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';toast('Save failed: '+e.message,'error');}
+}
+
+// Resize: re-render dots
+window.addEventListener('resize',()=>{if(hsData)hsRender();});
 </script>
 </body>
 </html>
