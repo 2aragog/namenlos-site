@@ -173,6 +173,7 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
     <button class="tab" data-tab="deploy">Deploy</button>
     <button class="tab" data-tab="secret">Secret Room</button>
     <button class="tab" data-tab="hotspots">Visual Editor</button>
+    <button class="tab" data-tab="media">Media</button>
   </div>
   <div class="panel active" id="panel-files">
     <div class="toolbar">
@@ -327,6 +328,53 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
       </div>
     </div>
   </div>
+  <!-- ═══ MEDIA MANAGER ═══ -->
+  <div class="panel" id="panel-media">
+    <div style="padding:16px;overflow-y:auto;flex:1;max-width:900px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <span style="color:var(--gold);font-size:14px">Media Manager</span>
+        <select id="mediaCategory" onchange="mediaRender()" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px">
+          <option value="films">Films / Episodes</option>
+          <option value="tracks">Soundtrack</option>
+          <option value="clips">Music Videos</option>
+          <option value="audiobooks">Audiobooks</option>
+        </select>
+        <button class="btn" onclick="mediaAdd()">+ Add Item</button>
+        <button class="btn btn-primary" onclick="mediaSave()">Save to GitHub</button>
+        <span id="mediaStatus" style="font-size:10px;color:var(--text2)"></span>
+      </div>
+      <div id="mediaList"></div>
+      <div id="mediaEdit" style="display:none;margin-top:16px;padding:16px;border:1px solid var(--border);background:var(--bg2)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <span style="color:var(--gold);font-size:12px" id="mediaEditTitle">Edit Item</span>
+          <button class="btn" onclick="document.getElementById('mediaEdit').style.display='none'" style="font-size:10px">Close</button>
+        </div>
+        <div class="ve-prop-row"><label style="width:80px">Title</label><input id="meTitle" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
+        <div class="ve-prop-row"><label style="width:80px">Description</label><textarea id="meDesc" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none;min-height:60px;resize:vertical"></textarea></div>
+        <div class="ve-prop-row"><label style="width:80px">Status</label>
+          <select id="meStatus" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px">
+            <option value="published">Published</option>
+            <option value="coming_soon">Coming Soon</option>
+            <option value="preview_soon">Preview Soon</option>
+            <option value="in_dev">In Development</option>
+            <option value="premium">Premium Only</option>
+          </select>
+        </div>
+        <div class="ve-prop-row" id="meYoutubeRow"><label style="width:80px">YouTube</label><input id="meYoutube" placeholder="https://youtube.com/watch?v=..." style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
+        <div class="ve-prop-row" id="meAudioRow"><label style="width:80px">Audio URL</label><input id="meAudio" placeholder="https://amkostiuk.de/namenlos-audio/..." style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;padding:4px 8px;outline:none"></div>
+        <div class="ve-prop-row" id="meUploadRow">
+          <label style="width:80px">Upload</label>
+          <input type="file" id="meFile" accept=".mp3,.wav,.ogg,.m4a,.flac,.aac" style="flex:1;font-size:11px;color:var(--text2)">
+          <button class="btn" onclick="mediaUploadAudio()" style="margin-left:6px">Upload to amkostiuk.de</button>
+        </div>
+        <div id="mePreview" style="margin-top:10px"></div>
+        <div style="margin-top:12px;display:flex;gap:6px">
+          <button class="btn btn-primary" onclick="mediaApplyEdit()">Apply</button>
+          <button class="btn btn-danger" onclick="mediaDeleteItem()">Delete Item</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
@@ -379,7 +427,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret'){loadSecretRoom();loadNotesEditor();}if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret'){loadSecretRoom();loadNotesEditor();}if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}if(t.dataset.tab==='media')mediaLoad();
 }));
 
 // API
@@ -1199,6 +1247,151 @@ window.addEventListener('resize',()=>{ if(veLoaded) veRender(); });
 
 // Resize: re-render dots
 window.addEventListener('resize',()=>{if(veLoaded)veRender();});
+
+// ═══ MEDIA MANAGER ═══
+const MEDIA_PATH='data/media.json';
+const AUDIO_UPLOAD_URL='https://amkostiuk.de/audio-upload.php';
+const AUDIO_UPLOAD_KEY='nm-audio-2026-x4k';
+let mediaData=null, mediaSha=null, mediaEditIdx=-1;
+
+async function mediaLoad(){
+  const st=document.getElementById('mediaStatus');
+  st.textContent='Loading...';
+  try{
+    const d=await api(`contents/${MEDIA_PATH}?ref=${BRANCH}`);
+    mediaData=JSON.parse(decodeURIComponent(escape(atob(d.content))));
+    mediaSha=d.sha;
+    st.textContent='Loaded';st.style.color='#4a4';
+    mediaRender();
+  }catch(e){st.textContent='Error: '+e.message;st.style.color='#a44';}
+}
+
+function mediaCat(){return document.getElementById('mediaCategory').value;}
+
+function mediaRender(){
+  if(!mediaData)return;
+  const cat=mediaCat();
+  const items=mediaData[cat]||[];
+  const list=document.getElementById('mediaList');
+  const badges={published:'✓ Published',coming_soon:'Coming Soon',preview_soon:'Preview Soon',in_dev:'In Development',premium:'Premium Only'};
+  const bcolors={published:'#4a4',coming_soon:'#aa7733',preview_soon:'#7799aa',in_dev:'#666',premium:'#a060c8'};
+  if(!items.length){list.innerHTML='<div style="color:var(--text2);font-size:12px;padding:20px">No items. Click "+ Add Item" to start.</div>';return;}
+  list.innerHTML=items.map((it,i)=>{
+    const hasMedia=(it.youtube&&it.youtube.length>5)||(it.audio_url&&it.audio_url.length>5);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);margin-bottom:4px;cursor:pointer;transition:border-color 0.15s${mediaEditIdx===i?';border-color:var(--gold);background:rgba(200,160,80,0.04)':''}" onclick="mediaStartEdit(${i})">
+      <span style="color:var(--text2);font-size:10px;width:20px;text-align:center">${i+1}</span>
+      <span style="color:${hasMedia?'var(--gold)':'var(--text2)'};font-size:12px;flex:1">${esc(it.title||'Untitled')}</span>
+      <span style="font-size:9px;color:${bcolors[it.status]||'#666'};letter-spacing:1px">${badges[it.status]||it.status}</span>
+      ${hasMedia?'<span style="font-size:10px;color:#4a4">●</span>':'<span style="font-size:10px;color:#a33">○</span>'}
+    </div>`;
+  }).join('');
+}
+
+function mediaStartEdit(idx){
+  const cat=mediaCat();
+  const items=mediaData[cat]||[];
+  const it=items[idx];if(!it)return;
+  mediaEditIdx=idx;
+  mediaRender();
+  const edit=document.getElementById('mediaEdit');
+  edit.style.display='block';
+  document.getElementById('mediaEditTitle').textContent='Edit: '+it.title;
+  document.getElementById('meTitle').value=it.title||'';
+  document.getElementById('meDesc').value=it.desc||'';
+  document.getElementById('meStatus').value=it.status||'coming_soon';
+  // Show/hide youtube vs audio fields
+  const isVideo=cat==='films'||cat==='clips';
+  const isAudio=cat==='tracks'||cat==='audiobooks';
+  document.getElementById('meYoutubeRow').style.display=isVideo?'flex':'none';
+  document.getElementById('meAudioRow').style.display=isAudio?'flex':'none';
+  document.getElementById('meUploadRow').style.display=isAudio?'flex':'none';
+  document.getElementById('meYoutube').value=it.youtube||'';
+  document.getElementById('meAudio').value=it.audio_url||'';
+  // Preview
+  const prev=document.getElementById('mePreview');
+  if(isVideo&&it.youtube){
+    const vid=ytId(it.youtube);
+    prev.innerHTML=vid?`<iframe width="100%" height="200" src="https://www.youtube-nocookie.com/embed/${vid}" frameborder="0" allowfullscreen style="border:1px solid var(--border)"></iframe>`:'';
+  }else if(isAudio&&it.audio_url){
+    prev.innerHTML=`<audio controls src="${esc(it.audio_url)}" style="width:100%"></audio>`;
+  }else{prev.innerHTML='';}
+}
+
+function ytId(url){
+  const m=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([a-zA-Z0-9_-]{11})/);
+  return m?m[1]:null;
+}
+
+function mediaApplyEdit(){
+  const cat=mediaCat();
+  const it=mediaData[cat][mediaEditIdx];if(!it)return;
+  it.title=document.getElementById('meTitle').value.trim();
+  it.desc=document.getElementById('meDesc').value.trim();
+  it.status=document.getElementById('meStatus').value;
+  if(cat==='films'||cat==='clips') it.youtube=document.getElementById('meYoutube').value.trim();
+  if(cat==='tracks'||cat==='audiobooks') it.audio_url=document.getElementById('meAudio').value.trim();
+  document.getElementById('mediaEdit').style.display='none';
+  mediaEditIdx=-1;
+  mediaRender();
+  toast('Applied (save to GitHub to publish)');
+}
+
+function mediaAdd(){
+  const cat=mediaCat();
+  if(!mediaData[cat])mediaData[cat]=[];
+  const isVideo=cat==='films'||cat==='clips';
+  const n=mediaData[cat].length+1;
+  const item={id:cat.slice(0,-1)+n,title:'New Item '+n,desc:'',status:'coming_soon',order:n};
+  if(isVideo)item.youtube='';else item.audio_url='';
+  mediaData[cat].push(item);
+  mediaRender();
+  mediaStartEdit(mediaData[cat].length-1);
+}
+
+function mediaDeleteItem(){
+  if(mediaEditIdx<0)return;
+  const cat=mediaCat();
+  mediaData[cat].splice(mediaEditIdx,1);
+  document.getElementById('mediaEdit').style.display='none';
+  mediaEditIdx=-1;
+  mediaRender();
+  toast('Deleted (save to publish)');
+}
+
+async function mediaSave(){
+  if(!mediaData){toast('Load media first','error');return;}
+  const st=document.getElementById('mediaStatus');
+  st.textContent='Saving...';st.style.color='var(--gold)';
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(mediaData,null,2))));
+    const body={message:'Update media via admin',content,branch:BRANCH};
+    if(mediaSha)body.sha=mediaSha;
+    const r=await api(`contents/${MEDIA_PATH}`,{method:'PUT',body:JSON.stringify(body)});
+    mediaSha=r.content.sha;
+    st.textContent='Saved!';st.style.color='#4a4';
+    toast('Media saved to GitHub!','success');
+  }catch(e){st.textContent='Error';st.style.color='#a44';toast('Error: '+e.message,'error');}
+}
+
+async function mediaUploadAudio(){
+  const file=document.getElementById('meFile').files[0];
+  if(!file){toast('Select a file first','error');return;}
+  const st=document.getElementById('mediaStatus');
+  st.textContent='Uploading '+file.name+'...';st.style.color='var(--gold)';
+  try{
+    const fd=new FormData();
+    fd.append('file',file);
+    fd.append('key',AUDIO_UPLOAD_KEY);
+    const r=await fetch(AUDIO_UPLOAD_URL,{method:'POST',body:fd});
+    const d=await r.json();
+    if(d.error){throw new Error(d.error);}
+    document.getElementById('meAudio').value=d.url;
+    st.textContent='Uploaded!';st.style.color='#4a4';
+    toast('Audio uploaded: '+d.name,'success');
+    // Auto-preview
+    document.getElementById('mePreview').innerHTML=`<audio controls src="${d.url}" style="width:100%"></audio>`;
+  }catch(e){st.textContent='Upload failed';st.style.color='#a44';toast('Upload error: '+e.message,'error');}
+}
 </script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+{
+  "films": [
+    {"id":"film1","title":"Episode 1 — The Shop Without a Name","desc":"Rita turns left when she meant to turn right. The alley narrows. The door has no sign. Inside, the shopkeeper is already waiting.","status":"coming_soon","youtube":"","order":1},
+    {"id":"film2","title":"Episode 2 — The Whip Chooses","desc":"She sees it behind the glass — black leather, braided tight. The handle is bone. She shouldn't touch it. But some things choose you.","status":"coming_soon","youtube":"","order":2},
+    {"id":"film3","title":"Episode 3 — Berlin, 3 AM","desc":"The city sleeps. Rita doesn't. The whip hums in her bag. She walks toward Oranienstraße without knowing why.","status":"coming_soon","youtube":"","order":3}
+  ],
+  "tracks": [
+    {"id":"track1","title":"Track 01 — The Nameless Shop","desc":"Ambient dark atmosphere. The sound of a door opening into a space that shouldn't exist.","status":"preview_soon","audio_url":"","order":1},
+    {"id":"track2","title":"Track 02 — Rita's Theme","desc":"A pulse. A heartbeat. Something between longing and fear.","status":"preview_soon","audio_url":"","order":2},
+    {"id":"track3","title":"Track 03 — The First Touch","desc":"The moment skin meets leather. Everything changes.","status":"preview_soon","audio_url":"","order":3}
+  ],
+  "clips": [
+    {"id":"clip1","title":"Music Video 01","desc":"Visual story for Track 01. Dark, atmospheric, AI-animated.","status":"coming_soon","youtube":"","order":1},
+    {"id":"clip2","title":"Music Video 02","desc":"Visual story for Track 02. A face in the window. A door that shouldn't be there.","status":"coming_soon","youtube":"","order":2}
+  ],
+  "audiobooks": [
+    {"id":"audiobook_skinme","title":"Audiobook — Skin Me","desc":"The complete novel, read aloud. Every whisper, every silence — preserved. Generated with ElevenLabs. Included in the Premium bundle ($49).","status":"premium","audio_url":"","order":1}
+  ],
+  "album": {
+    "title":"Full Soundtrack — 20 Tracks",
+    "desc":"20 original tracks composed for the Namenlos universe. Each song belongs to a scene, a character, a turning point.",
+    "status":"in_dev",
+    "track_count":20
+  }
+}
