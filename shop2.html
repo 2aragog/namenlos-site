@@ -285,6 +285,14 @@ body{cursor:default}
   font-family:'Cormorant Garamond',serif;font-size:12px;
   color:#2a2218;font-style:italic;margin-top:40px;
 }
+.code-btn{
+  display:inline-block;margin-top:14px;
+  background:transparent;border:1px solid rgba(200,160,80,0.2);
+  color:#7a6a55;font-family:'Cinzel',serif;font-size:11px;
+  letter-spacing:4px;text-transform:uppercase;padding:10px 28px;
+  cursor:pointer;transition:all 0.3s;
+}
+.code-btn:hover,.code-btn:active{color:#c8a060;border-color:#c8a060;background:rgba(200,160,80,0.06)}
 
 /* ═══════════════════════════════════════ */
 /* ═══ MOBILE ═══ */
@@ -471,21 +479,8 @@ body{cursor:default}
 </div>
 <div id="transition"></div>
 
-<!-- ═══════ SCENE: CODE ENTRY ═══════ -->
-<div class="scene active" id="scene-code">
-  <div class="code-screen">
-    <div class="code-title">NAMENLOS</div>
-    <div class="code-sub">The shop has no address. But it has a word.</div>
-    <div class="code-input-wrap">
-      <input type="text" id="codeInput" class="code-input" placeholder="Enter the code" maxlength="6" autocomplete="off" inputmode="numeric">
-      <div class="code-error" id="codeError"></div>
-    </div>
-    <div class="code-hint">If you know the word, you know the way in.</div>
-  </div>
-</div>
-
 <!-- ═══════ SCENE: ALLEY ═══════ -->
-<div class="scene" id="scene-alley">
+<div class="scene active" id="scene-alley">
   <img class="scene-img" src="img/Shop/001-Alley.png" alt="alley">
   <img class="scene-highlight" id="hl-alley-door" data-src="img/Shop/layers/001-Alley_0000_Layer-1.png" alt="">
   <div class="hotspots">
@@ -769,9 +764,28 @@ body{cursor:default}
   <img class="scene-img" loading="lazy" src="img/Shop/008-WC.png" alt="wc">
   <img class="scene-highlight" id="hl-secret" data-src="img/Shop/layers/008-WC_0000_Layer-1.png" alt="">
   <div class="hotspots">
-    <div class="hotspot" data-goto="secret" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%">
+    <div class="hotspot" data-goto="secretgate" data-glow="mystic" data-whisper="you weren't supposed to find this..." data-highlight="hl-secret" style="left:29.2%;top:20.9%;width:6.7%;height:58.2%">
       <span class="label">???</span>
     </div>
+  </div>
+</div>
+
+<!-- ═══════ SCENE: SECRET GATE (riddle) ═══════ -->
+<div class="scene" id="scene-secretgate">
+  <img class="scene-img" loading="lazy" src="img/Shop/008-WC.png" alt="wc" style="filter:brightness(0.3) blur(3px)">
+  <div class="code-screen">
+    <div class="code-title" style="font-size:clamp(16px,3vw,22px);margin-bottom:16px">The door is locked.</div>
+    <div class="code-sub" style="max-width:340px;line-height:1.8;margin-bottom:12px">A word is scratched into the wood. Below it — a question:</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(16px,2.5vw,20px);color:#c8a060;font-style:italic;line-height:1.9;max-width:320px;text-align:center;margin-bottom:32px">
+      "The shopkeeper remembers everything.<br>He asks only one thing of those who leave:<br><span style="color:#8a7a65">___________</span>"
+    </div>
+    <div class="code-input-wrap">
+      <input type="text" id="codeInput" class="code-input" placeholder="..." maxlength="20" autocomplete="off" style="width:220px;letter-spacing:4px">
+      <button class="code-btn" onclick="checkSecretCode()">Enter</button>
+      <div class="code-error" id="codeError"></div>
+    </div>
+    <div class="code-hint" style="margin-top:30px">The answer is in the language of the city.</div>
+    <div style="margin-top:24px"><a onclick="goTo('wc')" style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#3a2a18;cursor:pointer;transition:color 0.3s" onmouseover="this.style.color='#7a6a55'" onmouseout="this.style.color='#3a2a18'">← Walk away</a></div>
   </div>
 </div>
 
@@ -928,7 +942,7 @@ const BOOKS = {
 const SCENE_TITLES = {
   alley:'The Alley', hall:'Main Hall', shopkeeper:'The Shopkeeper',
   display:'The Cabinet', books:'The Books', corridor:'The Red Door',
-  cinema:'The Screening Room', wc:'WC', secret:'The Secret Room', cash:'The Drawer'
+  cinema:'The Screening Room', wc:'WC', secretgate:'The Hidden Door', secret:'The Secret Room', cash:'The Drawer'
 };
 
 // ═══ STATE ═══
@@ -946,7 +960,7 @@ function goTo(sceneId) {
     document.querySelector('.scene.active')?.classList.remove('active');
     document.getElementById('scene-'+sceneId)?.classList.add('active');
     navHistory.push(currentScene);
-    if(navHistory[navHistory.length-1]==='code') navHistory.pop(); // never go back to code screen
+    if(navHistory[navHistory.length-1]==='code' || navHistory[navHistory.length-1]==='secretgate') navHistory.pop();
     currentScene = sceneId;
     updateUI();
     setTimeout(() => {trans.classList.remove('active');isTransitioning=false;}, 50);
@@ -969,7 +983,7 @@ function goBack() {
 }
 
 function updateUI() {
-  document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall' && currentScene!=='code');
+  document.getElementById('backBtn').classList.toggle('visible', currentScene!=='alley' && currentScene!=='hall' && currentScene!=='code' && currentScene!=='secretgate');
   document.getElementById('sceneTitle').textContent = SCENE_TITLES[currentScene] || 'NAMENLOS';
   if(typeof syncHotspots === 'function') setTimeout(syncHotspots, 50);
 }
@@ -1200,39 +1214,33 @@ if(!(window.matchMedia('(max-width:768px)').matches || 'ontouchstart' in window)
   });
 }
 
-// ═══ CODE ENTRY ═══
+// ═══ SECRET ROOM CODE ═══
 const params = new URLSearchParams(location.search);
-const bypass = params.get('r') === '1';
 const startAt = params.get('start');
+const bypass = params.get('r') === '1';
 
-if(bypass || startAt) {
-  // Skip code screen
-  document.getElementById('scene-code')?.classList.remove('active');
-  const target = startAt || 'alley';
-  if(document.getElementById('scene-'+target)) {
-    document.getElementById('scene-'+target).classList.add('active');
-    currentScene = target;
-  } else {
-    document.getElementById('scene-alley').classList.add('active');
-    currentScene = 'alley';
-  }
-} else {
-  currentScene = 'code';
+if(startAt && document.getElementById('scene-'+startAt)) {
+  document.querySelector('.scene.active')?.classList.remove('active');
+  document.getElementById('scene-'+startAt).classList.add('active');
+  currentScene = startAt;
 }
 
+function checkSecretCode() {
+  const input = document.getElementById('codeInput');
+  if(!input) return;
+  const val = input.value.trim().toLowerCase();
+  if(val === 'vergiss' || val === 'forget') {
+    goTo('secret');
+  } else {
+    document.getElementById('codeError').textContent = 'The door stays shut.';
+    input.value = '';
+    setTimeout(() => { document.getElementById('codeError').textContent = ''; }, 3000);
+  }
+}
 const codeInput = document.getElementById('codeInput');
 if(codeInput) {
   codeInput.addEventListener('keydown', e => {
-    if(e.key === 'Enter') {
-      const val = codeInput.value.trim();
-      if(val === '547') {
-        goTo('alley');
-      } else {
-        document.getElementById('codeError').textContent = 'Wrong code. The shop stays hidden.';
-        codeInput.value = '';
-        setTimeout(() => { document.getElementById('codeError').textContent = ''; }, 3000);
-      }
-    }
+    if(e.key === 'Enter') checkSecretCode();
   });
 }
 updateUI();
