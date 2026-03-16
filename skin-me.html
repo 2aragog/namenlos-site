@@ -415,7 +415,7 @@ footer .legal-links a:hover{color:#7a6a55}
     <a href="#buy">Buy</a>
     <a href="#contact">Contact</a>
     <a href="#comments">Reviews</a>
-    <a href="shop.html?start=hall" class="nav-back">← Shop</a>
+    <a href="browse.html#books" class="nav-back" id="nav-back">← Back</a>
   </div>
 </nav>
 
@@ -802,6 +802,17 @@ footer .legal-links a:hover{color:#7a6a55}
 </footer>
 
 <script>
+/* ═══ SMART BACK BUTTON ═══ */
+const navBack = document.getElementById('nav-back');
+const ref = document.referrer || '';
+if (ref.includes('shop.html') || ref.includes('start=')) {
+  navBack.href = 'shop.html?start=books';
+  navBack.textContent = '← Shop';
+} else {
+  navBack.href = 'browse.html#books';
+  navBack.textContent = '← Books';
+}
+
 /* ═══ SCROLL REVEAL ═══ */
 const reveals = document.querySelectorAll('.reveal');
 const revealObserver = new IntersectionObserver((entries) => {
