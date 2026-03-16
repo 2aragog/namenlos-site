@@ -324,6 +324,25 @@ body{cursor:default}
   .chat-panel{height:55%}
   .modal-body h2{font-size:14px}
 }
+
+/* Landscape mobile */
+@media(max-height:500px) and (orientation:landscape){
+  .scene-img,.hotspots,.scene-highlight{
+    width:100% !important;height:auto !important;min-height:100%;min-width:100%;
+    transform:translate(-50%,-50%) !important;
+  }
+  .books-panel{padding:8px 3% 8px}
+  .books-row{gap:8px}
+  .book-card{flex:0 0 70px}
+  .book-card img{width:70px;height:100px}
+  .book-card .bc-placeholder{width:70px;height:100px}
+  .chat-panel{height:60%;width:50%}
+  .media-hall{padding:40px 3% 12px}
+  .room-content{padding:40px 20px 16px}
+  .top-bar{padding:4px 10px}
+  .nav-toggle{top:4px;right:8px}
+  .info{padding:4px 12px}
+}
 </style>
 </head>
 <body>
@@ -970,17 +989,25 @@ if(isMobile) {
   let startX = 0;
   let startPanX = 0;
   let isPanning = false;
+  let hasMoved = false;
   let gyroEnabled = false;
   let gyroPanX = 0;
   let gyroSmooth = 0;
   const maxPan = 120;
+  const moveThreshold = 8; // px before pan starts
+
+  // Start centered on shopkeeper for hall scene
+  if(currentScene === 'hall') {
+    panX = 50; gyroSmooth = 50;
+    requestAnimationFrame(() => applyPan());
+  }
 
   // Touch pan
   document.addEventListener('touchstart', e => {
     if(e.touches.length === 1) {
       startX = e.touches[0].clientX;
       startPanX = panX;
-      isPanning = true;
+      hasMoved = false;
     }
     const hint = document.getElementById('swipeHint');
     if(hint) hint.style.display = 'none';
@@ -995,13 +1022,16 @@ if(isMobile) {
   }, {passive:true});
 
   document.addEventListener('touchmove', e => {
-    if(!isPanning || e.touches.length !== 1) return;
+    if(e.touches.length !== 1) return;
     const dx = e.touches[0].clientX - startX;
+    if(!hasMoved && Math.abs(dx) < moveThreshold) return;
+    hasMoved = true;
+    isPanning = true;
     panX = Math.max(-maxPan, Math.min(maxPan, startPanX + dx));
     applyPan();
   }, {passive:true});
 
-  document.addEventListener('touchend', () => { isPanning = false; });
+  document.addEventListener('touchend', () => { isPanning = false; hasMoved = false; });
 
   function applyPan() {
     const active = document.querySelector('.scene.active');
@@ -1026,14 +1056,13 @@ if(isMobile) {
       gyroPanX = (tilt / 15) * maxPan;
     });
 
-    // Smooth animation loop for gyro
     (function gyroAnim() {
-      if(!isPanning) { // Only gyro when not finger-dragging
+      if(!isPanning) {
         gyroSmooth += (gyroPanX - gyroSmooth) * 0.08;
         panX = Math.max(-maxPan, Math.min(maxPan, gyroSmooth));
         applyPan();
       } else {
-        gyroSmooth = panX; // Sync so there's no jump when finger lifts
+        gyroSmooth = panX;
       }
       requestAnimationFrame(gyroAnim);
     })();
