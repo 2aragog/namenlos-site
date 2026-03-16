@@ -759,38 +759,44 @@ function veStatus(msg,color){
 
 // ─── PARSE ───
 function veParseHotspots(html, sceneId, ver){
-  // Match the hotspots div inside the correct scene
-  const re = new RegExp(`id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">([\\s\\S]*?)<\\/div>`);
-  const m = html.match(re);
-  if(!m) return [];
-  const block = m[1];
+  // Find the scene block (from id="scene-X" to next scene or end)
+  const sceneStart = html.indexOf(`id="scene-${sceneId}"`);
+  if(sceneStart < 0) return [];
+  // Find the hotspots container within this scene
+  const hsStart = html.indexOf('<div class="hotspots">', sceneStart);
+  if(hsStart < 0 || hsStart > sceneStart + 3000) return []; // safety: don't go too far
+  const afterHs = hsStart + '<div class="hotspots">'.length;
+  // Find matching closing </div> — count nesting
+  let depth = 1, pos = afterHs;
+  while(depth > 0 && pos < html.length){
+    const nextOpen = html.indexOf('<div', pos);
+    const nextClose = html.indexOf('</div>', pos);
+    if(nextClose < 0) break;
+    if(nextOpen >= 0 && nextOpen < nextClose){ depth++; pos = nextOpen + 4; }
+    else { depth--; if(depth > 0) pos = nextClose + 6; else pos = nextClose; }
+  }
+  const block = html.substring(afterHs, pos);
   const dots = [];
   const hre = /<div class="hotspot"([^>]*)>(?:<span class="label">([^<]*)<\/span>)?/g;
   let match;
   while((match=hre.exec(block))!==null){
     const attrs = match[1];
     const label = match[2]||'';
-    // data attr
     const dm = attrs.match(/data-(goto|artifact|note)="([^"]+)"/);
     const dataType = dm?dm[1]:'goto';
     const dataId = dm?dm[2]:'?';
-    // glow
     const gm = attrs.match(/data-glow="([^"]+)"/);
     const glow = gm?gm[1]:'';
-    // whisper
     const wm = attrs.match(/data-whisper="([^"]+)"/);
     const whisper = wm?wm[1]:'';
-    // highlight
     const hlm = attrs.match(/data-highlight="([^"]+)"/);
     const highlight = hlm?hlm[1]:'';
-    // style
     const sm = attrs.match(/style="([^"]+)"/);
     const style = sm?sm[1]:'';
     const left = parseFloat((style.match(/left:([\d.]+)%/)||[0,0])[1]);
     const top = parseFloat((style.match(/top:([\d.]+)%/)||[0,0])[1]);
     const width = parseFloat((style.match(/width:([\d.]+)%/)||[0,9])[1]);
     const height = parseFloat((style.match(/height:([\d.]+)%/)||[0,30])[1]);
-    // Extra style props
     const extra = style.replace(/left:[\d.]+%/,'').replace(/top:[\d.]+%/,'').replace(/width:[\d.]+%/,'').replace(/height:[\d.]+%/,'').replace(/^[;\s]+|[;\s]+$/g,'').replace(/;{2,}/g,';').replace(/^;|;$/g,'');
     dots.push({ dataType, dataId, glow, whisper, highlight, label, left, top, width, height, extra });
   }
@@ -1026,9 +1032,22 @@ async function veSave(){
       for(const sceneId of Object.keys(VE_FILES[ver].hotspots)){
         const dots = VE_FILES[ver].hotspots[sceneId];
         if(!dots.length) continue;
-        const re = new RegExp(`(id="scene-${sceneId}"[\\s\\S]*?<div class="hotspots">)([\\s\\S]*?)(</div>)`);
-        const m = html.match(re);
-        if(!m) continue;
+        // Find and replace hotspots block using nesting-aware approach
+        const scStart = html.indexOf(`id="scene-${sceneId}"`);
+        if(scStart < 0) continue;
+        const hsTag = '<div class="hotspots">';
+        const hsStart = html.indexOf(hsTag, scStart);
+        if(hsStart < 0 || hsStart > scStart + 3000) continue;
+        const afterHs = hsStart + hsTag.length;
+        // Find matching </div>
+        let depth2 = 1, pos2 = afterHs;
+        while(depth2 > 0 && pos2 < html.length){
+          const no = html.indexOf('<div', pos2);
+          const nc = html.indexOf('</div>', pos2);
+          if(nc < 0) break;
+          if(no >= 0 && no < nc){ depth2++; pos2 = no + 4; }
+          else { depth2--; if(depth2 > 0) pos2 = nc + 6; else pos2 = nc; }
+        }
         let block = '\n';
         dots.forEach(d=>{
           const da = `data-${d.dataType}="${d.dataId}"`;
@@ -1044,7 +1063,7 @@ async function veSave(){
           block += `      <div class="hotspot" ${attrs}>${lbl}</div>\n`;
         });
         block += '    ';
-        html = html.replace(re, '$1'+block+'$3');
+        html = html.substring(0, afterHs) + block + html.substring(pos2);
       }
       const content = btoa(unescape(encodeURIComponent(html)));
       const r = await api(`contents/${VE_FILES[ver].path}`,{method:'PUT',body:JSON.stringify({
