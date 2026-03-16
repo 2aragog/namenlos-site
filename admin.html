@@ -254,6 +254,20 @@ header nav a:hover,header nav button:hover{color:var(--gold)}
         </div>
       </div>
       <div class="sr-card"><h3>History</h3><div id="srHistory">Loading...</div></div>
+      <div class="sr-card">
+        <h2>Secret Room Stories & About Author</h2>
+        <p style="color:var(--text2);font-size:11px;margin-bottom:12px">These texts appear when tapping notes on the wall in the secret room. Use &lt;br&gt; for line breaks, &lt;strong&gt; for bold.</p>
+        <select id="noteSelect" onchange="loadNoteEditor()" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--gold);font-family:inherit;font-size:12px;padding:6px 8px;margin-bottom:12px">
+          <option value="">-- select a note --</option>
+        </select>
+        <div id="noteEditorWrap" style="display:none">
+          <div style="margin-bottom:8px"><label style="font-size:10px;color:var(--text2)">Title</label><input type="text" id="noteTitle" class="sr-textarea" style="min-height:0;padding:8px;font-size:14px"></div>
+          <div style="margin-bottom:8px"><label style="font-size:10px;color:var(--text2)">Text (HTML allowed)</label><textarea class="sr-textarea" id="noteText" style="min-height:120px"></textarea></div>
+          <div style="margin-bottom:8px"><label style="font-size:10px;color:var(--text2)">Source line</label><input type="text" id="noteSource" class="sr-textarea" style="min-height:0;padding:8px;font-size:13px;font-style:italic"></div>
+          <button class="btn btn-primary" onclick="saveNote()">Save This Note</button>
+          <button class="btn" onclick="saveAllNotes()" style="margin-left:6px">Save All Notes</button>
+        </div>
+      </div>
     </div>
   </div>
   <!-- ═══ VISUAL EDITOR ═══ -->
@@ -365,7 +379,7 @@ document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
   t.classList.add('active');document.getElementById('panel-'+t.dataset.tab).classList.add('active');
-  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret')loadSecretRoom();if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}
+  if(t.dataset.tab==='deploy')loadDeploys();if(t.dataset.tab==='secret'){loadSecretRoom();loadNotesEditor();}if(t.dataset.tab==='hotspots'&&!veLoaded){veLoadFiles();}
 }));
 
 // API
@@ -713,6 +727,53 @@ async function saveRiddle(){
   catch(e){toast('Error: '+e.message,'error');}
 }
 function previewSrMessage(){document.getElementById('srPreview').textContent=document.getElementById('srEditor').value.trim()||'(empty)';}
+
+// ═══ NOTES EDITOR ═══
+const NOTES_PATH='data/notes.json';
+let notesData={}, notesSha=null;
+async function loadNotesEditor(){
+  try{
+    const d=await api(`contents/${NOTES_PATH}?ref=${BRANCH}`);
+    notesData=JSON.parse(decodeURIComponent(escape(atob(d.content))));
+    notesSha=d.sha;
+    const sel=document.getElementById('noteSelect');
+    sel.innerHTML='<option value="">-- select a note --</option>';
+    const labels={whip:'Whip (Rita)',wig:'Wig',hourglass:'Hourglass',tarot:'Tarot',mirror:'Mirror',keeper:'Shopkeeper',compass:'Compass',entity:'Entity/Maker',map:'Map of Berlin',journal:'Journal',author:'About Author'};
+    for(const [id,note] of Object.entries(notesData)){
+      sel.innerHTML+=`<option value="${id}">${labels[id]||id}: ${note.title||id}</option>`;
+    }
+  }catch(e){console.log('Notes load error:',e);}
+}
+function loadNoteEditor(){
+  const id=document.getElementById('noteSelect').value;
+  const wrap=document.getElementById('noteEditorWrap');
+  if(!id){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const n=notesData[id]||{};
+  document.getElementById('noteTitle').value=n.title||'';
+  document.getElementById('noteText').value=(n.text||'').replace(/<br>/g,'\n');
+  document.getElementById('noteSource').value=n.source||'';
+}
+async function saveNote(){
+  const id=document.getElementById('noteSelect').value;
+  if(!id){toast('Select a note first','error');return;}
+  notesData[id]=notesData[id]||{};
+  notesData[id].title=document.getElementById('noteTitle').value.trim();
+  notesData[id].text=document.getElementById('noteText').value.trim().replace(/\n/g,'<br>');
+  notesData[id].source=document.getElementById('noteSource').value.trim();
+  if(id==='author')notesData[id].cta=true;
+  await saveAllNotes();
+}
+async function saveAllNotes(){
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(notesData,null,2))));
+    const body={message:'Update notes via admin',content,branch:BRANCH};
+    if(notesSha)body.sha=notesSha;
+    const r=await api(`contents/${NOTES_PATH}`,{method:'PUT',body:JSON.stringify(body)});
+    notesSha=r.content.sha;
+    toast('Notes saved!','success');
+  }catch(e){toast('Error: '+e.message,'error');}
+}
 
 // DIALOGS
 let dialogResolve=null;

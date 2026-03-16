@@ -433,18 +433,13 @@ const BOOKS = {
   layme:{title:'Lay Me',genre:'Dark Romance 18+',status:'dev',img:null,desc:'Inside the box: a tarot deck.',artifact:'tarot'},
   spinme:{title:'Spin Me',genre:'Dark Romance 18+',status:'dev',img:null,desc:'The pointe shoes dance at midnight.',artifact:null}
 };
-const NOTES = {
-  whip:{title:'The Whip — Subject: Rita K.',text:'She found the shop on Oranienstraße. She was not looking. The whip chose her the moment she crossed the threshold. Three days later she could no longer remember her own surname. The shopkeeper noted: "Faster than usual."',source:'File 0041 — Berlin, 2024'},
-  wig:{title:'The Wig — Subject: Unknown',text:'The auburn wig has been in the cabinet since 1887. Every owner dies with a different face. The last one was found in a hotel in Vienna, smiling. She had been dead for three days.',source:'File 0012 — Vienna, 1923'},
-  hourglass:{title:'The Hourglass — Warning',text:'DO NOT FLIP IT. The sand flows upward for a reason. The last person who turned it did not age — they un-aged. They are now seven years old.',source:'File 0007 — Location unknown'},
-  tarot:{title:'The Tarot Box — The Strength Card',text:'The deck has 79 cards. One more than standard. The extra card has no name, only a drawing of a door. Those who draw it disappear for exactly one lunar cycle.',source:'File 0033 — Marseille, 1971'},
-  mirror:{title:'The Mirror — Observation',text:'It does not show your reflection. It shows who you will become. A young woman looked into it and saw herself old, surrounded by books. She became a librarian.',source:'File 0002 — Prague, 1614'},
-  keeper:{title:'The Shopkeeper — Note to Self',text:'He has no name. He claims he never had one. The shop existed before the street. The street existed before the city.',source:'Unsigned — date unknown'},
-  compass:{title:'The Compass — Subject: Elias M.',text:'The compass does not point north. It points to where you need to be. Elias followed it for forty days across three countries into a cave. Inside: a letter from his dead mother.',source:'File 0019 — Carpathians, 1958'},
-  entity:{title:'The Entity Behind the Shop',text:'Some files reference "the Maker." Not the shopkeeper — something older. The artifacts are not cursed. They are tests. Those who pass are remembered. Those who fail are forgotten.',source:'Fragment — no file number'},
-  map:{title:'Map of Berlin — Kreuzberg',text:'Red threads connect seven points across the city. Oranienstraße. Görlitzer Park. The canal. The old post office. A cellar bar with no sign. A courtyard that doesn\'t appear on Google Maps. And the shop itself.<br><br>The map is old. The threads are new.',source:'Pinned to the wall — updated weekly'},
-  author:{title:'A Sealed Letter — Opened Once',text:'Behind every nameless shop stands someone with a name.<br><br><strong style="color:#c8a060">Mary-Ann Black</strong> writes stories about objects that remember more than people do. Every artifact carries a curse, a memory, or a promise. Sometimes all three.<br><br>The Namenlos universe is not a series — it is a world.',source:'Found tucked behind the map — unsigned',cta:true}
+let NOTES = {
+  whip:{title:'The Whip — Subject: Rita K.',text:'She found the shop on Oranienstraße...',source:'File 0041 — Berlin, 2024'},
+  author:{title:'A Sealed Letter — Opened Once',text:'Behind every nameless shop stands someone with a name.',source:'Found tucked behind the map — unsigned',cta:true}
 };
+(async function loadNotes(){
+  try { const r=await fetch('data/notes.json?t='+Date.now()); NOTES=await r.json(); } catch(e){ console.log('Notes fallback'); }
+})();
 const TITLES = {alley:'The Alley',hall:'Main Hall',shopkeeper:'The Shopkeeper',display:'The Cabinet',books:'The Books',corridor:'The Red Door',cinema:'Screening Room',wc:'WC',secretgate:'The Hidden Door',secret:'The Secret Room',cash:'The Drawer'};
 
 // ═══ STATE ═══
