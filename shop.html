@@ -570,7 +570,7 @@ body{cursor:default}
   <div class="books-panel">
     <h3>Books</h3>
     <div class="books-row">
-      <div class="book-card" onclick="openBookModal('skinme')">
+      <div class="book-card" onclick="window.location.href='skin-me.html'">
         <img src="img/Books/skin-me.jpg" alt="Skin Me">
         <div class="bc-name">Skin Me</div>
       </div>
@@ -1051,7 +1051,7 @@ function sendChat() {
   const lower = msg.toLowerCase();
   let reply='', nav=null;
 
-  if(/skin\s*me|rita|whip/.test(lower)) { reply='"Skin Me." A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it.<br>Standard — $25 · Premium — $49 · Subscribe — $7.99/mo'; nav='books'; }
+  if(/skin\s*me|rita|whip/.test(lower)) { reply='"Skin Me." A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it.<br>Standard — $25 · Premium — $49 · Subscribe — $7.99/mo<br><a href="skin-me.html" style="color:#c8a060">Read more about the book →</a>'; nav='books'; }
   else if(/book|read|shelv|shelf/.test(lower)) { reply='The shelves hold stories. Some finished, some still being written. "Skin Me" is ready — the whip chose its first reader.'; nav='books'; }
   else if(/artifact|cabinet|display|object/.test(lower)) { reply='The cabinet holds eight objects. Each one cursed, blessed, or both. Touch carefully.'; nav='display'; }
   else if(/cinem|film|movie|watch|kino/.test(lower)) { reply='Through the red door, past the corridor. The projector is warming up.'; nav='corridor'; }

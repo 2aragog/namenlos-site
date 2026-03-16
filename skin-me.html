@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skin Me — Mary-Ann Black | NAMENLOS</title>
+<meta name="description" content="Skin Me — Metaphysical Dark Romance 18+. A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it. By Mary-Ann Black.">
+<meta name="theme-color" content="#0a0505">
+<meta property="og:title" content="Skin Me — Mary-Ann Black">
+<meta property="og:description" content="A whip with a bone handle. A girl named Rita in Berlin. She should never have touched it.">
+<meta property="og:image" content="https://namenlos.black/img/Books/skin-me.jpg">
+<meta property="og:url" content="https://namenlos.black/skin-me.html">
+<meta property="og:type" content="book">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   SKIN ME — Book Page
+   namenlos.black / Mary-Ann Black
+   ═══════════════════════════════════════════════════ */
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:#0a0505;
+  color:#8a7a65;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:17px;line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:#3a1515;color:#c8a060}
+a{color:#c8a060;text-decoration:none;transition:all 0.3s}
+a:hover{color:#e0c080}
+
+/* ═══ NAV ═══ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 30px;display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom,rgba(10,5,5,0.97),rgba(10,5,5,0.6),transparent);
+  pointer-events:none;transition:background 0.4s;
+}
+nav *{pointer-events:auto}
+.nav-brand{font-family:'Cinzel',serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:#7a6a55;text-decoration:none;transition:color 0.3s}
+.nav-brand:hover{color:#c8a060}
+.nav-links{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.nav-links a{font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#7a6a55;text-decoration:none;transition:color 0.3s}
+.nav-links a:hover{color:#c8a060}
+.nav-back{font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7a6a55;padding:4px 12px;border:1px solid #3a2520;text-decoration:none;transition:all 0.3s}
+.nav-back:hover{border-color:#c8a060;color:#c8a060}
+
+/* ═══ HERO ═══ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:80px 30px 60px;
+}
+.hero-bg{
+  position:absolute;inset:-30px;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(107,28,28,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 60%, rgba(60,20,10,0.1) 0%, transparent 50%),
+    #0a0505;
+  z-index:0;
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity:0.5;
+}
+.hero-inner{
+  position:relative;z-index:2;
+  display:flex;gap:60px;align-items:center;justify-content:center;
+  max-width:1100px;width:100%;
+  animation:heroFade 2s ease both;
+}
+@keyframes heroFade{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+
+.hero-cover{
+  width:320px;flex-shrink:0;position:relative;
+}
+.hero-cover img{
+  width:100%;display:block;
+  border:1px solid #2a1a15;
+  box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 120px rgba(107,28,28,0.1);
+  transition:transform 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+.hero-cover:hover img{transform:scale(1.02)}
+.hero-cover::after{
+  content:'';position:absolute;inset:-1px;
+  border:1px solid rgba(200,160,80,0.06);
+  pointer-events:none;
+}
+
+.hero-text{max-width:480px}
+.hero-label{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;
+  text-transform:uppercase;color:#6b1c1c;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+.hero-label::before{content:'';width:24px;height:1px;background:#6b1c1c}
+.hero-title{
+  font-family:'Cinzel',serif;font-size:clamp(36px,5vw,56px);
+  letter-spacing:4px;color:#c8a060;font-weight:400;
+  line-height:1.2;margin-bottom:8px;
+}
+.hero-tagline{
+  font-size:clamp(18px,2.5vw,24px);font-style:italic;
+  color:#6a5a45;margin-bottom:24px;line-height:1.5;
+}
+.hero-meta{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:#7a6a55;margin-bottom:30px;
+  display:flex;flex-direction:column;gap:4px;
+}
+.hero-meta span{display:flex;align-items:center;gap:8px}
+.hero-meta .dot{color:#6b1c1c}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;
+  text-transform:uppercase;padding:14px 32px;
+  border:1px solid #2a1a15;color:#8a7a65;
+  cursor:pointer;transition:all 0.4s;background:none;
+  text-decoration:none;display:inline-block;
+}
+.btn:hover{border-color:#c8a060;color:#c8a060;background:rgba(200,160,96,0.05);transform:translateY(-2px)}
+.btn-primary{border-color:#6b1c1c;color:#c8a060;background:rgba(107,28,28,0.12)}
+.btn-primary:hover{background:rgba(107,28,28,0.25);border-color:#8b2c2c}
+
+/* ═══ SECTIONS ═══ */
+section{padding:100px 30px;max-width:900px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:50px}
+.section-title{
+  font-family:'Cinzel',serif;font-size:clamp(18px,2.5vw,24px);
+  letter-spacing:6px;text-transform:uppercase;color:#c8a060;
+  font-weight:400;margin-bottom:8px;
+}
+.section-sub{
+  font-size:14px;color:#6a5a45;font-style:italic;max-width:500px;margin:0 auto;
+}
+.section-line{
+  width:40px;height:1px;background:linear-gradient(to right,transparent,#6b1c1c,transparent);
+  margin:16px auto 0;
+}
+.divider{
+  width:100%;height:1px;margin:0 auto;
+  background:linear-gradient(to right,transparent 5%,#1a1210 30%,#2a1a15 50%,#1a1210 70%,transparent 95%);
+}
+
+/* ═══ SYNOPSIS ═══ */
+.synopsis{
+  max-width:700px;margin:0 auto;
+  text-align:center;
+}
+.synopsis .lead{
+  font-size:20px;font-style:italic;color:#7a6a55;
+  line-height:1.9;margin-bottom:30px;
+}
+.synopsis .body{
+  color:#6a5a45;line-height:2;
+  text-align:left;
+}
+.synopsis .body p{margin-bottom:20px}
+.synopsis .trigger-warning{
+  margin-top:40px;padding:20px 24px;
+  border:1px solid #2a1510;background:rgba(107,28,28,0.05);
+  font-size:14px;color:#7a6a55;
+}
+.synopsis .trigger-warning strong{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;color:#8b4040;display:block;margin-bottom:8px;
+}
+
+/* ═══ DETAILS GRID ═══ */
+.details-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:24px;margin-top:40px;
+}
+.detail-card{
+  border:1px solid #1a1210;padding:24px;text-align:center;
+  transition:all 0.4s;background:rgba(10,5,5,0.5);
+}
+.detail-card:hover{border-color:#2a1a15;background:rgba(107,28,28,0.04)}
+.detail-card .d-icon{font-size:28px;margin-bottom:10px;display:block}
+.detail-card .d-label{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:3px;
+  text-transform:uppercase;color:#7a6a55;margin-bottom:4px;
+}
+.detail-card .d-value{
+  font-family:'Cinzel',serif;font-size:16px;letter-spacing:2px;color:#c8a060;
+}
+
+/* ═══ SOUNDTRACK ═══ */
+.track-list{display:flex;flex-direction:column;gap:0}
+.track{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 0;border-bottom:1px solid #1a1210;
+  transition:all 0.3s;cursor:default;
+}
+.track:hover{background:rgba(107,28,28,0.04);padding-left:8px}
+.track-num{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;
+  color:#6b1c1c;width:36px;text-align:center;flex-shrink:0;
+}
+.track-info{flex:1}
+.track-name{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8a7a65}
+.track-desc{font-size:14px;font-style:italic;color:#5a4a3a;margin-top:2px}
+.track-badge{
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;color:#6b1c1c;padding:4px 10px;
+  border:1px solid #2a1510;flex-shrink:0;
+}
+.track-badge.free{border-color:#3a5a3a;color:#5a8a5a}
+
+/* ═══ CLIPS / VIDEO ═══ */
+.clips-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+}
+.clip-card{
+  border:1px solid #1a1210;overflow:hidden;
+  transition:all 0.4s;position:relative;
+  background:rgba(10,5,5,0.5);
+}
+.clip-card:hover{border-color:#2a1a15;transform:translateY(-3px);box-shadow:0 15px 40px rgba(0,0,0,0.4)}
+.clip-thumb{
+  width:100%;aspect-ratio:16/9;
+  background:#0f0a08;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.clip-thumb .play-icon{
+  font-size:48px;color:rgba(200,160,80,0.3);
+  transition:all 0.4s;z-index:2;position:relative;
+}
+.clip-card:hover .play-icon{color:rgba(200,160,80,0.6);transform:scale(1.1)}
+.clip-thumb::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle,transparent 30%,rgba(10,5,5,0.6));
+}
+.clip-info{padding:16px 18px}
+.clip-title{font-family:'Cinzel',serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#c8a060;margin-bottom:4px}
+.clip-desc{font-size:14px;font-style:italic;color:#6a5a45}
+.clip-badge{
+  position:absolute;top:12px;right:12px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;padding:4px 10px;
+  border:1px solid;z-index:3;
+  background:rgba(10,5,5,0.85);
+}
+.clip-badge.youtube{border-color:#3a5a3a;color:#5a8a5a}
+.clip-badge.premium{border-color:#6b1c1c;color:#8b4040}
+
+/* ═══ BUNDLES / PURCHASE ═══ */
+#buy{max-width:960px}
+.bundles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.bundle{
+  border:1px solid #1a1210;padding:32px 28px;
+  transition:all 0.4s;background:rgba(10,5,5,0.5);
+  display:flex;flex-direction:column;
+}
+.bundle:hover{border-color:#2a1a15;transform:translateY(-3px);box-shadow:0 15px 50px rgba(0,0,0,0.3)}
+.bundle.featured{border-color:#6b1c1c;background:rgba(107,28,28,0.06)}
+.bundle.featured:hover{border-color:#8b2c2c;box-shadow:0 15px 50px rgba(107,28,28,0.15)}
+.bundle-name{
+  font-family:'Cinzel',serif;font-size:14px;letter-spacing:4px;
+  text-transform:uppercase;color:#c8a060;margin-bottom:6px;
+}
+.bundle-price{
+  font-family:'Cinzel',serif;font-size:clamp(28px,3vw,36px);
+  color:#c8a060;font-weight:600;margin-bottom:20px;
+}
+.bundle-price .period{font-size:14px;font-weight:400;color:#7a6a55;letter-spacing:1px}
+.bundle-list{list-style:none;flex:1}
+.bundle-list li{
+  padding:8px 0;border-bottom:1px solid #1a1210;
+  font-size:15px;color:#7a6a55;display:flex;align-items:flex-start;gap:10px;
+}
+.bundle-list li::before{content:'◈';color:#6b1c1c;flex-shrink:0;margin-top:2px;font-size:10px}
+.bundle-btn{
+  margin-top:24px;width:100%;
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:3px;
+  text-transform:uppercase;padding:14px;text-align:center;
+  border:1px solid #2a1a15;color:#8a7a65;
+  cursor:pointer;transition:all 0.3s;background:none;
+  display:block;text-decoration:none;
+}
+.bundle-btn:hover{border-color:#c8a060;color:#c8a060;background:rgba(200,160,96,0.05)}
+.bundle.featured .bundle-btn{border-color:#6b1c1c;color:#c8a060}
+.bundle.featured .bundle-btn:hover{background:rgba(107,28,28,0.2)}
+
+/* ═══ COMMENTS ═══ */
+.comments-wrap{max-width:700px;margin:0 auto}
+.comment-form{margin-bottom:40px}
+.form-row{display:flex;gap:14px;margin-bottom:14px}
+.form-row input,.form-row textarea{
+  flex:1;
+  font-family:'Cormorant Garamond',Georgia,serif;
+  font-size:16px;color:#c8a060;
+  background:rgba(10,5,5,0.6);
+  border:1px solid #1a1210;
+  padding:14px 18px;
+  transition:border-color 0.3s;
+  outline:none;
+  resize:vertical;
+}
+.form-row input::placeholder,.form-row textarea::placeholder{color:#4a3a2a;font-style:italic}
+.form-row input:focus,.form-row textarea:focus{border-color:#6b1c1c}
+.form-row textarea{min-height:120px;line-height:1.7}
+.comment-submit{
+  font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;padding:12px 32px;
+  border:1px solid #6b1c1c;color:#c8a060;
+  cursor:pointer;transition:all 0.3s;background:rgba(107,28,28,0.1);
+}
+.comment-submit:hover{background:rgba(107,28,28,0.25);border-color:#8b2c2c}
+.comment-submit:disabled{opacity:0.4;cursor:not-allowed}
+
+.comments-list{display:flex;flex-direction:column;gap:0}
+.comment{
+  padding:24px 0;border-bottom:1px solid #1a1210;
+  animation:commentIn 0.5s ease both;
+}
+@keyframes commentIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+.comment-author{
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:2px;
+  text-transform:uppercase;color:#c8a060;margin-bottom:2px;
+}
+.comment-date{font-size:12px;color:#4a3a2a;font-style:italic;margin-bottom:10px}
+.comment-body{color:#7a6a55;line-height:1.8}
+.no-comments{
+  text-align:center;padding:40px;
+  font-style:italic;color:#4a3a2a;
+}
+
+/* ═══ BACK-TO-TOP ═══ */
+.to-top{
+  position:fixed;bottom:30px;right:30px;
+  width:44px;height:44px;
+  border:1px solid #2a1a15;background:rgba(10,5,5,0.9);
+  color:#6a5a45;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;
+  opacity:0;pointer-events:none;z-index:90;
+}
+.to-top.visible{opacity:1;pointer-events:auto}
+.to-top:hover{border-color:#c8a060;color:#c8a060}
+
+/* ═══ FOOTER ═══ */
+footer{
+  padding:60px 30px;text-align:center;
+  border-top:1px solid #1a1210;
+}
+.foot-brand{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:6px;
+  text-transform:uppercase;color:#6a5a45;margin-bottom:12px;
+}
+footer p{font-size:13px;color:#5a4a3a;font-style:italic;margin-bottom:6px}
+footer .legal-links{margin-top:20px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+footer .legal-links a{font-size:11px;color:#4a3a2a;letter-spacing:1px}
+footer .legal-links a:hover{color:#7a6a55}
+
+/* ═══ SCROLL REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(30px);transition:all 0.8s cubic-bezier(0.22,1,0.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ═══ MOBILE ═══ */
+@media(max-width:768px){
+  nav{padding:10px 16px}
+  .nav-brand{font-size:10px;letter-spacing:4px}
+  .nav-links{gap:10px}
+  .nav-links a{font-size:8px;letter-spacing:2px}
+  .nav-back{font-size:8px;padding:3px 8px}
+  .hero{min-height:auto;padding:100px 20px 60px}
+  .hero-inner{flex-direction:column;text-align:center;gap:40px}
+  .hero-cover{width:220px}
+  .hero-label{justify-content:center}
+  .hero-meta{align-items:center}
+  .hero-cta{justify-content:center}
+  section{padding:60px 20px}
+  .section-title{font-size:16px;letter-spacing:4px}
+  .bundles{grid-template-columns:1fr}
+  .clips-grid{grid-template-columns:1fr}
+  .form-row{flex-direction:column}
+  .details-grid{grid-template-columns:repeat(2,1fr);gap:16px}
+  .detail-card{padding:16px}
+  .btn{font-size:11px;padding:12px 24px;letter-spacing:2px}
+  .to-top{bottom:16px;right:16px;width:38px;height:38px}
+}
+@media(max-width:400px){
+  .hero-cover{width:180px}
+  .hero-title{font-size:28px}
+  .details-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+<script defer src="analytics.js"></script>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a class="nav-brand" href="home.html">Namenlos</a>
+  <div class="nav-links">
+    <a href="#synopsis">About</a>
+    <a href="#soundtrack">Music</a>
+    <a href="#clips">Clips</a>
+    <a href="#buy">Buy</a>
+    <a href="#comments">Reviews</a>
+    <a href="shop.html?start=hall" class="nav-back">← Shop</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-cover">
+      <img src="img/Books/skin-me.jpg" alt="Skin Me — Book Cover" loading="eager">
+    </div>
+    <div class="hero-text">
+      <div class="hero-label">Namenlos · Book 1</div>
+      <h1 class="hero-title">Skin Me</h1>
+      <p class="hero-tagline">And forget… who you were…</p>
+      <div class="hero-meta">
+        <span><span class="dot">◈</span> Metaphysical Dark Romance 18+</span>
+        <span><span class="dot">◈</span> Mary-Ann Black</span>
+        <span><span class="dot">◈</span> ~79,000 words · Russian</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#buy" class="btn btn-primary">Buy Now</a>
+        <a href="#synopsis" class="btn">Read More</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SYNOPSIS ═══ -->
+<section id="synopsis">
+  <div class="section-header reveal">
+    <div class="section-title">The Story</div>
+    <div class="section-sub">A whip with a bone handle. A girl named Rita in Berlin.</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="synopsis reveal">
+    <p class="lead">She should never have touched it.</p>
+    <div class="body">
+      <p>Rita turns left when she meant to turn right. The alley narrows. The door has no sign. Inside, the shopkeeper is already waiting — as if he knew she'd come.</p>
+      <p>Behind the glass, a whip. Black leather, braided tight. The handle is bone — old, warm, humming. She reaches out. The shopkeeper says nothing. He doesn't need to. Some things choose you.</p>
+      <p>What follows is Berlin at 3 AM. Oranienstraße after midnight. A cezve of Turkish coffee that boils without fire. A man named Maks who knows things he shouldn't. And a force — dark, ancient, insatiable — that has lived inside the whip for centuries, waiting for skin it recognizes.</p>
+      <p>This is not a love story. This is a story about what love does when it has teeth.</p>
+    </div>
+    <div class="trigger-warning">
+      <strong>⚠ Content Warning</strong>
+      This book contains explicit sexual content, dark themes, psychological intensity, and scenes of emotional and physical violence. Intended for adult readers 18+. The dark force is the cursed whip, not the male lead.
+    </div>
+  </div>
+
+  <!-- Details -->
+  <div class="details-grid reveal">
+    <div class="detail-card">
+      <span class="d-icon">📖</span>
+      <div class="d-label">Words</div>
+      <div class="d-value">~79,000</div>
+    </div>
+    <div class="detail-card">
+      <span class="d-icon">🌍</span>
+      <div class="d-label">Language</div>
+      <div class="d-value">Russian</div>
+    </div>
+    <div class="detail-card">
+      <span class="d-icon">♫</span>
+      <div class="d-label">Soundtrack</div>
+      <div class="d-value">20 Tracks</div>
+    </div>
+    <div class="detail-card">
+      <span class="d-icon">▶</span>
+      <div class="d-label">Video Clips</div>
+      <div class="d-value">20 Clips</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ SOUNDTRACK ═══ -->
+<section id="soundtrack">
+  <div class="section-header reveal">
+    <div class="section-title">Soundtrack</div>
+    <div class="section-sub">20 original tracks. Each song belongs to a scene, a character, a turning point.</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="track-list reveal">
+    <div class="track">
+      <div class="track-num">01</div>
+      <div class="track-info">
+        <div class="track-name">The Nameless Shop</div>
+        <div class="track-desc">Ambient dark atmosphere. A door opening into a space that shouldn't exist.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">02</div>
+      <div class="track-info">
+        <div class="track-name">Rita's Theme</div>
+        <div class="track-desc">A pulse. A heartbeat. Something between longing and fear.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">03</div>
+      <div class="track-info">
+        <div class="track-name">The First Touch</div>
+        <div class="track-desc">The moment skin meets leather. Everything changes.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">04</div>
+      <div class="track-info">
+        <div class="track-name">Oranienstraße</div>
+        <div class="track-desc">Berlin after midnight. Neon and shadow.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">05</div>
+      <div class="track-info">
+        <div class="track-name">Cezve</div>
+        <div class="track-desc">Copper. Heat. Coffee that boils without fire.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">06</div>
+      <div class="track-info">
+        <div class="track-name">Maks</div>
+        <div class="track-desc">He knows things he shouldn't. His hands smell of lemon.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">07</div>
+      <div class="track-info">
+        <div class="track-name">The Whip Remembers</div>
+        <div class="track-desc">Centuries of skin. Centuries of waiting.</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">08</div>
+      <div class="track-info">
+        <div class="track-name">Track 08</div>
+        <div class="track-desc">—</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">09</div>
+      <div class="track-info">
+        <div class="track-name">Track 09</div>
+        <div class="track-desc">—</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track">
+      <div class="track-num">10</div>
+      <div class="track-info">
+        <div class="track-name">Track 10</div>
+        <div class="track-desc">—</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+    <div class="track" style="opacity:0.5">
+      <div class="track-num">…</div>
+      <div class="track-info">
+        <div class="track-name">Tracks 11–20</div>
+        <div class="track-desc">Included in Standard &amp; Premium bundles</div>
+      </div>
+      <span class="track-badge">Bundle</span>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:30px" class="reveal">
+    <p style="font-size:14px;color:#5a4a3a;font-style:italic;margin-bottom:16px">
+      The soundtrack is not available on streaming platforms.<br>
+      It exists only here — inside the Namenlos universe.
+    </p>
+    <a href="#buy" class="btn">Get the Soundtrack</a>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ CLIPS ═══ -->
+<section id="clips">
+  <div class="section-header reveal">
+    <div class="section-title">Video Clips</div>
+    <div class="section-sub">5 free on YouTube. 15 exclusive in Premium.</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="clips-grid reveal">
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge youtube">YouTube</span>
+      <div class="clip-info">
+        <div class="clip-title">Clip 01 — The Shop</div>
+        <div class="clip-desc">The alley. The door. The shopkeeper. Free on YouTube.</div>
+      </div>
+    </div>
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge youtube">YouTube</span>
+      <div class="clip-info">
+        <div class="clip-title">Clip 02 — Rita</div>
+        <div class="clip-desc">A face in the window. A door that shouldn't be there.</div>
+      </div>
+    </div>
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge youtube">YouTube</span>
+      <div class="clip-info">
+        <div class="clip-title">Clip 03 — The Whip</div>
+        <div class="clip-desc">Behind the glass. Black leather. Bone handle.</div>
+      </div>
+    </div>
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge youtube">YouTube</span>
+      <div class="clip-info">
+        <div class="clip-title">Clip 04 — Berlin</div>
+        <div class="clip-desc">Oranienstraße after midnight. The city never sleeps.</div>
+      </div>
+    </div>
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge youtube">YouTube</span>
+      <div class="clip-info">
+        <div class="clip-title">Clip 05 — Cezve</div>
+        <div class="clip-desc">Copper and fire. The coffee knows your name.</div>
+      </div>
+    </div>
+    <div class="clip-card">
+      <div class="clip-thumb">
+        <span class="play-icon">▶</span>
+      </div>
+      <span class="clip-badge premium">Premium</span>
+      <div class="clip-info">
+        <div class="clip-title">Clips 06–20</div>
+        <div class="clip-desc">15 exclusive clips. Only in the Premium bundle ($49).</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:30px" class="reveal">
+    <p style="font-size:13px;color:#4a3a2a;font-style:italic">Videos coming soon. AI-animated. Realistic style.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ BUY ═══ -->
+<section id="buy">
+  <div class="section-header reveal">
+    <div class="section-title">Get Skin Me</div>
+    <div class="section-sub">Choose your way in.</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="bundles reveal">
+    <!-- Standard -->
+    <div class="bundle">
+      <div class="bundle-name">Standard</div>
+      <div class="bundle-price">$25</div>
+      <ul class="bundle-list">
+        <li>Ebook (PDF + EPUB)</li>
+        <li>Full soundtrack — 20 tracks</li>
+        <li>Character art collection</li>
+      </ul>
+      <a href="#" class="bundle-btn" data-bundle="standard">Coming Soon</a>
+    </div>
+    <!-- Premium -->
+    <div class="bundle featured">
+      <div class="bundle-name">Premium</div>
+      <div class="bundle-price">$49</div>
+      <ul class="bundle-list">
+        <li>Everything in Standard</li>
+        <li>15 exclusive video clips</li>
+        <li>Full audiobook (ElevenLabs AI voice)</li>
+      </ul>
+      <a href="#" class="bundle-btn" data-bundle="premium">Coming Soon</a>
+    </div>
+    <!-- Subscription -->
+    <div class="bundle">
+      <div class="bundle-name">Serialized</div>
+      <div class="bundle-price">$7.99<span class="period"> /month</span></div>
+      <ul class="bundle-list">
+        <li>One episode per week</li>
+        <li>Serialized reading experience</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <a href="#" class="bundle-btn" data-bundle="subscription">Coming Soon</a>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:30px" class="reveal">
+    <p style="font-size:13px;color:#4a3a2a;font-style:italic">
+      Payments processed via Digistore24. Sold exclusively through namenlos.black.<br>
+      Not available on Amazon. Not available on streaming platforms.
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══ COMMENTS ═══ -->
+<section id="comments">
+  <div class="section-header reveal">
+    <div class="section-title">Reader Voices</div>
+    <div class="section-sub">Leave your mark. The shopkeeper remembers everyone.</div>
+    <div class="section-line"></div>
+  </div>
+  <div class="comments-wrap reveal">
+    <!-- Comment form -->
+    <div class="comment-form">
+      <div class="form-row">
+        <input type="text" id="c-name" placeholder="Your name" maxlength="60">
+      </div>
+      <div class="form-row">
+        <textarea id="c-body" placeholder="What did the whip whisper to you?" maxlength="1000"></textarea>
+      </div>
+      <div class="form-row" style="justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:#4a3a2a;font-style:italic" id="c-count">0 / 1000</span>
+        <button class="comment-submit" id="c-submit">Leave a Mark</button>
+      </div>
+    </div>
+    <!-- Comments list -->
+    <div class="comments-list" id="comments-list">
+      <div class="no-comments" id="no-comments">No voices yet. Be the first to speak.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BACK TO TOP ═══ -->
+<div class="to-top" id="toTop" title="Back to top">↑</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-brand">Namenlos</div>
+  <p>One nameless shop · Different artifacts · Different stories</p>
+  <p style="margin-top:8px">© 2026 Mary-Ann Black. All rights reserved.</p>
+  <div class="legal-links">
+    <a href="legal/impressum.html">Impressum</a>
+    <a href="legal/datenschutz.html">Datenschutz</a>
+    <a href="legal/agb.html">AGB</a>
+    <a href="legal/widerrufsrecht.html">Widerrufsrecht</a>
+  </div>
+</footer>
+
+<script>
+/* ═══ SCROLL REVEAL ═══ */
+const reveals = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }});
+}, {threshold: 0.1});
+reveals.forEach(el => revealObserver.observe(el));
+
+/* ═══ BACK TO TOP ═══ */
+const toTop = document.getElementById('toTop');
+window.addEventListener('scroll', () => {
+  toTop.classList.toggle('visible', window.scrollY > 600);
+});
+toTop.addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+
+/* ═══ COMMENTS (localStorage) ═══ */
+const KEY = 'namenlos_skinme_comments';
+const cName = document.getElementById('c-name');
+const cBody = document.getElementById('c-body');
+const cSubmit = document.getElementById('c-submit');
+const cCount = document.getElementById('c-count');
+const cList = document.getElementById('comments-list');
+const noComments = document.getElementById('no-comments');
+
+function loadComments() {
+  try {
+    const data = JSON.parse(localStorage.getItem(KEY) || '[]');
+    if (data.length === 0) { noComments.style.display = ''; return; }
+    noComments.style.display = 'none';
+    // Show newest first
+    data.sort((a,b) => b.ts - a.ts);
+    data.forEach(c => appendComment(c, false));
+  } catch(e) {}
+}
+
+function appendComment(c, prepend) {
+  noComments.style.display = 'none';
+  const div = document.createElement('div');
+  div.className = 'comment';
+  const d = new Date(c.ts);
+  const dateStr = d.toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'});
+  div.innerHTML = `
+    <div class="comment-author">${escHTML(c.name)}</div>
+    <div class="comment-date">${dateStr}</div>
+    <div class="comment-body">${escHTML(c.body)}</div>
+  `;
+  if (prepend) cList.insertBefore(div, cList.firstChild);
+  else cList.appendChild(div);
+}
+
+function escHTML(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+cBody.addEventListener('input', () => {
+  cCount.textContent = cBody.value.length + ' / 1000';
+});
+
+cSubmit.addEventListener('click', () => {
+  const name = cName.value.trim();
+  const body = cBody.value.trim();
+  if (!name || !body) return;
+  if (body.length < 3) return;
+
+  const comment = { name, body, ts: Date.now() };
+  try {
+    const data = JSON.parse(localStorage.getItem(KEY) || '[]');
+    data.push(comment);
+    localStorage.setItem(KEY, JSON.stringify(data));
+  } catch(e) {}
+  appendComment(comment, true);
+  cName.value = '';
+  cBody.value = '';
+  cCount.textContent = '0 / 1000';
+});
+
+loadComments();
+
+/* ═══ SMOOTH NAV ═══ */
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+</script>
+</body>
+</html>
