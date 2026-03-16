@@ -413,7 +413,7 @@ footer .legal-links a:hover{color:#7a6a55}
     <a href="#soundtrack">Music</a>
     <a href="#clips">Clips</a>
     <a href="#buy">Buy</a>
-    <a href="#contact">Contact</a>
+    <a href="browse.html#contact">Contact</a>
     <a href="#comments">Reviews</a>
     <a href="browse.html#books" class="nav-back" id="nav-back">← Back</a>
   </div>
@@ -727,36 +727,6 @@ footer .legal-links a:hover{color:#7a6a55}
 
 <div class="divider"></div>
 
-<!-- ═══ CONTACT ═══ -->
-<section id="contact">
-  <div class="section-header reveal">
-    <div class="section-title">Get in Touch</div>
-    <div class="section-sub">Questions, collaborations, or just a word for the shopkeeper.</div>
-    <div class="section-line"></div>
-  </div>
-  <div class="comments-wrap reveal">
-    <div class="comment-form" id="contact-form">
-      <div class="form-row">
-        <input type="text" id="ct-name" placeholder="Your name" maxlength="100">
-        <input type="email" id="ct-email" placeholder="Your email" maxlength="200">
-      </div>
-      <div class="form-row">
-        <input type="text" id="ct-subject" placeholder="Subject" maxlength="200">
-      </div>
-      <div class="form-row">
-        <textarea id="ct-msg" placeholder="Your message..." maxlength="5000" style="min-height:150px"></textarea>
-      </div>
-      <div style="display:none"><input type="text" id="ct-honeypot" tabindex="-1" autocomplete="off"></div>
-      <div class="form-row" style="justify-content:space-between;align-items:center">
-        <span style="font-size:12px;color:#4a3a2a;font-style:italic" id="ct-status"></span>
-        <button class="comment-submit" id="ct-submit">Send Message</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
 <!-- ═══ COMMENTS ═══ -->
 <section id="comments">
   <div class="section-header reveal">
@@ -945,64 +915,6 @@ async function buyBundle(product) {
     btn.style.pointerEvents = '';
   }
 }
-
-/* ═══ CONTACT FORM ═══ */
-const CT_API = 'https://amkostiuk.de/namenlos-contact.php';
-const ctSubmit = document.getElementById('ct-submit');
-const ctStatus = document.getElementById('ct-status');
-let ctSending = false;
-
-ctSubmit.addEventListener('click', async () => {
-  if (ctSending) return;
-  const name = document.getElementById('ct-name').value.trim();
-  const email = document.getElementById('ct-email').value.trim();
-  const subject = document.getElementById('ct-subject').value.trim();
-  const message = document.getElementById('ct-msg').value.trim();
-  const honeypot = document.getElementById('ct-honeypot').value;
-
-  if (!name || !email || !message) {
-    ctStatus.textContent = 'Please fill in name, email, and message.';
-    ctStatus.style.color = '#8b4040';
-    return;
-  }
-  if (!email.includes('@') || !email.includes('.')) {
-    ctStatus.textContent = 'Please enter a valid email.';
-    ctStatus.style.color = '#8b4040';
-    return;
-  }
-
-  ctSending = true;
-  ctSubmit.disabled = true;
-  ctSubmit.textContent = 'Sending...';
-  ctStatus.textContent = '';
-
-  try {
-    const res = await fetch(CT_API, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name, email, subject: subject || 'Message', message, website_url: honeypot})
-    });
-    if (res.status === 429) {
-      ctStatus.textContent = 'Please wait before sending again.';
-      ctStatus.style.color = '#8b4040';
-      return;
-    }
-    if (!res.ok) throw new Error(res.status);
-    ctStatus.textContent = 'Message sent. The shopkeeper will respond.';
-    ctStatus.style.color = '#5a8a5a';
-    document.getElementById('ct-name').value = '';
-    document.getElementById('ct-email').value = '';
-    document.getElementById('ct-subject').value = '';
-    document.getElementById('ct-msg').value = '';
-  } catch(e) {
-    ctStatus.textContent = 'Could not send. Try again or email directly.';
-    ctStatus.style.color = '#8b4040';
-  } finally {
-    ctSending = false;
-    ctSubmit.disabled = false;
-    ctSubmit.textContent = 'Send Message';
-  }
-});
 
 /* ═══ SMOOTH NAV ═══ */
 document.querySelectorAll('nav a[href^="#"]').forEach(a => {

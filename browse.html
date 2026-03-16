@@ -150,6 +150,7 @@ footer p{font-size:13px;color:#6a5a45;font-style:italic}
     <a href="#books">Books</a>
     <a href="#media">Media</a>
     <a href="#cinema">Cinema</a>
+    <a href="#contact">Contact</a>
     <a href="shop.html?start=hall" class="nav-mode">Explore Mode ↗</a>
   </div>
 </nav>
@@ -394,6 +395,30 @@ footer p{font-size:13px;color:#6a5a45;font-style:italic}
   </div>
 </section>
 
+<!-- CONTACT -->
+<div class="divider" style="margin:0 auto;max-width:900px"></div>
+<section id="contact">
+  <div class="section-title reveal">Get in Touch</div>
+  <div class="section-sub reveal">Questions, collaborations, or just a word for the shopkeeper.</div>
+  <div class="reveal" style="max-width:600px;margin:30px auto 0">
+    <div style="display:flex;gap:14px;margin-bottom:14px">
+      <input type="text" id="ct-name" placeholder="Your name" maxlength="100" style="flex:1;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;color:#c8a060;background:rgba(10,8,5,0.6);border:1px solid #1a1510;padding:14px 18px;outline:none" onfocus="this.style.borderColor='#6b1c1c'" onblur="this.style.borderColor='#1a1510'">
+      <input type="email" id="ct-email" placeholder="Your email" maxlength="200" style="flex:1;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;color:#c8a060;background:rgba(10,8,5,0.6);border:1px solid #1a1510;padding:14px 18px;outline:none" onfocus="this.style.borderColor='#6b1c1c'" onblur="this.style.borderColor='#1a1510'">
+    </div>
+    <div style="margin-bottom:14px">
+      <input type="text" id="ct-subject" placeholder="Subject" maxlength="200" style="width:100%;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;color:#c8a060;background:rgba(10,8,5,0.6);border:1px solid #1a1510;padding:14px 18px;outline:none" onfocus="this.style.borderColor='#6b1c1c'" onblur="this.style.borderColor='#1a1510'">
+    </div>
+    <div style="margin-bottom:14px">
+      <textarea id="ct-msg" placeholder="Your message..." maxlength="5000" style="width:100%;min-height:150px;font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;color:#c8a060;background:rgba(10,8,5,0.6);border:1px solid #1a1510;padding:14px 18px;outline:none;resize:vertical;line-height:1.7" onfocus="this.style.borderColor='#6b1c1c'" onblur="this.style.borderColor='#1a1510'"></textarea>
+    </div>
+    <div style="display:none"><input type="text" id="ct-honeypot" tabindex="-1" autocomplete="off"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:12px;color:#4a3a2a;font-style:italic" id="ct-status"></span>
+      <button id="ct-submit" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:12px 32px;border:1px solid #6b1c1c;color:#c8a060;cursor:pointer;background:rgba(107,28,28,0.1);transition:all 0.3s" onmouseover="this.style.background='rgba(107,28,28,0.25)'" onmouseout="this.style.background='rgba(107,28,28,0.1)'">Send Message</button>
+    </div>
+  </div>
+</section>
+
 <!-- FOOTER -->
 <footer>
   <div class="foot-brand">Namenlos</div>
@@ -421,6 +446,31 @@ if(location.hash && location.hash !== '#') {
   const target = document.querySelector(location.hash);
   if(target) setTimeout(() => target.scrollIntoView(), 100);
 }
+
+// Contact form
+const CT_API = 'https://amkostiuk.de/namenlos-contact.php';
+const ctSubmit = document.getElementById('ct-submit');
+const ctStatus = document.getElementById('ct-status');
+let ctSending = false;
+if (ctSubmit) ctSubmit.addEventListener('click', async () => {
+  if (ctSending) return;
+  const name = document.getElementById('ct-name').value.trim();
+  const email = document.getElementById('ct-email').value.trim();
+  const subject = document.getElementById('ct-subject').value.trim();
+  const message = document.getElementById('ct-msg').value.trim();
+  const honeypot = document.getElementById('ct-honeypot').value;
+  if (!name || !email || !message) { ctStatus.textContent = 'Please fill in name, email, and message.'; ctStatus.style.color = '#8b4040'; return; }
+  if (!email.includes('@')) { ctStatus.textContent = 'Please enter a valid email.'; ctStatus.style.color = '#8b4040'; return; }
+  ctSending = true; ctSubmit.disabled = true; ctSubmit.textContent = 'Sending...'; ctStatus.textContent = '';
+  try {
+    const res = await fetch(CT_API, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name, email, subject: subject || 'Message', message, website_url: honeypot}) });
+    if (res.status === 429) { ctStatus.textContent = 'Please wait before sending again.'; ctStatus.style.color = '#8b4040'; return; }
+    if (!res.ok) throw new Error(res.status);
+    ctStatus.textContent = 'Message sent. The shopkeeper will respond.'; ctStatus.style.color = '#5a8a5a';
+    ['ct-name','ct-email','ct-subject','ct-msg'].forEach(id => document.getElementById(id).value = '');
+  } catch(e) { ctStatus.textContent = 'Could not send. Try again later.'; ctStatus.style.color = '#8b4040'; }
+  finally { ctSending = false; ctSubmit.disabled = false; ctSubmit.textContent = 'Send Message'; }
+});
 </script>
 </body>
 </html>

@@ -547,7 +547,7 @@ body{cursor:default}
   <div class="chat-panel">
     <div class="chat-header">The Shopkeeper</div>
     <div class="chat-messages" id="chatMessages">
-      <div class="chat-msg bot">Welcome. Or welcome back. The shop doesn't distinguish.<br><br>What are you looking for?<br><button class="chat-nav-btn" onclick="chatGo('books')">Books</button> <button class="chat-nav-btn" onclick="chatGo('display')">Artifacts</button> <button class="chat-nav-btn" onclick="chatGo('corridor')">Cinema</button> <button class="chat-nav-btn" onclick="chatGo('cash')">Pay</button></div>
+      <div class="chat-msg bot">Welcome. Or welcome back. The shop doesn't distinguish.<br><br>What are you looking for?<br><button class="chat-nav-btn" onclick="chatGo('books')">Books</button> <button class="chat-nav-btn" onclick="chatGo('display')">Artifacts</button> <button class="chat-nav-btn" onclick="chatGo('corridor')">Cinema</button> <button class="chat-nav-btn" onclick="chatGo('cash')">Pay</button> <button class="chat-nav-btn" onclick="window.open('browse.html#contact','_blank')">Contact</button></div>
     </div>
     <div class="chat-input-row">
       <input type="text" id="chatInput" placeholder="Ask the shopkeeper..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -1071,6 +1071,7 @@ function sendChat() {
   else if(/album|music|soundtrack|song/.test(lower)) { reply='Twenty tracks. Each one a scene, a heartbeat. The album is being composed.'; }
   else if(/clip|video/.test(lower)) { reply='Dark visuals for every song. They are being filmed in the shadows.'; }
   else if(/audiobook|audio/.test(lower)) { reply='Every whisper preserved. The recordings will come.'; }
+  else if(/contact|email|write|reach|message|question/.test(lower)) { reply='The shopkeeper listens, but answers come from elsewhere.<br><a href="browse.html#contact" style="color:#c8a060" target="_blank">Send a message →</a>'; }
   else if(/hello|hi|hey|привет/.test(lower)) { reply='Welcome. Or welcome back.'; }
   else if(/help|what|where|how|show|guide/.test(lower)) { reply='We have <b>books</b> on the shelves to the left. <b>Artifacts</b> in the cabinet to the right. <b>Cinema</b> through the red door.'; }
   else { reply='Interesting question. I can show you the books, the artifacts, or the cinema.'; }
