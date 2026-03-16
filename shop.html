@@ -49,7 +49,6 @@ body{cursor:default}
 /* Highlight layers — full-scene PNG overlays */
 .scene-highlight{
   position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%);
   width:110%;height:110%;
   object-fit:cover;will-change:transform,opacity;
   pointer-events:none;z-index:25;
@@ -520,12 +519,12 @@ body{cursor:default}
   <img class="scene-highlight glow-red" id="hl-cinema" src="img/Shop/layers/006-Cinema-door-wc_0000_Layer-1.png" alt="" style="mix-blend-mode:screen">
   <img class="scene-highlight" id="hl-wc" src="img/Shop/layers/006-Cinema-door-wc_0001_Layer-2.png" alt="">
   <div class="hotspots">
-    <!-- WC door (centered on visible door) -->
-    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:45.7%;top:33.2%;width:9.7%;height:39.8%">
+    <!-- WC door: wooden door center-left -->
+    <div class="hotspot" data-goto="wc" data-glow="amber" data-whisper="look closer..." data-highlight="hl-wc" style="left:35%;top:28%;width:13%;height:60%">
       <span class="label">WC</span>
     </div>
-    <!-- KINO door (red glowing door, right of center) -->
-    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:53.6%;top:18%;width:15.5%;height:70.2%">
+    <!-- KINO door: red glowing door, center-right -->
+    <div class="hotspot" data-goto="cinema" data-glow="red" data-whisper="the screen remembers..." data-highlight="hl-cinema" style="left:49%;top:10%;width:16%;height:80%">
       <span class="label">Cinema</span>
     </div>
   </div>
