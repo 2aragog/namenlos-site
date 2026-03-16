@@ -611,10 +611,18 @@ document.querySelectorAll('.hotspot').forEach(h => {
 
 // ═══ TOUCH PAN ═══
 let panX=0,startX=0,startPanX=0,hasMoved=false;
-const maxPan = Math.max(200, Math.round((window.innerHeight * 1200/670 - window.innerWidth) / 2 * 0.85));
+function getMaxPan() {
+  // How far image overflows viewport on each side
+  var imgW = window.innerHeight * 1200/670;
+  var overflow = (imgW - window.innerWidth) / 2;
+  return Math.max(0, Math.round(overflow * 0.92));
+}
+let maxPan = getMaxPan();
+window.addEventListener('resize', () => { maxPan = getMaxPan(); panX = Math.max(-maxPan, Math.min(maxPan, panX)); applyPan(); });
+window.addEventListener('orientationchange', () => { setTimeout(() => { maxPan = getMaxPan(); panX = Math.max(-maxPan, Math.min(maxPan, panX)); applyPan(); }, 300); });
 
 function resetPan(id) {
-  panX = (id==='hall') ? 70 : 0;
+  panX = (id==='hall') ? Math.min(70, maxPan) : 0;
   applyPan();
 }
 function applyPan() {
