@@ -133,30 +133,32 @@ body{background:#000;overflow:hidden;height:100vh;width:100vw;font-family:'Cinze
 @media(max-width:768px){
   .bg-img{
     width:auto;height:100%;min-width:160%;
-    transform:translate(-50%,-50%) translateX(var(--panX,0px));
+    transform:translate(-40%,-50%) translateX(var(--panX,0px));
     transition:none;
+    object-position:right center;
   }
   .bg-highlight{
     width:auto;height:100%;min-width:160%;
-    transform:translate(-50%,-50%) translateX(var(--panX,0px));
+    transform:translate(-40%,-50%) translateX(var(--panX,0px));
   }
   .menu{
     position:fixed;left:0;right:0;top:auto;bottom:0;
     width:100%;max-width:100%;
     transform:none;
-    padding:0 6vw 60px;
+    padding:0 6vw 24px;
     justify-content:flex-end;
-    background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.75) 60%,transparent 100%);
+    background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.8) 40%,rgba(0,0,0,0.3) 70%,transparent 100%);
   }
   .door-zone{display:none}
-  .menu-title{font-size:22px;letter-spacing:5px;text-align:center}
-  .menu-sub{margin-bottom:24px;font-size:13px;text-align:center}
-  .menu-item{padding:14px 0}
-  .menu-item .text{font-size:12px;letter-spacing:3px}
-  .menu-item .desc{font-size:11px}
-  .menu-item .icon{font-size:14px}
-  .bottom span{font-size:8px;letter-spacing:3px}
-  .vignette{background:radial-gradient(ellipse at 50% 40%,transparent 40%,rgba(0,0,0,0.6) 100%)}
+  .menu-title{font-size:20px;letter-spacing:5px;text-align:center}
+  .menu-sub{margin-bottom:16px;font-size:12px;text-align:center}
+  .menu-item{padding:10px 0}
+  .menu-item .text{font-size:11px;letter-spacing:3px}
+  .menu-item .desc{font-size:10px}
+  .menu-item .icon{font-size:13px;width:22px}
+  .menu-item .arrow{display:none}
+  .bottom{display:none}
+  .vignette{background:radial-gradient(ellipse at 60% 35%,transparent 35%,rgba(0,0,0,0.5) 100%)}
 }
 </style>
 </head>
